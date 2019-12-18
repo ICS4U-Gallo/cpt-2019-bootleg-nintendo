@@ -1,9 +1,12 @@
-# Program Title (replace)
+# Bootleg Pokemon
 Program description. Replace with description of your program. Give a description of each scene.
 
 ### Group Members:
-- Member1
-- Member2
+- Eric J
+- Ryan C
+- Henson C
+- Terry C
+- Aidan T
 
 
 # CPT 2019
