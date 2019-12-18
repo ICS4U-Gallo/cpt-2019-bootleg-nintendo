@@ -9,7 +9,7 @@ class Chapter1View(arcade.View):
     
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_text("Chapter 1", settings.WIDTH/2, settings.HEIGHT/2,
+        arcade.draw_text("in game", settings.WIDTH/2, settings.HEIGHT/2,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
     
     def on_key_press(self, key, modifiers):
