@@ -62,6 +62,32 @@ def start_town():
     return room
 
 
+def other_town():
+    room = Room()
+
+    room.wall_list = arcade.SpriteList()
+
+    for y in (0, screen_height - sprite_size):
+        for x in range(0, screen_width, sprite_size):
+            if x != sprite_size * 3 and x != sprite_size * 4:
+                wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+                wall.left = x
+                wall.bottom = y
+                room.wall_list.append(wall)
+
+    for x in (0, screen_width - sprite_size):
+        for y in range(sprite_size, screen_height - sprite_size, sprite_size):
+            if y != sprite_size * 4 and y != sprite_size * 5:
+                wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+                wall.left = x
+                wall.bottom = y
+                room.wall_list.append(wall)
+
+    room.background = arcade.load_texture("images/background.jpg")
+
+    return room
+
+
 class MyGame(arcade.Window):
     """ Main application class. """
 
@@ -79,12 +105,13 @@ class MyGame(arcade.Window):
         os.chdir(file_path)
 
         # Sprite lists
-        self.player_list = None
+        self.current_room = 0
         self.coin_list = None
 
         # Set up the player
+        self.rooms = None
         self.player_sprite = None
-        self.wall_list = None
+        self.player_list = None
         self.physics_engine = None
         self.view_bottom = 0
         self.view_left = 0
@@ -97,8 +124,8 @@ class MyGame(arcade.Window):
 
         # Set up the player
         self.player_sprite = arcade.Sprite("images/character.png", 0.4)
-        self.player_sprite.center_x = 64
-        self.player_sprite.center_y = 270
+        self.player_sprite.center_x = 100
+        self.player_sprite.center_y = 100
         self.player_list.append(self.player_sprite)
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
@@ -110,6 +137,11 @@ class MyGame(arcade.Window):
         # These numbers set where we have 'scrolled' to.
         self.view_left = 0
         self.view_bottom = 0
+
+        self.rooms = []
+
+        room = start_town()
+        
 
     def on_draw(self):
         """
