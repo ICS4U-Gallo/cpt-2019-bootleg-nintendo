@@ -42,18 +42,19 @@ class Pokemon(arcade.Sprite):
             self.stats[i] = round(self.stats[i] * 51/50)
 
     def attack(self, opp, move):
-        if (move.type == "fire" and opp.type == "grass") or
-        (move.type == "grass" and opp.type == "water") or
-        (move.type == "water" and opp.type == "fire"):
+        if ((move.type == "fire" and opp.type == "grass") or
+                (move.type == "grass" and opp.type == "water") or
+                (move.type == "water" and opp.type == "fire")):
             modif = 1.5
-        elif (move.type == "fire" and opp.type == "water") or
-        (move.type == "water" and opp.type == "grass") or
-        (move.type == "grass" and opp.type == "fire"):
+        elif ((move.type == "fire" and opp.type == "water") or
+                (move.type == "water" and opp.type == "grass") or
+                (move.type == "grass" and opp.type == "fire")):
             modif = 0.5
         else:
             modif = 1
 
-        dmg = ((self.lvl/2+2)*move.pwr*self.stats[1]/opp.stats[2]/50+2) * modif
+        dmg = ((((self.lvl/2+2)*move.pwr*self.stats[1]/opp.stats[2]/50)+2) *
+               modif)
 
     def update(self):
         if self.battle_c % 10 == 0:
