@@ -1,5 +1,5 @@
-import poke_move
 import images
+import arcade
 
 types = ["fire", "water", "grass", "normal"]
 
@@ -45,13 +45,13 @@ class Pokemon(arcade.Sprite):
             self.cur_hp = self.stats[0]
 
     def type_modif(self, move, opp):
-        if (move.type == "fire" and opp.type == "grass") or
-        (move.type == "grass" and opp.type == "water") or
-        (move.type == "water" and opp.type == "fire"):
+        if ((move.type == "fire" and opp.type == "grass") or
+            (move.type == "grass" and opp.type == "water") or
+            (move.type == "water" and opp.type == "fire")):
             return 1.5
-        elif (move.type == "fire" and opp.type == "water") or
-        (move.type == "water" and opp.type == "grass") or
-        (move.type == "grass" and opp.type == "fire"):
+        elif ((move.type == "fire" and opp.type == "water") or
+              (move.type == "water" and opp.type == "grass") or
+              (move.type == "grass" and opp.type == "fire")):
             return 0.5
         else:
             return 1
@@ -65,53 +65,53 @@ class Pokemon(arcade.Sprite):
         if self.battle_c % 10 == 0:
             self.levelup()
 
+    @classmethod
+    def Charmander(cls):
+        poke = cls("Charmander", "fire", 1, 39, 52, 43, 65)
+        poke.texture = arcade.load_texture("images/charmander.png")
+        return poke
 
-class Charmander(Pokemon):
-    def __init__(self):
-        super().__init__("Charmander", "fire", 1, 39, 52, 43, 65)
-        self.texture = arcade.load_texture("images/charmander.png")
+    @classmethod
+    def Squirtle(cls):
+        poke = cls("Squirtle", "water", 1, 44, 48, 65, 43)
+        poke.texture = arcade.load_texture("images/squirtle.jpg")
+        return poke
 
+    @classmethod
+    def Bulbasaur(cls):
+        poke = cls("Bulbasaur", "grass", 1, 45, 49, 49, 45)
+        poke.texture = arcade.load_texture("images/bulbasaur.png")
+        return poke
 
-class Squirtle(Pokemon):
-    def __init__(self):
-        super().__init__("Squirtle", "water", 1, 44, 48, 65, 43)
-        self.texture = arcade.load_texture("images/squirtle.jpg")
+    @classmethod
+    def IceCream(cls):
+        poke = cls("Literally an ice cream", "water", 1, 36, 50, 50, 44)
+        poke.texture = arcade.load_texture("images/literal_ice_cream.jpg")
+        return poke
 
+    @classmethod
+    def Garbage(Pokemon):
+        poke = cls("Literal Garbage", "grass", 1, 50, 50, 62, 67)
+        poke.texture = arcade.load_texture("images/garbage.jpg")
+        return poke
 
-class Bulbasaur(Pokemon):
-    def __init__(self):
-        super().__init__("Bulbasaur", "grass", 1, 45, 49, 49, 45)
-        self.texture = arcade.load_texture("images/bulbasaur.png")
+    @classmethod
+    def torkoal(Pokemone):
+        poke = cls("China's air", "fire", 1, 70, 85, 140, 20)
+        poke.texture = arcade.load_texture("images/torkoal.jpg")
+        return poke
 
+    @classmethod
+    def Klefki(Pokemon):
+        poke = cls("Your missing keys", "normal", 1, 57, 80, 91, 75)
+        poke.texture = arcade.load_texture("images/key.jpg")
+        return poke
 
-class IceCream(Pokemon):
-    def __init__(self):
-        super().__init__("Literally an ice cream", "water", 1, 36, 50, 50, 44)
-        self.texture = arcade.load_texture("images/literal_ice_cream.jpg")
-
-
-class Garbage(Pokemon):
-    def __init__(self):
-        super().__init__("Literal Garbage", "grass", 1, 50, 50, 62, 67)
-        self.texture = arcade.load_texture("images/garbage.jpg")
-
-
-class torkoal(Pokemone):
-    def __init__(self):
-        super().__init__("China's air", "fire", 1, 70, 85, 140, 20)
-        self.texture = arcade.load_texture("images/torkoal.jpg")
-
-
-class Klefki(Pokemon):
-    def __init__(self):
-        super().__init__("Your missing keys", "normal", 1, 57, 80, 91, 75)
-        self.texture = arcade.load_texture("images/key.jpg")
-
-
-class Magikarp(Pokemon):
-    def __init__(self):
-        super().__init__("Dead fish", "water", 1, 100, 100, 100, 100)
-        self.texture = arcade.load_texture("images/magikarp.jpg")
+    @classmethod
+    def Magikarp(Pokemon):
+        poke = cls("Dead fish", "water", 1, 100, 100, 100, 100)
+        poke.texture = arcade.load_texture("images/magikarp.jpg")
+        return poke
 
 
 def main():
