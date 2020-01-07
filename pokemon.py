@@ -4,26 +4,25 @@ types = ["fire", "water", "grass", "normal"]
 
 
 class Move:
+    move_list = []
+
     def __init__(self, name, pwr, type, pp, status):
         self.name = name
         self.pwr = pwr
         self.pp = pp
         self.status = status
 
+    @classmethod
+    def Tackle(cls):
+        return cls("Bump", 40, "normal", 40, None)
 
-class Tackle(Move):
-    def __init__(self):
-        super.__init__("Bump", 40, "normal", 40, None)
+    @classmethod
+    def Leer(cls):
+        return cls("look suggestively", 0, "normal", 40, "reduce def")
 
-
-class Leer(Move):
-    def __init__(self):
-        super.__init__("look suggestively", 0, "normal", 40, "reduce def")
-
-
-class Growl(Move):
-    def __init__(self):
-        super.__init__("yap", 0, "normal", 40, "reduce atk")
+    @classmethod
+    def Growl(Move):
+        return cls("yap", 0, "normal", 40, "reduce atk")
 
 
 class Pokemon:
@@ -31,27 +30,34 @@ class Pokemon:
         self.name = name
         self.type = types
         self.lvl = lvl
+        self.cur_hp = hp
         self.stats = [hp, atk, def_, spd]
         self.battle_c = 0
 
     def levelup(self):
         self.lvl += 1
+        self.cur_hp += self.stats[0]*1.5
         for i in range(4):
             self.stats[i] = round(self.stats[i] * 51/50)
+        if self.cur_hp > self.stats[0]:
+            self.cur_hp = self.stats[0]
 
-    def attack(self, opp, move):
+    def type_modif(self, move, opp):
         if (move.type == "fire" and opp.type == "grass") or
         (move.type == "grass" and opp.type == "water") or
         (move.type == "water" and opp.type == "fire"):
-            modif = 1.5
+            return 1.5
         elif (move.type == "fire" and opp.type == "water") or
         (move.type == "water" and opp.type == "grass") or
         (move.type == "grass" and opp.type == "fire"):
-            modif = 0.5
+            return 0.5
         else:
-            modif = 1
+            return 1
 
+    def attack(self, opp, move):
+        modif = self.type_modif(opp, move)
         dmg = ((self.lvl/2+2)*move.pwr*self.stats[1]/opp.stats[2]/50+2) * modif
+        opp.cur_hp -= dmg
 
     def update(self):
         if self.battle_c % 10 == 0:
