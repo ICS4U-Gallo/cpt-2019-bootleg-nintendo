@@ -1,15 +1,3 @@
-
-"""
-Use sprites to scroll around a large screen.
-
-Simple program to show basic sprite usage.
-
-Artwork from http://kenney.nl
-
-If Python and Arcade are installed, this example can be run from the command line with:
-python -m arcade.examples.sprite_move_scrolling
-"""
-
 import random
 import arcade
 import os
@@ -18,7 +6,7 @@ sprite_scale = 0.5
 native_sprite = 128
 sprite_size = int(sprite_scale * native_sprite)
 
-screen_width = sprite_size * 14
+screen_width = sprite_size * 12
 screen_height = sprite_size * 10
 screen_title = "Sprite Move with Scrolling Screen Example"
 
@@ -158,8 +146,8 @@ class MyGame(arcade.Window):
         arcade.start_render()
 
         # Draw all the sprites.
-        arcade.draw_texture_rectangle(screen_width // 2, screen_height // 2,
-                                      screen_width, screen_height, self.rooms[self.current_room].background)
+        arcade.draw_texture_rectangle(screen_width, screen_height,
+                                      screen_width * 2, screen_height * 2, self.rooms[self.current_room].background)
         self.rooms[self.current_room].wall_list.draw()
         self.player_list.draw()
 
