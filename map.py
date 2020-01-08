@@ -12,7 +12,8 @@ screen_title = "Sprite Move with Scrolling Screen Example"
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
-view_boundary = 40
+view_boundary_yaxis = 294
+view_boundary_xaxis = 375
 
 MOVEMENT_SPEED = 5
 
@@ -112,8 +113,8 @@ class MyGame(arcade.Window):
 
         # Set up the player
         self.player_sprite = arcade.Sprite("images/character.png", 0.4)
-        self.player_sprite.center_x = 100
-        self.player_sprite.center_y = 100
+        self.player_sprite.center_x = 500
+        self.player_sprite.center_y = 500
         self.player_list.append(self.player_sprite)
 
 
@@ -185,25 +186,25 @@ class MyGame(arcade.Window):
         changed = False
 
         # Scroll left
-        left_boundary = self.view_left + view_boundary
+        left_boundary = self.view_left + view_boundary_xaxis
         if self.player_sprite.left < left_boundary:
             self.view_left -= left_boundary - self.player_sprite.left
             changed = True
 
         # Scroll right
-        right_boundary = self.view_left + screen_width - view_boundary
+        right_boundary = self.view_left + screen_width - view_boundary_xaxis
         if self.player_sprite.right > right_boundary:
             self.view_left += self.player_sprite.right - right_boundary
             changed = True
 
         # Scroll up
-        top_boundary = self.view_bottom + screen_height - view_boundary
+        top_boundary = self.view_bottom + screen_height - view_boundary_yaxis
         if self.player_sprite.top > top_boundary:
             self.view_bottom += self.player_sprite.top - top_boundary
             changed = True
 
         # Scroll down
-        bottom_boundary = self.view_bottom + view_boundary
+        bottom_boundary = self.view_bottom + view_boundary_yaxis
         if self.player_sprite.bottom < bottom_boundary:
             self.view_bottom -= bottom_boundary - self.player_sprite.bottom
             changed = True
