@@ -27,7 +27,7 @@ class Move:
 
 
 class Pokemon(arcade.Sprite):
-    def __init__(self, name, types, lvl, hp, atk, def_, spd):
+    def __init__(self, name, types, lvl, cur_hp, atk, def_, spd):
         super().__init__()
         self.name = name
         self.type = types
@@ -58,7 +58,8 @@ class Pokemon(arcade.Sprite):
 
     def attack(self, opp, move):
         modif = self.type_modif(opp, move)
-        dmg = ((self.lvl/2+2)*move.pwr*self.stats[1]/opp.stats[2]/50+2) * modif
+        dmg = (((((self.lvl/2+2)*move.pwr*(self.stats[1]/opp.stats[2]))/50)+2)
+               * modif)
         opp.cur_hp -= dmg
 
     def update(self):
