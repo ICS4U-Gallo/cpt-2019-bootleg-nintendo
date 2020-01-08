@@ -27,7 +27,7 @@ class Move:
 
 
 class Pokemon(arcade.Sprite):
-    def __init__(self, name, types, lvl, hp, atk, def_, spd):
+    def __init__(self, name, types, lvl, cur_hp, atk, def_, spd):
         super().__init__()
         self.name = name
         self.type = types
@@ -46,8 +46,8 @@ class Pokemon(arcade.Sprite):
 
     def type_modif(self, move, opp):
         if ((move.type == "fire" and opp.type == "grass") or
-            (move.type == "grass" and opp.type == "water") or
-            (move.type == "water" and opp.type == "fire")):
+           (move.type == "grass" and opp.type == "water") or
+           (move.type == "water" and opp.type == "fire")):
             return 1.5
         elif ((move.type == "fire" and opp.type == "water") or
               (move.type == "water" and opp.type == "grass") or
@@ -58,7 +58,8 @@ class Pokemon(arcade.Sprite):
 
     def attack(self, opp, move):
         modif = self.type_modif(opp, move)
-        dmg = ((self.lvl/2+2)*move.pwr*self.stats[1]/opp.stats[2]/50+2) * modif
+        dmg = (((((self.lvl/2+2)*move.pwr*(self.stats[1]/opp.stats[2]))/50)+2)
+               * modif)
         opp.cur_hp -= dmg
 
     def update(self):
