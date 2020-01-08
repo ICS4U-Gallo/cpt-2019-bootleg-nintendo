@@ -46,8 +46,8 @@ class Pokemon(arcade.Sprite):
 
     def type_modif(self, move, opp):
         if ((move.type == "fire" and opp.type == "grass") or
-            (move.type == "grass" and opp.type == "water") or
-            (move.type == "water" and opp.type == "fire")):
+           (move.type == "grass" and opp.type == "water") or
+           (move.type == "water" and opp.type == "fire")):
             return 1.5
         elif ((move.type == "fire" and opp.type == "water") or
               (move.type == "water" and opp.type == "grass") or
