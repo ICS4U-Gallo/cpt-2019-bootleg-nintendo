@@ -8,7 +8,7 @@ class Item:
         self.amount = amount
 
     def use(pokemon):
-        if self.name = "Potion":
+        if self.name = "Essential oils":
             pokemon.cur_hp += 20
         if self.name = "Steroids":
             pokemon.atk += 20
@@ -17,7 +17,7 @@ class Item:
 
     @classmethod
     def potion(cls):
-        return cls("Potion", "Heal hp by 20", 1)
+        return cls("Essential oils", "Heal hp by 20", 1)
 
     @classmethod
     def steroids(cls):
