@@ -15,7 +15,7 @@ screen_title = "Sprite Move with Scrolling Screen Example"
 view_boundary_yaxis = 294
 view_boundary_xaxis = 375
 
-MOVEMENT_SPEED = 5
+MOVEMENT_SPEED = 2
 
 
 class Room:
@@ -102,20 +102,32 @@ class MyGame(arcade.Window):
         self.player_sprite = None
         self.player_list = None
         self.physics_engine = None
+        self.physics_engine_2 = None
         self.view_bottom = 0
         self.view_left = 0
+        self.house_list = None
+
+        self.left_pressed = False
+        self.right_pressed = False
+        self.up_pressed = False
+        self.down_pressed = False
 
     def setup(self):
         """ Set up the game and initialize the variables. """
 
         # Sprite lists
         self.player_list = arcade.SpriteList()
+        self.house_list = arcade.SpriteList()
 
         # Set up the player
         self.player_sprite = arcade.Sprite("images/character.png", 0.4)
         self.player_sprite.center_x = 500
         self.player_sprite.center_y = 500
         self.player_list.append(self.player_sprite)
+
+        house = arcade.Sprite("images/house.png", 3)
+        house.center_x = 700
+        house.center_y = 400
 
 
         # Set the background color
@@ -134,9 +146,12 @@ class MyGame(arcade.Window):
         room = other_town()
         self.rooms.append(room)
 
+        self.house_list.append(house)
+
         self.current_room = 0
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
+        self.physics_engine_2 = arcade.PhysicsEngineSimple(self.player_sprite, self.house_list)
 
     def on_draw(self):
         """
@@ -151,33 +166,52 @@ class MyGame(arcade.Window):
                                       screen_width * 2, screen_height * 2, self.rooms[self.current_room].background)
         self.rooms[self.current_room].wall_list.draw()
         self.player_list.draw()
+        self.house_list.draw()
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
         if key == arcade.key.W:
-            self.player_sprite.change_y = MOVEMENT_SPEED
+            self.up_pressed = True
         elif key == arcade.key.S:
-            self.player_sprite.change_y = -MOVEMENT_SPEED
+            self.down_pressed = True
         elif key == arcade.key.A:
-            self.player_sprite.change_x = -MOVEMENT_SPEED
+            self.left_pressed = True
         elif key == arcade.key.D:
-            self.player_sprite.change_x = MOVEMENT_SPEED
+            self.right_pressed = True
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
 
-        if key == arcade.key.W or key == arcade.key.S:
-            self.player_sprite.change_y = 0
-        elif key == arcade.key.A or key == arcade.key.D:
-            self.player_sprite.change_x = 0
-
+        if key == arcade.key.W:
+            self.up_pressed = False
+        elif key == arcade.key.S:
+            self.down_pressed = False
+        elif key == arcade.key.A:
+            self.left_pressed = False
+        elif key == arcade.key.D:
+            self.right_pressed = False
+        
     def on_update(self, delta_time):
         """ Movement and game logic """
+
+        self.player_sprite.change_x = 0
+        self.player_sprite.change_y = 0
+
+        if self.up_pressed and not self.down_pressed:
+            self.player_sprite.change_y = MOVEMENT_SPEED
+        elif self.down_pressed and not self.up_pressed:
+            self.player_sprite.change_y = -MOVEMENT_SPEED
+        if self.left_pressed and not self.right_pressed:
+            self.player_sprite.change_x = -MOVEMENT_SPEED
+        elif self.right_pressed and not self.left_pressed:
+            self.player_sprite.change_x = MOVEMENT_SPEED
 
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
+        self.physics_engine_2.update()
+        self.player_list.update()
 
         # --- Manage Scrolling ---
 
@@ -223,7 +257,7 @@ class MyGame(arcade.Window):
                                 self.view_bottom,
                                 screen_height + self.view_bottom - 1)
         
-        if self.player_sprite.center_x > screen_width and self.current_room == 0:
+        if self.player_sprite.center_x > 200000 and self.current_room == 0:
             self.current_room = 1
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
                                                              self.rooms[self.current_room].wall_list)
