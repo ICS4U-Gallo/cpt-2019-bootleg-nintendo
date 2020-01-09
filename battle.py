@@ -1,5 +1,10 @@
 import arcade
 import settings
+import pokemon
+import random
+
+poke1 = pokemon.Pokemon.Magikarp()
+poke2 = pokemon.Pokemon.IceCream()
 
 
 def check_first(poke, opp):
@@ -9,15 +14,29 @@ def check_first(poke, opp):
         return 1
 
 
-def combat(poke, opp):
-    move_pokemon = check_first()
-    while True:
-        if move_pokemon % 2 == 0:
-            move = choose_move()
+def choose_move(poke):
+    # move_num = int(input("move# :"))
+    move = poke.moves[0]
+    return move
+
+
+def fight(poke, opp):
+    turn = check_first(poke, opp)
+    for i in range(2):
+        if turn % 2 == 0:
+            move = choose_move(poke)
             poke.attack(opp, move)
+            if opp.is_dead():
+                print(f"\n{opp.name} is dead")
+                break
         else:
-            move = None
+            rng = random.randrange(len(opp.moves))
+            move = opp.moves[rng]
             opp.attack(poke, move)
+            if poke.is_dead():
+                print(f"\n{poke.name} is dead")
+                break
+        turn += 1
 
 
 class BattleView(arcade.View):
@@ -37,9 +56,15 @@ class BattleView(arcade.View):
 
 
 if __name__ == "__main__":
-    from utils import FakeDirector
-    window = arcade.Window(settings.WIDTH, settings.HEIGHT)
-    my_view = BattleView()
-    my_view.director = FakeDirector(close_on_next_view=True)
-    window.show_view(my_view)
-    arcade.run()
+    # from utils import FakeDirector
+    # window = arcade.Window(settings.WIDTH, settings.HEIGHT)
+    # my_view = BattleView()
+    # my_view.director = FakeDirector(close_on_next_view=True)
+    # window.show_view(my_view)
+    # arcade.run()
+    print(poke1)
+    print(poke2)
+    while not poke1.is_dead() and not poke2.is_dead():
+        fight(poke1, poke2)
+    print(poke1)
+    print(poke2)
