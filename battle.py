@@ -3,12 +3,43 @@ import settings
 import pokemon
 import random
 
+
+class Player:
+    def __init__():
+        self.pokemon = []
+
+    def defeated():
+        for poke in self.pokemon:
+            if poke.cur_stats[0] > 0:
+                return False
+        return True
+
+
+a = Player()
+b = Player()
 poke1 = pokemon.Pokemon.Magikarp()
 poke2 = pokemon.Pokemon.IceCream()
+a.pokemon = [poke1, poke1]
+b.pokemon = [poke2, poke2]
+
+
+def battle(player, opp):
+    i = j = 0
+    while opp not deafeated() and player not defeated():
+        action(player, opp)
+
+
+def action(player, opp, i, j):
+    if option == "fight":
+        fight(player1.pokemon[i], player2.pokemon[j])
+    elif option == "switch":
+        i = 1
+    elif option == "item":
+        pass
 
 
 def check_first(poke, opp):
-    if poke1.stats[3] > poke2.stats[3]:
+    if poke.stats[3] >= opp.stats[3]:
         return 0
     else:
         return 1

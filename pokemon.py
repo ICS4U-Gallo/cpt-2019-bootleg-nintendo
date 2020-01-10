@@ -5,13 +5,13 @@ types = ["fire", "water", "grass", "normal"]
 
 
 class Move:
-    def __init__(self, name, pwr, type_, pp, status):
+    def __init__(self, name, pwr, type_, pp, *status):
         self.name = name
         self.pwr = pwr
         self.type = type_
         self.cur_pp = pp
         self.pp = pp
-        self.status = status
+        self.status = [*status]
 
     def check_pp(self):
         if self.cur_pp == 0:
@@ -20,36 +20,45 @@ class Move:
             self.cur_pp -= 1
             return True
 
+    def apply_effect(self, poke, opp):
+        if self.status[0] == 0:
+            return
+        elif self.status[0] == 1:
+            print(self.status[1], self.status[2])
+            poke.cur_stats[self.status[1]] += self.status[2]
+        elif self.status[0] == 2:
+            opp.cur_stats[self.status[1]] += self.status[2]
+
     @classmethod
     def Tackle(cls):
-        return cls("Bump", 40, "normal", 40, None)
+        return cls("Bump", 40, "normal", 40, 0)
 
     @classmethod
     def Leer(cls):
-        return cls("look suggestively", 0, "normal", 40, "reduce def")
+        return cls("look suggestively", 0, "normal", 40, 2, 2, -10)
 
     @classmethod
     def Growl(cls):
-        return cls("yap", 0, "normal", 40, "reduce atk")
+        return cls("yap", 0, "normal", 40, 2, 1, -10)
 
 
 class Pokemon(arcade.Sprite):
-    def __init__(self, name, types, lvl, cur_hp, atk, def_, spd):
+    def __init__(self, name, types, lvl, hp, atk, def_, spd):
         super().__init__()
         self.name = name
         self.type = types
         self.lvl = lvl
-        self.cur_hp = hp
+        self.cur_stats = [hp, atk, def_]
         self.stats = [hp, atk, def_, spd]
         self.battle_c = 0
 
     def levelup(self):
         self.lvl += 1
-        self.cur_hp += self.stats[0]*1.5
+        self.cur_stats[0] += self.stats[0]*1.5
         for i in range(4):
             self.stats[i] = round(self.stats[i] * 51/50)
-        if self.cur_hp > self.stats[0]:
-            self.cur_hp = self.stats[0]
+        if self.cur_stats[0] > self.stats[0]:
+            self.cur_stats[0] = self.stats[0]
 
     def type_modif(self, opp, move):
         if ((move.type == "fire" and opp.type == "grass") or
@@ -66,13 +75,14 @@ class Pokemon(arcade.Sprite):
     def attack(self, opp, move):
         print(f"\n{self.name} uses {move.name}")
         modif = self.type_modif(opp, move)
-        dmg = (((((self.lvl/2+2)*move.pwr*(self.stats[1]/opp.stats[2]))/50)+2)
-               * modif)
-        opp.cur_hp -= dmg
+        move.apply_effect(self, opp)
+        dmg = round(((((self.lvl/2+2)*move.pwr*(self.cur_stats[1]
+                    / opp.cur_stats[2]))/50)+2)*modif)
+        opp.cur_stats[0] -= dmg
         print(f"{self.name} does {dmg} damage to {opp.name}.")
 
     def is_dead(self):
-        if self.cur_hp <= 0:
+        if self.cur_stats[0] <= 0:
             return True
         else:
             return False
@@ -82,7 +92,7 @@ class Pokemon(arcade.Sprite):
             self.levelup()
 
     def __str__(self):
-        return f"{self.name}, {self.type}, {self.cur_hp}"
+        return f"{self.name, self.type, *self.cur_stats}"
 
     @classmethod
     def Charmander(cls):
