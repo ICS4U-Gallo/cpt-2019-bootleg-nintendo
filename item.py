@@ -1,4 +1,5 @@
 import pokemon
+import main.Player
 
 
 class Item:
@@ -8,25 +9,32 @@ class Item:
         self.amount = amount
 
     def use(pokemon):
-        if self.name = "Essential oils":
+        if self.name == "Essential oils":
             pokemon.cur_hp += 20
-        if self.name = "Steroids":
+        if self.name == "Steroids":
             pokemon.atk += 20
-        if self.name = "Leg Day":
+        if self.name == "Leg Day":
             pokemon.spd += 20
 
     @classmethod
     def potion(cls):
-        return cls("Essential oils", "Heal hp by 20", 1)
+        item = cls("Essential oils", "Heal hp by 20", 1)
+        item.texture = arcade.load_texture("images/cocaine.jpg")
+        return item
 
     @classmethod
     def steroids(cls):
-        return cls("Steroids", "Increase attack by 20", 1)
+        item = cls("Steroids", "Increase attack by 20", 1)
+        item.texture = arcade.load_texture("images/steroid.jpg")
+        return item
 
     @classmethod
     def leg_day(cls):
-        return cls("Leg Day", "Increase speed by 20", 1)
+        item = cls("Leg Day", "Increase speed by 20", 1)
+        item.texture = arcade.load_texture("images/legs.jpg")
+        return item
 
 
 if __name__ == "__main__":
-    pass
+    p = main.Player()
+    p.bag.append(item)

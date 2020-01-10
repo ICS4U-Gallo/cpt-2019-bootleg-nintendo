@@ -43,8 +43,9 @@ class Move:
 
 
 class Pokemon(arcade.Sprite):
-    def __init__(self, name, types, lvl, hp, atk, def_, spd):
+    def __init__(self, num, name, types, lvl, hp, atk, def_, spd):
         super().__init__()
+        self.num = num
         self.name = name
         self.type = types
         self.lvl = lvl
@@ -96,56 +97,56 @@ class Pokemon(arcade.Sprite):
 
     @classmethod
     def Charmander(cls):
-        poke = cls("Charmander", "fire", 1, 39, 52, 43, 65)
+        poke = cls(1, "Charmander", "fire", 1, 39, 52, 43, 65)
         poke.texture = arcade.load_texture("images/charmander.png")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Squirtle(cls):
-        poke = cls("Squirtle", "water", 1, 44, 48, 65, 43)
+        poke = cls(4, "Squirtle", "water", 1, 44, 48, 65, 43)
         poke.texture = arcade.load_texture("images/squirtle.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Bulbasaur(cls):
-        poke = cls("Bulbasaur", "grass", 1, 45, 49, 49, 45)
+        poke = cls(7, "Bulbasaur", "grass", 1, 45, 49, 49, 45)
         poke.texture = arcade.load_texture("images/bulbasaur.png")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def IceCream(cls):
-        poke = cls("Literally an ice cream", "water", 1, 36, 50, 50, 44)
+        poke = cls(10, "Ice cream", "water", 1, 36, 50, 50, 44)
         poke.texture = arcade.load_texture("images/literal_ice_cream.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Garbage(cls):
-        poke = cls("Literal Garbage", "grass", 1, 50, 50, 62, 67)
+        poke = cls(13, "Literal Garbage", "grass", 1, 50, 50, 62, 67)
         poke.texture = arcade.load_texture("images/garbage.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def torkoal(cls):
-        poke = cls("China's air", "fire", 1, 70, 85, 140, 20)
+        poke = cls(14, "China's air", "fire", 1, 70, 85, 140, 20)
         poke.texture = arcade.load_texture("images/torkoal.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Klefki(cls):
-        poke = cls("Your missing keys", "normal", 1, 57, 80, 91, 75)
+        poke = cls(15, "Your missing keys", "normal", 1, 57, 80, 91, 75)
         poke.texture = arcade.load_texture("images/key.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Magikarp(cls):
-        poke = cls("Dead fish", "water", 1, 100, 100, 100, 100)
+        poke = cls(16, "Dead fish", "water", 1, 100, 100, 100, 100)
         poke.texture = arcade.load_texture("images/magikarp.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
