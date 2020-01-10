@@ -7,7 +7,32 @@ sprite_size = int(sprite_scale * native_sprite)
 SCREEN_WIDTH = 768
 SCREEN_HEIGHT = 640
 
+<<<<<<< HEAD
+pause = True
+
+
+def main_menu():
+    # Draw Main menu
+    arcade.set_background_color(arcade.color.WHITE)
+    arcade.draw_text("Pokemans",
+                     SCREEN_WIDTH/2, 480, arcade.color.BLACK, 70,
+                     align="center", anchor_x="center", anchor_y="center")
+    if pause is True:
+        arcade.draw_text("Play", SCREEN_WIDTH/2,
+                         SCREEN_HEIGHT/2+13, arcade.color.BLACK, 30,
+                         align="center", anchor_x="center", anchor_y="center")
+
+    else:
+        arcade.draw_text("lmao u touched me", SCREEN_WIDTH/2,
+                         SCREEN_HEIGHT/2+13, arcade.color.BLACK, 30,
+                         align="center", anchor_x="center", anchor_y="center")
+
+    arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
+                                       SCREEN_HEIGHT/2-25, 300, 75,
+                                       arcade.color.BLACK, 5)
+=======
 game = False
+>>>>>>> a848fc3a11bf437685c69c48118d02109f9e3fbd
 
 
 class MyGame(arcade.Window):
