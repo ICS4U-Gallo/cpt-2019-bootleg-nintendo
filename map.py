@@ -15,7 +15,7 @@ screen_title = "Sprite Move with Scrolling Screen Example"
 view_boundary_yaxis = 294
 view_boundary_xaxis = 375
 
-MOVEMENT_SPEED = 2
+MOVEMENT_SPEED = 5
 
 
 class Room:
@@ -45,6 +45,11 @@ def start_town():
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
+
+    house = arcade.Sprite("images/house.png", 3)
+    house.left = 900
+    house.bottom = 700
+    room.wall_list.append(house)
 
     room.background = arcade.load_texture("images/background.jpg")
 
@@ -96,38 +101,31 @@ class MyGame(arcade.Window):
         # Sprite lists
         self.current_room = 0
         self.coin_list = None
+        
 
         # Set up the player
         self.rooms = None
         self.player_sprite = None
         self.player_list = None
         self.physics_engine = None
-        self.physics_engine_2 = None
-        self.view_bottom = 0
-        self.view_left = 0
-        self.house_list = None
-
         self.left_pressed = False
         self.right_pressed = False
         self.up_pressed = False
         self.down_pressed = False
+        self.view_bottom = 0
+        self.view_left = 0
 
     def setup(self):
         """ Set up the game and initialize the variables. """
 
         # Sprite lists
         self.player_list = arcade.SpriteList()
-        self.house_list = arcade.SpriteList()
 
         # Set up the player
         self.player_sprite = arcade.Sprite("images/character.png", 0.4)
         self.player_sprite.center_x = 500
         self.player_sprite.center_y = 500
         self.player_list.append(self.player_sprite)
-
-        house = arcade.Sprite("images/house.png", 3)
-        house.center_x = 700
-        house.center_y = 400
 
 
         # Set the background color
@@ -146,12 +144,9 @@ class MyGame(arcade.Window):
         room = other_town()
         self.rooms.append(room)
 
-        self.house_list.append(house)
-
         self.current_room = 0
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
-        self.physics_engine_2 = arcade.PhysicsEngineSimple(self.player_sprite, self.house_list)
 
     def on_draw(self):
         """
@@ -166,7 +161,6 @@ class MyGame(arcade.Window):
                                       screen_width * 2, screen_height * 2, self.rooms[self.current_room].background)
         self.rooms[self.current_room].wall_list.draw()
         self.player_list.draw()
-        self.house_list.draw()
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -191,7 +185,7 @@ class MyGame(arcade.Window):
             self.left_pressed = False
         elif key == arcade.key.D:
             self.right_pressed = False
-        
+
     def on_update(self, delta_time):
         """ Movement and game logic """
 
@@ -210,8 +204,7 @@ class MyGame(arcade.Window):
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
-        self.physics_engine_2.update()
-        self.player_list.update()
+        
 
         # --- Manage Scrolling ---
 
@@ -257,7 +250,7 @@ class MyGame(arcade.Window):
                                 self.view_bottom,
                                 screen_height + self.view_bottom - 1)
         
-        if self.player_sprite.center_x > 200000 and self.current_room == 0:
+        if self.player_sprite.center_x > 200000000 and self.current_room == 0:
             self.current_room = 1
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
                                                              self.rooms[self.current_room].wall_list)
