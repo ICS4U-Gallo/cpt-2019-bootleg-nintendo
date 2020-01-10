@@ -5,72 +5,73 @@ import random
 
 
 class Player:
-    def __init__():
+    def __init__(self):
         self.pokemon = []
 
-    def defeated():
+    def not_defeated(self):
+        print(self.pokemon)
         for poke in self.pokemon:
             if poke.cur_stats[0] > 0:
-                return False
-        return True
+                return True
+        return False
 
 
 a = Player()
 b = Player()
 poke1 = pokemon.Pokemon.Magikarp()
 poke2 = pokemon.Pokemon.IceCream()
-a.pokemon = [poke1, poke1]
-b.pokemon = [poke2, poke2]
+poke3 = pokemon.Pokemon.Charmander()
+poke4 = pokemon.Pokemon.Bulbasaur()
+a.pokemon = [poke1, poke3]
+b.pokemon = [poke2, poke4]
 
 
-def battle(player, opp):
+def battle(p1, p2):
     i = j = 0
-    while opp not deafeated() and player not defeated():
-        action(player, opp)
+    while p1.not_defeated() and p2.not_defeated():
+        action(p1, p2, i, j)
 
 
-def action(player, opp, i, j):
+def action(p1, p2, i, j):
+    option = "fight"
     if option == "fight":
-        fight(player1.pokemon[i], player2.pokemon[j])
+        move = choose_move(p1.pokemon[i])
+        fight(p1.pokemon[i], p2.pokemon[j], move)
     elif option == "switch":
         i = 1
+        opp = p2.pokemon[j]
+        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
     elif option == "item":
         pass
 
 
-def check_first(poke, opp):
+def move_first(poke, opp):
     if poke.stats[3] >= opp.stats[3]:
-        return 0
+        return True
     else:
-        return 1
+        return False
 
 
 def choose_move(poke):
-    # move_num = int(input("move# :"))
+    move_num = int(input("move# :"))
     move = poke.moves[0]
     return move
 
 
-def fight(poke, opp):
-    turn = check_first(poke, opp)
-    for i in range(2):
-        if turn % 2 == 0:
-            move = choose_move(poke)
-            poke.attack(opp, move)
-            if opp.is_dead():
-                print(f"\n{opp.name} is dead")
-                break
-        else:
-            rng = random.randrange(len(opp.moves))
-            move = opp.moves[rng]
-            opp.attack(poke, move)
-            if poke.is_dead():
-                print(f"\n{poke.name} is dead")
-                break
-        turn += 1
+def fight(poke, opp, move):
+    if move_first(poke, opp):
+        poke.attack(opp, move)
+        opp.check_dead()
+        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
+        poke.check_dead()
+    else:
+        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
+        poke.check_dead()
+        poke.attack(opp, move)
+        opp.check_dead()
 
 
-class BattleView(arcade.View):
+class Battle(arcade.Window):
     def on_show(self):
         arcade.set_background_color(arcade.color.WHITE)
 
@@ -95,7 +96,9 @@ if __name__ == "__main__":
     # arcade.run()
     print(poke1)
     print(poke2)
-    while not poke1.is_dead() and not poke2.is_dead():
-        fight(poke1, poke2)
+    # while not poke1.check_dead() and not poke2.check_dead():
+    #     move = poke1.moves[0]
+    #     fight(poke1, poke2, move)
+    battle(a, b)
     print(poke1)
     print(poke2)
