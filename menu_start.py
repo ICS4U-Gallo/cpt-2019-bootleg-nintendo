@@ -13,19 +13,19 @@ pause = True
 def main_menu():
     # Draw Main menu
     arcade.set_background_color(arcade.color.WHITE)
-    arcade.draw_text("Pokeman",
+    arcade.draw_text("Pokemans",
                      SCREEN_WIDTH/2, 480, arcade.color.BLACK, 70,
                      align="center", anchor_x="center", anchor_y="center")
     if pause is True:
-        arcade.draw_text("Plae", SCREEN_WIDTH/2,
-                        SCREEN_HEIGHT/2+13, arcade.color.BLACK, 30,
-                        align="center", anchor_x="center", anchor_y="center")
+        arcade.draw_text("Play", SCREEN_WIDTH/2,
+                         SCREEN_HEIGHT/2+13, arcade.color.BLACK, 30,
+                         align="center", anchor_x="center", anchor_y="center")
 
     else:
         arcade.draw_text("lmao u touched me", SCREEN_WIDTH/2,
-                        SCREEN_HEIGHT/2+13, arcade.color.BLACK, 30,
-                        align="center", anchor_x="center", anchor_y="center")
-    
+                         SCREEN_HEIGHT/2+13, arcade.color.BLACK, 30,
+                         align="center", anchor_x="center", anchor_y="center")
+
     arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
                                        SCREEN_HEIGHT/2-25, 300, 75,
                                        arcade.color.BLACK, 5)
