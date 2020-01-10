@@ -8,12 +8,12 @@ class Player:
     def __init__(self):
         self.pokemon = []
 
-    def not_defeated(self):
-        print(self.pokemon)
+    def defeated(self):
         for poke in self.pokemon:
-            if poke.cur_stats[0] > 0:
-                return True
-        return False
+            if not poke.is_dead():
+                return False
+        else:
+            return True
 
 
 a = Player()
@@ -28,8 +28,23 @@ b.pokemon = [poke2, poke4]
 
 def battle(p1, p2):
     i = j = 0
-    while p1.not_defeated() and p2.not_defeated():
+    print("Hello World")
+    while True:
         action(p1, p2, i, j)
+        if p1.defeated():
+            print("p1 lost")
+            break
+        elif p2.defeated():
+            print("p1 won")
+            break
+        if p1.pokemon[i].is_dead():
+            i += 1
+            print(f"p1 switch to {p1.pokemon[i].name}")
+        elif p2.pokemon[j].is_dead():
+            j += 1
+            print(f"p2 switch to {p2.pokemon[j].name}")
+    else:
+        pass
 
 
 def action(p1, p2, i, j):
@@ -54,37 +69,73 @@ def move_first(poke, opp):
 
 def choose_move(poke):
     move_num = int(input("move# :"))
-    move = poke.moves[0]
+    move = poke.moves[move_num]
     return move
 
 
 def fight(poke, opp, move):
     if move_first(poke, opp):
         poke.attack(opp, move)
-        opp.check_dead()
+        if opp.is_dead():
+            print(f"{opp.name} is dead")
+            return
         opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
-        poke.check_dead()
     else:
         opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
-        poke.check_dead()
+        if poke.is_dead():
+            print(f"{poke.name} is dead")
+            return
         poke.attack(opp, move)
-        opp.check_dead()
 
 
 class Battle(arcade.Window):
-    def on_show(self):
+    """
+    Main application class.
+
+    NOTE: Go ahead and delete the methods you don't need.
+    If you do need a method, delete the 'pass' and replace it
+    with your own code. Don't leave 'pass' in this program.
+    """
+
+    def __init__(self, width, height, title):
+        super().__init__(width, height, title)
+
         arcade.set_background_color(arcade.color.WHITE)
 
+        # If you have sprite lists, you should create them here,
+        # and set them to None
+
+    def setup(self):
+        # Create your sprites and sprite lists here
+        pass
+
     def on_draw(self):
+        # This command should happen before we start drawing. It will clear
+        # the screen to the background color, and erase what we drew last frame.
         arcade.start_render()
         bg = arcade.load_texture("images/battle_background.jpg")
-        arcade.draw_texture_rectangle(settings.WIDTH // 2,
-                                      settings.HEIGHT // 2,
-                                      settings.WIDTH, settings.HEIGHT, bg
-                                      )
+        arcade.draw_texture_rectangle(settings.WIDTH/2, settings.HEIGHT/2,
+                                      settings.WIDTH, settings.HEIGHT, bg)
+        # Call draw() on all your sprite lists below
 
-    def on_key_press(self, key, modifiers):
+    def on_update(self, delta_time):
         pass
+
+    def on_key_press(self, key, key_modifiers):
+        pass
+
+    def on_key_release(self, key, key_modifiers):
+        pass
+
+    def on_mouse_motion(self, x, y, delta_x, delta_y):
+        pass
+
+    def on_mouse_press(self, x, y, button, key_modifiers):
+        pass
+
+    def on_mouse_release(self, x, y, button, key_modifiers):
+        pass
+
 
 
 if __name__ == "__main__":
@@ -93,12 +144,12 @@ if __name__ == "__main__":
     # my_view = BattleView()
     # my_view.director = FakeDirector(close_on_next_view=True)
     # window.show_view(my_view)
-    # arcade.run()
-    print(poke1)
-    print(poke2)
-    # while not poke1.check_dead() and not poke2.check_dead():
-    #     move = poke1.moves[0]
-    #     fight(poke1, poke2, move)
+    game = Battle(settings.WIDTH, settings.HEIGHT, "battle")
+    game.setup()
+    arcade.run()
+
+    print(*a.pokemon)
+    print(*b.pokemon)
     battle(a, b)
-    print(poke1)
-    print(poke2)
+    print(*a.pokemon)
+    print(*b.pokemon)

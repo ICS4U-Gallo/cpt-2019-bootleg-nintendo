@@ -82,9 +82,8 @@ class Pokemon(arcade.Sprite):
         opp.cur_stats[0] -= dmg
         print(f"{self.name} does {dmg} damage to {opp.name}.")
 
-    def check_dead(self):
+    def is_dead(self):
         if self.cur_stats[0] <= 0:
-            print(f"{self.name} is dead")
             return True
         else:
             return False
