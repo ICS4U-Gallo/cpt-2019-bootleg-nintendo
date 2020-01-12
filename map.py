@@ -8,7 +8,7 @@ sprite_size = int(sprite_scale * native_sprite)
 
 screen_width = sprite_size * 12
 screen_height = sprite_size * 10
-screen_title = "Sprite Move with Scrolling Screen Example"
+screen_title = "Hey, stop that"
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
@@ -23,6 +23,10 @@ class Room:
     def __init__(self):
         self.wall_list = None
         self.background_list = None
+
+
+class Player(arcade.Sprite):
+    pass
 
 
 def start_town():
@@ -46,14 +50,98 @@ def start_town():
                 wall.bottom = y
                 room.wall_list.append(wall)
 
-    house = arcade.Sprite("images/house.png", 3)
+    house = arcade.Sprite("images/house.png", 6)
     house.left = 900
     house.bottom = 700
     room.wall_list.append(house)
 
+    house2 = arcade.Sprite("images/house.png", 6)
+    house2.left = 100
+    house2.bottom = 700
+    room.wall_list.append(house2)
+
     room.background = arcade.load_texture("images/background.jpg")
 
     return room
+
+
+def start_room():
+    room = Room()
+
+    room.wall_list = arcade.SpriteList()
+
+    for x in (0, screen_width - sprite_size):
+        for y in range(0, screen_height, sprite_size):
+            wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+            wall.left = x
+            wall.bottom = y
+            room.wall_list.append(wall)
+
+    for y in (0, screen_height - sprite_size):
+        for x in range(0, screen_width, sprite_size):
+            if (x != sprite_size * 5 and x != sprite_size * 6) or y != 0:
+                wall = arcade.Sprite("images/boxCrate_double.png",
+                                     sprite_scale)
+                wall.left = x
+                wall.bottom = y
+                room.wall_list.append(wall)
+
+    room.background = arcade.load_texture("images/background.jpg")
+
+    return room
+
+
+def poke_lab():
+    room = Room()
+
+    room.wall_list = arcade.SpriteList()
+
+    for x in (0, screen_width - sprite_size):
+        for y in range(0, screen_height, sprite_size):
+            wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+            wall.left = x
+            wall.bottom = y
+            room.wall_list.append(wall)
+
+    for y in (0, screen_height - sprite_size):
+        for x in range(0, screen_width, sprite_size):
+            if (x != sprite_size * 5 and x != sprite_size * 6) or y != 0:
+                wall = arcade.Sprite("images/boxCrate_double.png",
+                                     sprite_scale)
+                wall.left = x
+                wall.bottom = y
+                room.wall_list.append(wall)
+
+    room.background = arcade.load_texture("images/background.jpg")
+
+    return room
+
+
+def wild_area():
+    room = Room()
+
+    room.wall_list = arcade.SpriteList()
+
+    for x in (0, (screen_width * 2) - sprite_size):
+        for y in range(0, screen_height, sprite_size):
+            if (y != sprite_size * 4 and y != sprite_size * 5) or x == 0:
+                wall = arcade.Sprite("images/boxCrate_double.png",
+                                     sprite_scale)
+                wall.left = x
+                wall.bottom = y
+                room.wall_list.append(wall)
+
+    for y in (0, (screen_height * 2) - sprite_size):
+        for x in range(0, screen_width, sprite_size):
+            if (y == 0 and (x != sprite_size * 2 and
+                            x != sprite_size * 3)) or (y != 0 and
+                                                       (x != sprite_size * 5 and
+                                                        x != sprite_size * 6)):
+                wall = arcade.Sprite("images/boxCrate_double.png",
+                                     sprite_scale)
+                wall.left = x
+                wall.bottom = y
+                room.wall_list.append(wall)
 
 
 def other_town():
@@ -73,6 +161,68 @@ def other_town():
         for y in range(sprite_size, (screen_height * 2) - sprite_size, sprite_size):
             if y != sprite_size * 4 and y != sprite_size * 5:
                 wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+                wall.left = x
+                wall.bottom = y
+                room.wall_list.append(wall)
+
+    house = arcade.Sprite("images/house.png", 6)
+    house.left = 900
+    house.bottom = 700
+    room.wall_list.append(house)
+
+    house2 = arcade.Sprite("images/house.png", 6)
+    house2.left = 100
+    house2.bottom = 700
+    room.wall_list.append(house2)
+
+    room.background = arcade.load_texture("images/background.jpg")
+
+    return room
+
+
+def gym():
+    room = Room()
+
+    room.wall_list = arcade.SpriteList()
+
+    for x in (0, (screen_width * 2) - sprite_size):
+        for y in range(0, screen_height, sprite_size):
+            wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+            wall.left = x
+            wall.bottom = y
+            room.wall_list.append(wall)
+
+    for y in (0, (screen_height * 2) - sprite_size):
+        for x in range(0, screen_width, sprite_size):
+            if (x != sprite_size * 5 and x != sprite_size * 6) or y != 0:
+                wall = arcade.Sprite("images/boxCrate_double.png",
+                                     sprite_scale)
+                wall.left = x
+                wall.bottom = y
+                room.wall_list.append(wall)
+
+    room.background = arcade.load_texture("images/background.jpg")
+
+    return room
+
+
+def heal_center():
+    room = Room()
+
+    room.wall_list = arcade.SpriteList()
+
+    for x in (0, screen_width - sprite_size):
+        for y in range(0, screen_height, sprite_size):
+            wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+            wall.left = x
+            wall.bottom = y
+            room.wall_list.append(wall)
+
+    for y in (0, screen_height - sprite_size):
+        for x in range(0, screen_width, sprite_size):
+            if (x != sprite_size * 5 and x != sprite_size * 6) or y != 0:
+                wall = arcade.Sprite("images/boxCrate_double.png",
+                                     sprite_scale)
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
@@ -141,6 +291,9 @@ class MyGame(arcade.Window):
         room = start_town()
         self.rooms.append(room)
 
+        room = start_room()
+        self.rooms.append(room)
+
         room = other_town()
         self.rooms.append(room)
 
@@ -204,10 +357,8 @@ class MyGame(arcade.Window):
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
-        
-
         # --- Manage Scrolling ---
-
+        print(self.player_sprite.center_x, self.player_sprite.center_y)
         # Keep track of if we changed the boundary. We don't want to call the
         # set_viewport command if we didn't change the view port.
         changed = False
@@ -250,16 +401,22 @@ class MyGame(arcade.Window):
                                 self.view_bottom,
                                 screen_height + self.view_bottom - 1)
         
-        if self.player_sprite.center_x > 200000000 and self.current_room == 0:
+        if self.player_sprite.center_x in range(1000, 1080) and self.player_sprite.center_y in range(670, 676) and self.current_room == 0:
             self.current_room = 1
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
                                                              self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = 0
-        elif self.player_sprite.center_x < 0 and self.current_room == 1:
+            self.player_sprite.center_x = 383.6
+            self.player_sprite.center_y = 40
+        elif self.player_sprite.center_y < 35 and self.current_room == 1:
             self.current_room = 0
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
                                                              self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = screen_width
+            self.player_sprite.center_x = 1040
+            self.player_sprite.center_y = 656
+
+        # 1000-1080, 674.4
+        # 383.6, 40
+        # if player in room then make the viewport 0 and set the screen
 
 
 def main():
