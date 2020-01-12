@@ -5,7 +5,7 @@ Program description. Replace with description of your program. Give a descriptio
 - Eric J
 - Ryan C
 - Henson C
-- Terry C
+- Terry K
 - Aidan T
 
 
