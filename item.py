@@ -1,4 +1,5 @@
 import pokemon
+import main.Player
 
 
 class Item:
@@ -8,11 +9,11 @@ class Item:
         self.amount = amount
 
     def use(pokemon):
-        if self.name = "Essential oils":
+        if self.name == "Essential oils":
             pokemon.cur_hp += 20
-        if self.name = "Steroids":
+        if self.name == "Steroids":
             pokemon.atk += 20
-        if self.name = "Leg Day":
+        if self.name == "Leg Day":
             pokemon.spd += 20
 
     @classmethod
@@ -35,4 +36,5 @@ class Item:
 
 
 if __name__ == "__main__":
-    pass
+    p = main.Player()
+    p.bag.append(item)

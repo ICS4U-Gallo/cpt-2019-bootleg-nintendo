@@ -97,6 +97,8 @@ class MyGame(arcade.Window):
                 print("save")
             elif self.select_x == 1 and self.select_y == 0:  # exit
                 print("exit")
+        elif key == arcade.key.K:
+            print("exit")
 
 
 def main():
