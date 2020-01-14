@@ -7,32 +7,9 @@ sprite_size = int(sprite_scale * native_sprite)
 SCREEN_WIDTH = 768
 SCREEN_HEIGHT = 640
 
-<<<<<<< HEAD
-pause = True
+start = False
 
-
-def main_menu():
-    # Draw Main menu
-    arcade.set_background_color(arcade.color.WHITE)
-    arcade.draw_text("Pokemans",
-                     SCREEN_WIDTH/2, 480, arcade.color.BLACK, 70,
-                     align="center", anchor_x="center", anchor_y="center")
-    if pause is True:
-        arcade.draw_text("Play", SCREEN_WIDTH/2,
-                         SCREEN_HEIGHT/2+13, arcade.color.BLACK, 30,
-                         align="center", anchor_x="center", anchor_y="center")
-
-    else:
-        arcade.draw_text("lmao u touched me", SCREEN_WIDTH/2,
-                         SCREEN_HEIGHT/2+13, arcade.color.BLACK, 30,
-                         align="center", anchor_x="center", anchor_y="center")
-
-    arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
-                                       SCREEN_HEIGHT/2-25, 300, 75,
-                                       arcade.color.BLACK, 5)
-=======
 game = False
->>>>>>> a848fc3a11bf437685c69c48118d02109f9e3fbd
 
 
 class MyGame(arcade.Window):
@@ -42,53 +19,79 @@ class MyGame(arcade.Window):
         arcade.set_background_color([0, 0, 0])
         self.mouse_x = 0
         self.mouse_y = 0
+        self.mouse_click = False
 
     def on_mouse_press(self, x, y, button, modifiers):
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            self.mouse_click = True
 
-        global game
-
-        if button == (arcade.MOUSE_BUTTON_LEFT and
-                      SCREEN_WIDTH/2+150 > x > SCREEN_WIDTH/2-150 and
-                      SCREEN_HEIGHT/2+100 > y > SCREEN_HEIGHT/2+25
-                      and game is False):
-            game = not game
+    def on_mouse_release(self, x, y, button, modifiers):
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            self.mouse_click = False
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.mouse_x = x
         self.mouse_y = y
 
+    def on_update(self, delta_time):
+        global game, start
+
+        if start is False:
+            if self.mouse_click is True:
+                start = True
+        else:
+            print(self.mouse_click)
+            if (SCREEN_WIDTH/2+150 > self.mouse_x > SCREEN_WIDTH/2-150 and
+                    SCREEN_HEIGHT/2+100 > self.mouse_y > SCREEN_HEIGHT/2+25 and
+                    self.mouse_click is True and game is False):
+                game = True
+
     def on_draw(self):
         arcade.start_render()
         # Draw Main menu
         arcade.set_background_color(arcade.color.WHITE)
-        arcade.draw_text("PokeMan",
-                        SCREEN_WIDTH/2, 480, arcade.color.BLACK, 70,
-                        align="center", anchor_x="center", anchor_y="center")
-        
-        if game is False:
-            arcade.draw_text("Stawt New Gaym", SCREEN_WIDTH/2,
-                            SCREEN_HEIGHT/2+63, arcade.color.BLACK, 30,
-                            align="center", anchor_x="center", anchor_y="center")
+        arcade.draw_text("Pokemon", SCREEN_WIDTH/2, 480, 
+                         arcade.color.BLACK, 70,
+                         align="center", anchor_x="center", anchor_y="center")
 
-            if (SCREEN_WIDTH/2+150 > self.mouse_x > SCREEN_WIDTH/2-150 and
-                SCREEN_HEIGHT/2+100 > self.mouse_y > SCREEN_HEIGHT/2+25 and
-                    game is False):
-                arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150-4,
-                                        SCREEN_HEIGHT/2+25-4, 300+8, 75+8,
-                                        arcade.color.RED, 5)
-            else:
-                arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
-                                        SCREEN_HEIGHT/2+25, 300, 75,
-                                        arcade.color.BLACK, 5)
-                    
+        if start is False:
+            pass
         else:
-            arcade.draw_text("lmao u touched me", SCREEN_WIDTH/2,
-                            SCREEN_HEIGHT/2+63, arcade.color.BLACK, 30,
-                            align="center", anchor_x="center", anchor_y="center")
+            if game is False:
+                arcade.draw_text("Start New Game", SCREEN_WIDTH/2,
+                                 SCREEN_HEIGHT/2+63, arcade.color.BLACK, 30,
+                                 align="center", anchor_x="center", 
+                                 anchor_y="center")
+
+                if (SCREEN_WIDTH/2+150 > self.mouse_x > SCREEN_WIDTH/2-150 and
+                    SCREEN_HEIGHT/2+100 > self.mouse_y > SCREEN_HEIGHT/2+25 and
+                        game is False and self.mouse_click is True):
+                    arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150-4,
+                                                       SCREEN_HEIGHT/2+25-4,
+                                                       300+8, 75+8,
+                                                       arcade.color.RED, 8)
+                else:
+                    arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
+                                                       SCREEN_HEIGHT/2+25, 300,
+                                                       75, arcade.color.BLACK,
+                                                       5)
+
+                arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
+                                                   SCREEN_HEIGHT/2-100, 300, 
+                                                   75, arcade.color.BLACK, 5)
+
+                arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
+                                                   SCREEN_HEIGHT/2-200, 300,
+                                                   75, arcade.color.BLACK, 5)
+
+            else:
+                arcade.draw_text("Game started wow", SCREEN_WIDTH/2,
+                                SCREEN_HEIGHT/2+63, arcade.color.BLACK, 30,
+                                align="center", anchor_x="center", anchor_y="center")
 
 
 def main():
-    MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, 'Ponkymohn')
+    MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, 'Bootleg Pokemon')
     arcade.run()
 
 
