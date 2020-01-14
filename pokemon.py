@@ -35,7 +35,7 @@ class Move:
 
     @classmethod
     def Leer(cls):
-        return cls("look suggestively", 0, "normal", 40, 2, 2, -10)
+        return cls("Leer", 0, "normal", 40, 2, 2, -10)
 
     @classmethod
     def Growl(cls):
@@ -51,15 +51,20 @@ class Pokemon(arcade.Sprite):
         self.lvl = lvl
         self.cur_stats = [hp, atk, def_]
         self.stats = [hp, atk, def_, spd]
-        self.battle_c = 0
+        self.killcount = 0
+
+    def addlevel(self, lvl):
+        for i in range(lvl):
+            self.levelup()
 
     def levelup(self):
         self.lvl += 1
-        self.cur_stats[0] += self.stats[0]*1.5
-        for i in range(4):
+        for i in range(3):
             self.stats[i] = round(self.stats[i] * 51/50)
-        if self.cur_stats[0] > self.stats[0]:
-            self.cur_stats[0] = self.stats[0]
+        for i in range(3):
+            self.cur_stats[i] += self.stats[i]*1.5
+            if self.cur_stats[i] > self.stats[i]:
+                self.cur_stats[i] = self.stats[i]
 
     def type_modif(self, opp, move):
         if ((move.type == "fire" and opp.type == "grass") or
@@ -88,12 +93,17 @@ class Pokemon(arcade.Sprite):
         else:
             return False
 
-    def update(self):
-        if self.battle_c % 10 == 0:
-            self.levelup()
+    def gainkill(self):
+        self.killcount += 1
+        if self.killcount == 5:
+            self.killcount = 0
+            self.levelup
 
+    def update(self):
+        pass
+        
     def __str__(self):
-        return f"{self.name, self.type, *self.cur_stats}"
+        return f"{self.name, self.type, self.lvl, *self.cur_stats}"
 
     @classmethod
     def Charmander(cls):

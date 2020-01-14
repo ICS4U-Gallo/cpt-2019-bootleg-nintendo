@@ -1,7 +1,8 @@
-import arcade
 import settings
 import pokemon
 import random
+from arcade.gui import *
+import os
 
 
 class Player:
@@ -14,16 +15,6 @@ class Player:
                 return False
         else:
             return True
-
-
-a = Player()
-b = Player()
-poke1 = pokemon.Pokemon.Magikarp()
-poke2 = pokemon.Pokemon.IceCream()
-poke3 = pokemon.Pokemon.Charmander()
-poke4 = pokemon.Pokemon.Bulbasaur()
-a.pokemon = [poke1, poke3]
-b.pokemon = [poke2, poke4]
 
 
 def battle(p1, p2):
@@ -78,6 +69,7 @@ def fight(poke, opp, move):
         poke.attack(opp, move)
         if opp.is_dead():
             print(f"{opp.name} is dead")
+            poke.gainkill()
             return
         opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
     else:
@@ -86,62 +78,117 @@ def fight(poke, opp, move):
             print(f"{poke.name} is dead")
             return
         poke.attack(opp, move)
+        if opp.is_dead():
+            print(f"{opp.name} is dead")
+            poke.gainkill()
+
+
+class actionButton(TextButton):
+    def __init__(self, game, x=0, y=0, width=100, height=40, text="Play", theme=None):
+        super().__init__(x, y, width, height, text, theme=theme)
+        self.game = game
+
+    def on_press(self):
+        self.pressed = True
+
+    def on_release(self):
+        if self.pressed:
+            self.game.action = self.text
+            self.pressed = False
+
+
+class moveButton(TextButton):
+    def __init__(self, game, x=0, y=0, width=100, height=40, move=None, theme=None):
+        super().__init__(x, y, width, height, move.name, theme=theme)
+        self.game = game
+
+    def on_press(self):
+        self.pressed = True
+
+    def on_release(self):
+        if self.pressed:
+            self.game.move = move
+            self.pressed = False
 
 
 class Battle(arcade.Window):
-    """
-    Main application class.
+    def __init__(self, w, h, name, p1, p2):
+        super().__init__(w, h, name)
 
-    NOTE: Go ahead and delete the methods you don't need.
-    If you do need a method, delete the 'pass' and replace it
-    with your own code. Don't leave 'pass' in this program.
-    """
+        # Set the working directory (where we expect to find files) to the same
+        # directory this .py file is in. You can leave this out of your own
+        # code, but it is needed to easily run the examples using "python -m"
+        # as mentioned at the top of this program.
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        os.chdir(file_path)
 
-    def __init__(self, width, height, title):
-        super().__init__(width, height, title)
-        self.background = None
         arcade.set_background_color(arcade.color.WHITE)
+        self.player = p1
+        self.enemy = p2
+        self.i = self.j = 0
+        self.action = None
+        self.move = None
+        self.theme = None
+        self.button_list = None
 
-        # If you have sprite lists, you should create them here,
-        # and set them to None
+    def set_button_textures(self):
+        normal = ":resources:gui_themes/Fantasy/Buttons/Normal.png"
+        hover = ":resources:gui_themes/Fantasy/Buttons/Hover.png"
+        clicked = ":resources:gui_themes/Fantasy/Buttons/Clicked.png"
+        locked = ":resources:gui_themes/Fantasy/Buttons/Locked.png"
+        self.theme.add_button_textures(normal, hover, clicked, locked)
+
+    def setup_theme(self):
+        self.theme = Theme()
+        self.theme.set_font(24, arcade.color.WHITE)
+        self.set_button_textures()
+
+    def fight_buttons(self):
+        self.button_list = []
+        # (300, 115), (500, 115), (300, 40), (500, 40)
+        self.button_list.append(actionButton(self, 300, 115, 200, 70, "Fight", self.theme))
+        self.button_list.append(actionButton(self, 500, 115, 200, 70, "Switch", self.theme))
+        self.button_list.append(actionButton(self, 300, 40, 200, 70, "Bag", self.theme))
+
+    def move_buttons(self):
+        self.button_list = []
+        poke = self.player.pokemon[self.i]
+        self.button_list.append(moveButton(self, 300, 115, 200, 70, poke.moves[0], self.theme))
+        self.button_list.append(moveButton(self, 500, 115, 200, 70, poke.moves[1], self.theme))
+        self.button_list.append(moveButton(self, 300, 40, 200, 70, poke.moves[2], self.theme))
 
     def setup(self):
-        # Create your sprites and sprite lists here
-        self.poke_list = arcade.SpriteList()
-        self.opp_list = arcade.SpriteList()
-
-        self.poke_sprite = arcade.Sprite("images/poke_images")
-        self.poke_sprite.center_x = 25
-        self.poke_sprite.center_y = 25
-        self.poke_list.append(self.poke_sprite)
+        self.setup_theme()
+        self.fight_buttons()
 
     def on_draw(self):
-        # This command should happen before we start drawing. It will clear
-        # the screen to the background color, and erase what we drew last frame
         arcade.start_render()
         bg = arcade.load_texture("images/battle_background.jpg")
-        arcade.draw_texture_rectangle(settings.WIDTH/2, settings.HEIGHT/2,
-                                      settings.WIDTH, settings.HEIGHT, bg)
-        # Call draw() on all your sprite lists below
+        arcade.draw_texture_rectangle(settings.WIDTH/2, (settings.HEIGHT+150)/2,
+                                      settings.WIDTH, settings.HEIGHT-150, bg)
+        for button in self.button_list:
+            button.draw()
 
-    def on_update(self, delta_time):
-        pass
-
-    def on_key_press(self, key, key_modifiers):
-        pass
-
-    def on_key_release(self, key, key_modifiers):
-        pass
-
-    def on_mouse_motion(self, x, y, delta_x, delta_y):
-        pass
-
-    def on_mouse_press(self, x, y, button, key_modifiers):
-        pass
-
-    def on_mouse_release(self, x, y, button, key_modifiers):
-        pass
-
+    def update(self, delta_time):
+        if self.action == "Fight":
+            self.move_buttons()
+            if self.move != None:
+                fight(self.player.pokemon[self.i], self.enemy.pokemon[self.j], self.move)
+                self.action = None
+                self.move = None
+        
+        if self.player.defeated():
+            print("p1 lost")
+            return
+        elif self.enemy.defeated():
+            print("p1 won")
+            return
+        if self.player.pokemon[self.i].is_dead():
+            self.i += 1
+            print(f"p1 switch to {self.player.pokemon[self.i].name}")
+        elif self.enemy.pokemon[self.j].is_dead():
+            self.j += 1
+            print(f"p2 switch to {self.enemy.pokemon[self.j].name}")
 
 if __name__ == "__main__":
     # from utils import FakeDirector
@@ -149,12 +196,22 @@ if __name__ == "__main__":
     # my_view = BattleView()
     # my_view.director = FakeDirector(close_on_next_view=True)
     # window.show_view(my_view)
-    game = Battle(settings.WIDTH, settings.HEIGHT, "battle")
+    a = Player()
+    b = Player()
+    poke1 = pokemon.Pokemon.Magikarp()
+    poke1.addlevel(4)
+    poke2 = pokemon.Pokemon.IceCream()
+    poke3 = pokemon.Pokemon.Charmander()
+    poke4 = pokemon.Pokemon.Bulbasaur()
+    a.pokemon = [poke1, poke3]
+    b.pokemon = [poke2, poke4]
+
+    game = Battle(settings.WIDTH, settings.HEIGHT, "battle", a, b)
     game.setup()
     arcade.run()
 
-    print(*a.pokemon)
-    print(*b.pokemon)
-    battle(a, b)
-    print(*a.pokemon)
-    print(*b.pokemon)
+    # print(*a.pokemon)
+    # print(*b.pokemon)
+    # battle(a, b)
+    # print(*a.pokemon)
+    # print(*b.pokemon)
