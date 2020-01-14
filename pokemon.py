@@ -98,21 +98,21 @@ class Pokemon(arcade.Sprite):
     @classmethod
     def Charmander(cls):
         poke = cls(1, "Charmander", "fire", 1, 39, 52, 43, 65)
-        poke.texture = arcade.load_texture("images/charmander.png")
+        poke.texture = arcade.load_texture("images/poke_images/charmander.png")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Squirtle(cls):
         poke = cls(4, "Squirtle", "water", 1, 44, 48, 65, 43)
-        poke.texture = arcade.load_texture("images/squirtle.jpg")
+        poke.texture = arcade.load_texture("images/poke_images/squirtle.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Bulbasaur(cls):
         poke = cls(7, "Bulbasaur", "grass", 1, 45, 49, 49, 45)
-        poke.texture = arcade.load_texture("images/bulbasaur.png")
+        poke.texture = arcade.load_texture("images/poke_images/bulbasaur.png")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
