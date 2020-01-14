@@ -35,7 +35,7 @@ class Move:
 
     @classmethod
     def Leer(cls):
-        return cls("look suggestively", 0, "normal", 40, 2, 2, -10)
+        return cls("Leer", 0, "normal", 40, 2, 2, -10)
 
     @classmethod
     def Growl(cls):
@@ -95,7 +95,7 @@ class Pokemon(arcade.Sprite):
 
     def gainkill(self):
         self.killcount += 1
-        if self.killcount == 10:
+        if self.killcount == 5:
             self.killcount = 0
             self.levelup
 
