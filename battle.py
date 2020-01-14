@@ -19,6 +19,7 @@ class Player:
 a = Player()
 b = Player()
 poke1 = pokemon.Pokemon.Magikarp()
+poke1.addlevel(4)
 poke2 = pokemon.Pokemon.IceCream()
 poke3 = pokemon.Pokemon.Charmander()
 poke4 = pokemon.Pokemon.Bulbasaur()
@@ -78,6 +79,7 @@ def fight(poke, opp, move):
         poke.attack(opp, move)
         if opp.is_dead():
             print(f"{opp.name} is dead")
+            poke.gainkill()
             return
         opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
     else:
@@ -86,6 +88,9 @@ def fight(poke, opp, move):
             print(f"{poke.name} is dead")
             return
         poke.attack(opp, move)
+        if opp.is_dead():
+            print(f"{opp.name} is dead")
+            poke.gainkill()
 
 
 class Battle(arcade.Window):
@@ -144,9 +149,9 @@ if __name__ == "__main__":
     # my_view = BattleView()
     # my_view.director = FakeDirector(close_on_next_view=True)
     # window.show_view(my_view)
-    game = Battle(settings.WIDTH, settings.HEIGHT, "battle")
-    game.setup()
-    arcade.run()
+    # game = Battle(settings.WIDTH, settings.HEIGHT, "battle")
+    # game.setup()
+    # arcade.run()
 
     print(*a.pokemon)
     print(*b.pokemon)
