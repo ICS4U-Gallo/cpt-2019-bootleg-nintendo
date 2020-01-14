@@ -19,19 +19,19 @@ class Item:
     @classmethod
     def potion(cls):
         item = cls("Essential oils", "Heal hp by 20", 1)
-        item.texture = arcade.load_texture("images/cocaine.jpg")
+        item.texture = arcade.load_texture("images/buff_images/cocaine.jpg")
         return item
 
     @classmethod
     def steroids(cls):
         item = cls("Steroids", "Increase attack by 20", 1)
-        item.texture = arcade.load_texture("images/steroid.jpg")
+        item.texture = arcade.load_texture("images/buff_images/steroid.jpg")
         return item
 
     @classmethod
     def leg_day(cls):
         item = cls("Leg Day", "Increase speed by 20", 1)
-        item.texture = arcade.load_texture("images/legs.jpg")
+        item.texture = arcade.load_texture("images/buff_images/legs.jpg")
         return item
 
 
