@@ -112,7 +112,11 @@ class Pokemon(arcade.Sprite):
     @classmethod
     def Bulbasaur(cls):
         poke = cls(7, "Bulbasaur", "grass", 1, 45, 49, 49, 45)
+<<<<<<< HEAD
         poke.texture = arcade.load_texture("images/poke_images/bulbasaur.png")
+=======
+        poke.texture = arcade.load_texture("images/bulbasaur.jpg")
+>>>>>>> 060e5d2af928e60bd7c8826b8b859d73cad12589
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
