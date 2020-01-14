@@ -99,7 +99,7 @@ class Battle(arcade.Window):
 
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
-
+        self.background = None
         arcade.set_background_color(arcade.color.WHITE)
 
         # If you have sprite lists, you should create them here,
@@ -107,11 +107,17 @@ class Battle(arcade.Window):
 
     def setup(self):
         # Create your sprites and sprite lists here
-        pass
+        self.poke_list = arcade.SpriteList()
+        self.opp_list = arcade.SpriteList()
+
+        self.poke_sprite = arcade.Sprite("images/poke_images")
+        self.poke_sprite.center_x = 25
+        self.poke_sprite.center_y = 25
+        self.poke_list.append(self.poke_sprite)
 
     def on_draw(self):
         # This command should happen before we start drawing. It will clear
-        # the screen to the background color, and erase what we drew last frame.
+        # the screen to the background color, and erase what we drew last frame
         arcade.start_render()
         bg = arcade.load_texture("images/battle_background.jpg")
         arcade.draw_texture_rectangle(settings.WIDTH/2, settings.HEIGHT/2,
@@ -135,7 +141,6 @@ class Battle(arcade.Window):
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         pass
-
 
 
 if __name__ == "__main__":
