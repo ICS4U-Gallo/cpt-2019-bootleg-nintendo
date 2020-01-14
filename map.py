@@ -186,14 +186,14 @@ def gym():
     room.wall_list = arcade.SpriteList()
 
     for x in (0, (screen_width * 2) - sprite_size):
-        for y in range(0, screen_height, sprite_size):
+        for y in range(0, (screen_height * 2), sprite_size):
             wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
             wall.left = x
             wall.bottom = y
             room.wall_list.append(wall)
 
     for y in (0, (screen_height * 2) - sprite_size):
-        for x in range(0, screen_width, sprite_size):
+        for x in range(0, (screen_width * 2), sprite_size):
             if (x != sprite_size * 5 and x != sprite_size * 6) or y != 0:
                 wall = arcade.Sprite("images/boxCrate_double.png",
                                      sprite_scale)
@@ -447,7 +447,30 @@ class MyGame(arcade.Window):
                                                              self.rooms[self.current_room].wall_list)
             self.player_sprite.center_x = 1040
             self.player_sprite.center_y = 656
-
+        elif ceil(self.player_sprite.center_x) in range(1100, 1180) and ceil(self.player_sprite.center_y) in range(670, 676) and self.current_room == 4:
+            self.current_room = 5
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 383.6
+            self.player_sprite.center_y = 40
+        elif ceil(self.player_sprite.center_x) in range(180, 270) and ceil(self.player_sprite.center_y) in range(670, 676) and self.current_room == 4:
+            self.current_room = 6
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 383.6
+            self.player_sprite.center_y = 40
+        elif self.player_sprite.center_y < 35 and self.current_room == 5:
+            self.current_room = 0
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 1040
+            self.player_sprite.center_y = 656
+        elif self.player_sprite.center_y < 35 and self.current_room == 6:
+            self.current_room = 0
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 1040
+            self.player_sprite.center_y = 656
         # 1000-1080, 674.4
         # 383.6, 40
         # if player in room then make the viewport 0 and set the screen
