@@ -190,7 +190,6 @@ class Battle(arcade.Window):
             self.j += 1
             print(f"p2 switch to {self.enemy.pokemon[self.j].name}")
 
-
 if __name__ == "__main__":
     # from utils import FakeDirector
     # window = arcade.Window(settings.WIDTH, settings.HEIGHT)
