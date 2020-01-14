@@ -7,9 +7,11 @@ sprite_size = int(sprite_scale * native_sprite)
 SCREEN_WIDTH = 768
 SCREEN_HEIGHT = 640
 
-start = False
+start = False  # just for start menu aesthetic
 
-game = False
+load = True  # existing game
+
+game = False  # variable to indicate if game started
 
 
 class MyGame(arcade.Window):
@@ -40,7 +42,6 @@ class MyGame(arcade.Window):
             if self.mouse_click is True:
                 start = True
         else:
-            print(self.mouse_click)
             if (SCREEN_WIDTH/2+150 > self.mouse_x > SCREEN_WIDTH/2-150 and
                     SCREEN_HEIGHT/2+100 > self.mouse_y > SCREEN_HEIGHT/2+25 and
                     self.mouse_click is True and game is False):
@@ -58,32 +59,57 @@ class MyGame(arcade.Window):
             pass
         else:
             if game is False:
+                # start button v
                 arcade.draw_text("Start New Game", SCREEN_WIDTH/2,
                                  SCREEN_HEIGHT/2+63, arcade.color.BLACK, 30,
-                                 align="center", anchor_x="center", 
+                                 align="center", anchor_x="center",
                                  anchor_y="center")
 
                 if (SCREEN_WIDTH/2+150 > self.mouse_x > SCREEN_WIDTH/2-150 and
-                    SCREEN_HEIGHT/2+100 > self.mouse_y > SCREEN_HEIGHT/2+25 and
-                        game is False and self.mouse_click is True):
+                    SCREEN_HEIGHT/2+100 > self.mouse_y > SCREEN_HEIGHT/2+25):
                     arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150-4,
                                                        SCREEN_HEIGHT/2+25-4,
                                                        300+8, 75+8,
-                                                       arcade.color.RED, 8)
+                                                       arcade.color.RED, 7)
                 else:
                     arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
                                                        SCREEN_HEIGHT/2+25, 300,
                                                        75, arcade.color.BLACK,
                                                        5)
+                
+                # start button ^ load button v
+                if load is False:
+                    arcade.draw_text("Load Game", SCREEN_WIDTH/2,
+                                    SCREEN_HEIGHT/2+63-125, arcade.color.GRAY, 30,
+                                    align="center", anchor_x="center",
+                                    anchor_y="center")
 
-                arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
+                    arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
                                                    SCREEN_HEIGHT/2-100, 300, 
-                                                   75, arcade.color.BLACK, 5)
+                                                   75, arcade.color.GRAY, 5)
 
-                arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
-                                                   SCREEN_HEIGHT/2-200, 300,
-                                                   75, arcade.color.BLACK, 5)
+                else:
+                    arcade.draw_text("Load Game", SCREEN_WIDTH/2,
+                                    SCREEN_HEIGHT/2+63-125, arcade.color.BLACK, 30,
+                                    align="center", anchor_x="center",
+                                    anchor_y="center")
 
+                    if (SCREEN_WIDTH/2+150 > self.mouse_x > SCREEN_WIDTH/2-150 and
+                    SCREEN_HEIGHT/2-25 > self.mouse_y > SCREEN_HEIGHT/2-100):
+                        arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150-4,
+                                                    SCREEN_HEIGHT/2-100-4, 300+8, 
+                                                    75+8, arcade.color.RED, 7)
+
+                    else:
+                        arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-150,
+                                                    SCREEN_HEIGHT/2-100, 300, 
+                                                    75, arcade.color.BLACK, 5)
+                    # load button ^ delete button v
+
+                arcade.draw_xywh_rectangle_outline(SCREEN_WIDTH/2-75/2,
+                                                   SCREEN_HEIGHT/2-225, 75,
+                                                   75, arcade.color.BLACK, 5)
+            # end of menu code
             else:
                 arcade.draw_text("Game started wow", SCREEN_WIDTH/2,
                                 SCREEN_HEIGHT/2+63, arcade.color.BLACK, 30,
