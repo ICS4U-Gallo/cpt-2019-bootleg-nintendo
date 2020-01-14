@@ -112,46 +112,43 @@ class Pokemon(arcade.Sprite):
     @classmethod
     def Bulbasaur(cls):
         poke = cls(7, "Bulbasaur", "grass", 1, 45, 49, 49, 45)
-<<<<<<< HEAD
         poke.texture = arcade.load_texture("images/poke_images/bulbasaur.png")
-=======
-        poke.texture = arcade.load_texture("images/bulbasaur.jpg")
->>>>>>> 060e5d2af928e60bd7c8826b8b859d73cad12589
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def IceCream(cls):
         poke = cls(10, "Ice cream", "water", 1, 36, 50, 50, 44)
-        poke.texture = arcade.load_texture("images/literal_ice_cream.jpg")
+        poke.texture = arcade.load_texture("images/poke_images/"
+                                           "literal_ice_cream.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Garbage(cls):
         poke = cls(13, "Literal Garbage", "grass", 1, 50, 50, 62, 67)
-        poke.texture = arcade.load_texture("images/garbage.jpg")
+        poke.texture = arcade.load_texture("images/poke_images/garbage.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def torkoal(cls):
         poke = cls(14, "China's air", "fire", 1, 70, 85, 140, 20)
-        poke.texture = arcade.load_texture("images/torkoal.jpg")
+        poke.texture = arcade.load_texture("images/poke_images/torkoal.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Klefki(cls):
         poke = cls(15, "Your missing keys", "normal", 1, 57, 80, 91, 75)
-        poke.texture = arcade.load_texture("images/key.jpg")
+        poke.texture = arcade.load_texture("images/poke_images/key.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
     @classmethod
     def Magikarp(cls):
         poke = cls(16, "Dead fish", "water", 1, 100, 100, 100, 100)
-        poke.texture = arcade.load_texture("images/magikarp.jpg")
+        poke.texture = arcade.load_texture("images/poke_images/magikarp.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
