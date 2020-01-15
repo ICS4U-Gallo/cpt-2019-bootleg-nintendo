@@ -2,11 +2,6 @@ import images
 import arcade
 
 types = ["fire", "water", "grass", "normal"]
-poke_list = [Pokemon.Charmander(), Pokemon.Squirtle(),
-             Pokemon.Bulbasaur(), Pokemon.IceCream(),
-             Pokemon.Garbage(), Pokemon.torkoal(),
-             Pokemon.Klefki(), Pokemon.Magikarp()]
-
 
 class Move:
     def __init__(self, name, pwr, type_, pp, *status):
@@ -32,6 +27,8 @@ class Move:
             poke.cur_stats[self.status[1]] += self.status[2]
         elif self.status[0] == 2:
             opp.cur_stats[self.status[1]] += self.status[2]
+        if poke.cur_stats[self.status[1]] <= 0:
+            poke.cur_stats[self.status[1]] = 1
 
     @classmethod
     def Tackle(cls):
@@ -167,6 +164,11 @@ class Pokemon(arcade.Sprite):
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         return poke
 
+
+poke_list = [Pokemon.Charmander(), Pokemon.Squirtle(),
+             Pokemon.Bulbasaur(), Pokemon.IceCream(),
+             Pokemon.Garbage(), Pokemon.torkoal(),
+             Pokemon.Klefki(), Pokemon.Magikarp()]
 
 def main():
     pass
