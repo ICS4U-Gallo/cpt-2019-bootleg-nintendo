@@ -4,6 +4,7 @@ import os
 from math import ceil
 
 sprite_scale = 0.5
+other_scale = 0.4
 native_sprite = 128
 sprite_size = int(sprite_scale * native_sprite)
 
@@ -17,6 +18,11 @@ view_boundary_yaxis = 294
 view_boundary_xaxis = 375
 
 MOVEMENT_SPEED = 10
+big_room_list = [0, 3, 4, 5]
+small_room_list = [1, 2, 6]
+
+tex_right = 1
+tex_left = 0
 
 
 class Room:
@@ -24,10 +30,40 @@ class Room:
     def __init__(self):
         self.wall_list = None
         self.background_list = None
+        self.grass_list = None
 
 
 class Player(arcade.Sprite):
-    pass
+    def __init__(self):
+        super().__init__()
+
+        # Load a left facing texture and a right facing texture.
+        # mirrored=True will mirror the image we load.
+        texture = arcade.load_texture("images/character.png",
+                                      mirrored=True, scale=other_scale)
+        self.textures.append(texture)
+        texture = arcade.load_texture("images/character.png",
+                                      scale=other_scale)
+        self.textures.append(texture)
+
+        # By default, face right.
+        self.face_dir = 1
+        # 0 = up, 1 = right, 2 = down, 3 = left
+        self.set_texture(tex_right)
+
+    def update(self):
+
+        # Figure out player facing direction
+        if self.change_y < 0:
+            self.face_dir = 2
+        if self.change_y > 0:
+            self.face_dir = 0
+        if self.change_x < 0:
+            self.face_dir = 3
+            self.set_texture(tex_left)
+        if self.change_x > 0:
+            self.face_dir = 1
+            self.set_texture(tex_right)
 
 
 def start_town():
@@ -86,6 +122,16 @@ def start_room():
                 wall.bottom = y
                 room.wall_list.append(wall)
 
+    table = arcade.Sprite("images/table.png", 2)
+    table.left = 500
+    table.bottom = 350
+    room.wall_list.append(table)
+
+    bed = arcade.Sprite("images/bed.png", 2)
+    bed.left = 100
+    bed.bottom = 300
+    room.wall_list.append(bed)
+
     room.background = arcade.load_texture("images/background.jpg")
 
     return room
@@ -112,6 +158,11 @@ def poke_lab():
                 wall.bottom = y
                 room.wall_list.append(wall)
 
+    table = arcade.Sprite("images/table.png", 2)
+    table.left = 300
+    table.bottom = 350
+    room.wall_list.append(table)
+
     room.background = arcade.load_texture("images/background.jpg")
 
     return room
@@ -121,6 +172,7 @@ def wild_area():
     room = Room()
 
     room.wall_list = arcade.SpriteList()
+    room.grass_list = arcade.SpriteList()
 
     for x in (0, (screen_width * 2) - sprite_size):
         for y in range(0, (screen_height * 2), sprite_size):
@@ -139,6 +191,14 @@ def wild_area():
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
+
+    for x in range(sprite_size, (screen_width * 2) - (sprite_size), sprite_size):
+        for y in range(sprite_size, (screen_height * 2) - (sprite_size), sprite_size):
+            grass = arcade.Sprite("images/grass.png", sprite_scale)
+            grass.left = x
+            grass.bottom = y
+            room.grass_list.append(grass)
+
 
     room.background = arcade.load_texture("images/background.jpg")
     
@@ -249,9 +309,8 @@ class MyGame(arcade.Window):
         os.chdir(file_path)
 
         # Sprite lists
-        self.current_room = 0
+        self.current_room = 1
         self.coin_list = None
-        
 
         # Set up the player
         self.rooms = None
@@ -272,9 +331,9 @@ class MyGame(arcade.Window):
         self.player_list = arcade.SpriteList()
 
         # Set up the player
-        self.player_sprite = arcade.Sprite("images/character.png", 0.4)
-        self.player_sprite.center_x = 500
-        self.player_sprite.center_y = 500
+        self.player_sprite = Player()
+        self.player_sprite.center_x = 250
+        self.player_sprite.center_y = 400
         self.player_list.append(self.player_sprite)
 
 
@@ -309,7 +368,7 @@ class MyGame(arcade.Window):
         room = heal_center()
         self.rooms.append(room)
 
-        self.current_room = 0
+        self.current_room = 1
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
 
@@ -326,6 +385,8 @@ class MyGame(arcade.Window):
                                       screen_width * 2, screen_height * 2, self.rooms[self.current_room].background)
         self.rooms[self.current_room].wall_list.draw()
         self.player_list.draw()
+        if self.current_room == 3:
+            self.rooms[self.current_room].grass_list.draw()
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -369,49 +430,52 @@ class MyGame(arcade.Window):
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
+        self.player_list.update()
         # --- Manage Scrolling ---
-        print(self.player_sprite.center_x, self.player_sprite.center_y)
         # Keep track of if we changed the boundary. We don't want to call the
         # set_viewport command if we didn't change the view port.
         changed = False
 
         # Scroll left
-        left_boundary = self.view_left + view_boundary_xaxis
-        if self.player_sprite.left < left_boundary:
-            self.view_left -= left_boundary - self.player_sprite.left
-            changed = True
+        if self.current_room in big_room_list:
+            left_boundary = self.view_left + view_boundary_xaxis
+            if self.player_sprite.left < left_boundary:
+                self.view_left -= left_boundary - self.player_sprite.left
+                changed = True
 
-        # Scroll right
-        right_boundary = self.view_left + screen_width - view_boundary_xaxis
-        if self.player_sprite.right > right_boundary:
-            self.view_left += self.player_sprite.right - right_boundary
-            changed = True
+            # Scroll right
+            right_boundary = self.view_left + screen_width - view_boundary_xaxis
+            if self.player_sprite.right > right_boundary:
+                self.view_left += self.player_sprite.right - right_boundary
+                changed = True
 
-        # Scroll up
-        top_boundary = self.view_bottom + screen_height - view_boundary_yaxis
-        if self.player_sprite.top > top_boundary:
-            self.view_bottom += self.player_sprite.top - top_boundary
-            changed = True
+            # Scroll up
+            top_boundary = self.view_bottom + screen_height - view_boundary_yaxis
+            if self.player_sprite.top > top_boundary:
+                self.view_bottom += self.player_sprite.top - top_boundary
+                changed = True
 
-        # Scroll down
-        bottom_boundary = self.view_bottom + view_boundary_yaxis
-        if self.player_sprite.bottom < bottom_boundary:
-            self.view_bottom -= bottom_boundary - self.player_sprite.bottom
-            changed = True
+            # Scroll down
+            bottom_boundary = self.view_bottom + view_boundary_yaxis
+            if self.player_sprite.bottom < bottom_boundary:
+                self.view_bottom -= bottom_boundary - self.player_sprite.bottom
+                changed = True
 
-        # Make sure our boundaries are integer values. While the view port does
-        # support floating point numbers, for this application we want every pixel
-        # in the view port to map directly onto a pixel on the screen. We don't want
-        # any rounding errors.
-        self.view_left = int(self.view_left)
-        self.view_bottom = int(self.view_bottom)
+            # Make sure our boundaries are integer values. While the view port does
+            # support floating point numbers, for this application we want every pixel
+            # in the view port to map directly onto a pixel on the screen. We don't want
+            # any rounding errors.
+            self.view_left = int(self.view_left)
+            self.view_bottom = int(self.view_bottom)
 
-        # If we changed the boundary values, update the view port to match
-        if changed:
-            arcade.set_viewport(self.view_left,
-                                screen_width + self.view_left - 1,
-                                self.view_bottom,
-                                screen_height + self.view_bottom - 1)
+            # If we changed the boundary values, update the view port to match
+            if changed:
+                arcade.set_viewport(self.view_left,
+                                    screen_width + self.view_left - 1,
+                                    self.view_bottom,
+                                    screen_height + self.view_bottom - 1)
+        if self.current_room in small_room_list:
+            arcade.set_viewport(0, screen_width, 0, screen_height)
         
         if ceil(self.player_sprite.center_x) in range(1000, 1080) and ceil(self.player_sprite.center_y) in range(670, 676) and self.current_room == 0:
             self.current_room = 2
@@ -429,12 +493,12 @@ class MyGame(arcade.Window):
             self.current_room = 3
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
                                                              self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_y = 0
+            self.player_sprite.center_y = 30
         elif self.player_sprite.center_x > 1500 and self.current_room == 3:
             self.current_room = 4
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
                                                              self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = 0
+            self.player_sprite.center_x = 30
         elif ceil(self.player_sprite.center_x) in range(200, 285) and ceil(self.player_sprite.center_y) in range(670, 676) and self.current_room == 0:
             self.current_room = 1
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
@@ -460,17 +524,34 @@ class MyGame(arcade.Window):
             self.player_sprite.center_x = 383.6
             self.player_sprite.center_y = 40
         elif self.player_sprite.center_y < 35 and self.current_room == 5:
-            self.current_room = 0
+            self.current_room = 4
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
                                                              self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = 1040
+            self.player_sprite.center_x = 1140
             self.player_sprite.center_y = 656
         elif self.player_sprite.center_y < 35 and self.current_room == 6:
+            self.current_room = 4
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 240
+            self.player_sprite.center_y = 656
+        elif self.player_sprite.center_y < 20 and self.current_room == 3:
             self.current_room = 0
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
                                                              self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = 1040
-            self.player_sprite.center_y = 656
+            self.player_sprite.center_y = ((screen_height * 2) - sprite_size)
+        elif self.player_sprite.center_x < 20 and self.current_room == 4:
+            self.current_room = 3
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = ((screen_width * 2) - sprite_size)
+
+        if self.current_room == 3:
+            grass_hit = arcade.check_for_collision_with_list(self.player_sprite, self.rooms[self.current_room].grass_list)
+            if len(grass_hit) > 0:
+                encounter = random.randint(0, 67)
+                if encounter == 1:
+                    print("pokemon")
         # 1000-1080, 674.4
         # 383.6, 40
         # if player in room then make the viewport 0 and set the screen

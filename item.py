@@ -19,7 +19,7 @@ class Item:
     @classmethod
     def potion(cls):
         item = cls("Essential oils", "Heal hp by 20", 1)
-        item.texture = arcade.load_texture("images/buff_images/cocaine.jpg")
+        item.texture = arcade.load_texture("images/heal_images/cocaine.jpg")
         return item
 
     @classmethod
