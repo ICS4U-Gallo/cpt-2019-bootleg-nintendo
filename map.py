@@ -199,9 +199,8 @@ def wild_area():
             grass.bottom = y
             room.grass_list.append(grass)
 
+    room.background = arcade.load_texture("images/floors.jpg")
 
-    room.background = arcade.load_texture("images/background.jpg")
-    
     return room
 
 
