@@ -2,10 +2,10 @@ import images
 import arcade
 
 types = ["fire", "water", "grass", "normal"]
-poke_list = [pokemon.Pokemon.Charmander(), pokemon.Pokemon.Squirtle(),
-             pokemon.Pokemon.Bulbasaur(), pokemon.Pokemon.IceCream(),
-             pokemon.Pokemon.Garbage(), pokemon.Pokemon.torkoal(),
-             pokemon.Pokemon.Klefki(), pokemon.Pokemon.Magikarp()]
+poke_list = [Pokemon.Charmander(), Pokemon.Squirtle(),
+             Pokemon.Bulbasaur(), Pokemon.IceCream(),
+             Pokemon.Garbage(), Pokemon.torkoal(),
+             Pokemon.Klefki(), Pokemon.Magikarp()]
 
 
 class Move:
