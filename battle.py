@@ -100,6 +100,7 @@ class actionButton(TextButton):
 class moveButton(TextButton):
     def __init__(self, game, x=0, y=0, width=100, height=40, move=None, theme=None):
         super().__init__(x, y, width, height, move.name, theme=theme)
+        self.move = move
         self.game = game
 
     def on_press(self):
@@ -107,7 +108,7 @@ class moveButton(TextButton):
 
     def on_release(self):
         if self.pressed:
-            self.game.move = move
+            self.game.move = self.move
             self.pressed = False
 
 
@@ -125,11 +126,14 @@ class Battle(arcade.Window):
         arcade.set_background_color(arcade.color.WHITE)
         self.player = p1
         self.enemy = p2
-        self.i = self.j = 0
+        self.i = 0
+        self.j = 0
         self.action = None
         self.move = None
         self.theme = None
+        self.button = None
         self.button_list = None
+        self.pokemon_list = None
 
     def set_button_textures(self):
         normal = ":resources:gui_themes/Fantasy/Buttons/Normal.png"
@@ -143,23 +147,49 @@ class Battle(arcade.Window):
         self.theme.set_font(24, arcade.color.WHITE)
         self.set_button_textures()
 
-    def fight_buttons(self):
+    def setup_pokemon(self):
+        self.pokemon_list.append(self.player.pokemon[self.i])
+        self.player.pokemon[self.i].center_x = self.player_x
+        self.player.pokemon[self.i].center_y = self.player_y
+        self.pokemon_list.append(self.enemy.pokemon[self.j])
+        self.enemy.pokemon[self.j].center_x = self.enemy_x
+        self.enemy.pokemon[self.j].center_y = self.enemy_y
+
+    def display_pokemon(self):
+        player = self.player.pokemon[self.i]
+        arcade.draw_xywh_rectangle_filled(125, player.top+30, 150, 8, arcade.color.RED)
+        arcade.draw_xywh_rectangle_filled(125, player.top+30, 150 * (player.cur_stats[0]/player.stats[0]), 8, arcade.color.GREEN)
+
+        enemy = self.enemy.pokemon[self.j]
+        arcade.draw_xywh_rectangle_filled(525, enemy.bottom-30, 150, 8, arcade.color.RED)
+        arcade.draw_xywh_rectangle_filled(525, enemy.bottom-30, 150 * (enemy.cur_stats[0]/enemy.stats[0]), 8, arcade.color.GREEN)
+
+    def action_buttons(self):
         self.button_list = []
         # (300, 115), (500, 115), (300, 40), (500, 40)
         self.button_list.append(actionButton(self, 300, 115, 200, 70, "Fight", self.theme))
         self.button_list.append(actionButton(self, 500, 115, 200, 70, "Switch", self.theme))
         self.button_list.append(actionButton(self, 300, 40, 200, 70, "Bag", self.theme))
+        self.button_set = "action"
 
     def move_buttons(self):
         self.button_list = []
         poke = self.player.pokemon[self.i]
-        self.button_list.append(moveButton(self, 300, 115, 200, 70, poke.moves[0], self.theme))
-        self.button_list.append(moveButton(self, 500, 115, 200, 70, poke.moves[1], self.theme))
-        self.button_list.append(moveButton(self, 300, 40, 200, 70, poke.moves[2], self.theme))
+        for i in range(len(poke.moves)):
+            self.button_list.append(moveButton(self, 300+(i%2)*200, 115-(i//2)*75, 200, 70, poke.moves[i], self.theme))
+        self.button_set = "move"
 
     def setup(self):
         self.setup_theme()
-        self.fight_buttons()
+        self.action_buttons()
+
+        self.player_x = 200
+        self.player_y = 300
+        self.enemy_x = 600
+        self.enemy_y = 450
+
+        self.pokemon_list = arcade.SpriteList()
+        self.setup_pokemon()
 
     def on_draw(self):
         arcade.start_render()
@@ -169,14 +199,21 @@ class Battle(arcade.Window):
         for button in self.button_list:
             button.draw()
 
+        self.pokemon_list.draw()
+        self.display_pokemon()
+
     def update(self, delta_time):
         if self.action == "Fight":
-            self.move_buttons()
+            if self.button_set != "move":
+                self.move_buttons()
             if self.move != None:
                 fight(self.player.pokemon[self.i], self.enemy.pokemon[self.j], self.move)
+                self.action_buttons()
                 self.action = None
                 self.move = None
-        
+        elif self.action == "switch":
+            pass
+
         if self.player.defeated():
             print("p1 lost")
             return
@@ -184,10 +221,14 @@ class Battle(arcade.Window):
             print("p1 won")
             return
         if self.player.pokemon[self.i].is_dead():
+            self.pokemon_list.remove(self.player.pokemon[self.i])
             self.i += 1
+            self.setup_pokemon()
             print(f"p1 switch to {self.player.pokemon[self.i].name}")
         elif self.enemy.pokemon[self.j].is_dead():
+            self.pokemon_list.remove(self.enemy.pokemon[self.j])
             self.j += 1
+            self.setup_pokemon()
             print(f"p2 switch to {self.enemy.pokemon[self.j].name}")
 
 if __name__ == "__main__":

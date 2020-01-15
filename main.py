@@ -3,7 +3,6 @@ import arcade
 import settings
 
 from menu_start import MenuView
-from game import Chapter1View
 
 tex_right = 1
 tex_left = 0

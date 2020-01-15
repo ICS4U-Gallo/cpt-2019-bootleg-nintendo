@@ -4,6 +4,7 @@ import os
 from math import ceil
 
 sprite_scale = 0.5
+other_scale = 0.4
 native_sprite = 128
 sprite_size = int(sprite_scale * native_sprite)
 
@@ -20,6 +21,9 @@ MOVEMENT_SPEED = 10
 big_room_list = [0, 3, 4, 5]
 small_room_list = [1, 2, 6]
 
+tex_right = 1
+tex_left = 0
+
 
 class Room:
 
@@ -30,7 +34,36 @@ class Room:
 
 
 class Player(arcade.Sprite):
-    pass
+    def __init__(self):
+        super().__init__()
+
+        # Load a left facing texture and a right facing texture.
+        # mirrored=True will mirror the image we load.
+        texture = arcade.load_texture("images/character.png",
+                                      mirrored=True, scale=other_scale)
+        self.textures.append(texture)
+        texture = arcade.load_texture("images/character.png",
+                                      scale=other_scale)
+        self.textures.append(texture)
+
+        # By default, face right.
+        self.face_dir = 1
+        # 0 = up, 1 = right, 2 = down, 3 = left
+        self.set_texture(tex_right)
+
+    def update(self):
+
+        # Figure out player facing direction
+        if self.change_y < 0:
+            self.face_dir = 2
+        if self.change_y > 0:
+            self.face_dir = 0
+        if self.change_x < 0:
+            self.face_dir = 3
+            self.set_texture(tex_left)
+        if self.change_x > 0:
+            self.face_dir = 1
+            self.set_texture(tex_right)
 
 
 def start_town():
@@ -89,6 +122,16 @@ def start_room():
                 wall.bottom = y
                 room.wall_list.append(wall)
 
+    table = arcade.Sprite("images/table.png", 2)
+    table.left = 500
+    table.bottom = 350
+    room.wall_list.append(table)
+
+    bed = arcade.Sprite("images/bed.png", 2)
+    bed.left = 100
+    bed.bottom = 300
+    room.wall_list.append(bed)
+
     room.background = arcade.load_texture("images/background.jpg")
 
     return room
@@ -114,6 +157,11 @@ def poke_lab():
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
+
+    table = arcade.Sprite("images/table.png", 2)
+    table.left = 300
+    table.bottom = 350
+    room.wall_list.append(table)
 
     room.background = arcade.load_texture("images/background.jpg")
 
@@ -261,9 +309,8 @@ class MyGame(arcade.Window):
         os.chdir(file_path)
 
         # Sprite lists
-        self.current_room = 0
+        self.current_room = 1
         self.coin_list = None
-        
 
         # Set up the player
         self.rooms = None
@@ -284,9 +331,9 @@ class MyGame(arcade.Window):
         self.player_list = arcade.SpriteList()
 
         # Set up the player
-        self.player_sprite = arcade.Sprite("images/character.png", 0.4)
-        self.player_sprite.center_x = 500
-        self.player_sprite.center_y = 500
+        self.player_sprite = Player()
+        self.player_sprite.center_x = 250
+        self.player_sprite.center_y = 400
         self.player_list.append(self.player_sprite)
 
 
@@ -321,7 +368,7 @@ class MyGame(arcade.Window):
         room = heal_center()
         self.rooms.append(room)
 
-        self.current_room = 0
+        self.current_room = 1
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
 
@@ -383,6 +430,7 @@ class MyGame(arcade.Window):
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
+        self.player_list.update()
         # --- Manage Scrolling ---
         # Keep track of if we changed the boundary. We don't want to call the
         # set_viewport command if we didn't change the view port.
@@ -501,7 +549,7 @@ class MyGame(arcade.Window):
         if self.current_room == 3:
             grass_hit = arcade.check_for_collision_with_list(self.player_sprite, self.rooms[self.current_room].grass_list)
             if len(grass_hit) > 0:
-                encounter = random.randint(0, 1)
+                encounter = random.randint(0, 67)
                 if encounter == 1:
                     print("pokemon")
         # 1000-1080, 674.4
