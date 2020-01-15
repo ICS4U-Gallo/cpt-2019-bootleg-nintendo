@@ -192,15 +192,16 @@ def wild_area():
                 wall.bottom = y
                 room.wall_list.append(wall)
 
-    for x in range(sprite_size, (screen_width * 2) - (sprite_size), sprite_size):
-        for y in range(sprite_size, (screen_height * 2) - (sprite_size), sprite_size):
+    for x in range(sprite_size, (screen_width * 2) - (sprite_size),
+                   sprite_size):
+        for y in range(sprite_size, (screen_height * 2) - (sprite_size),
+                       sprite_size):
             grass = arcade.Sprite("images/grass.png", sprite_scale)
             grass.left = x
             grass.bottom = y
             room.grass_list.append(grass)
 
     room.background = arcade.load_texture("images/floors.jpg")
-
     return room
 
 
@@ -217,9 +218,11 @@ def other_town():
             room.wall_list.append(wall)
 
     for x in (0, (screen_width * 2) - sprite_size):
-        for y in range(sprite_size, (screen_height * 2) - sprite_size, sprite_size):
+        for y in range(sprite_size, (screen_height * 2) - sprite_size,
+                       sprite_size):
             if (y != sprite_size * 4 and y != sprite_size * 5) or x != 0:
-                wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+                wall = arcade.Sprite("images/boxCrate_double.png",
+                                     sprite_scale)
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
@@ -286,6 +289,11 @@ def heal_center():
                 wall.bottom = y
                 room.wall_list.append(wall)
 
+    healstation = arcade.Sprite("images/heal_station.png", 5)
+    healstation.left = 200
+    healstation.bottom = 330
+    room.wall_list.append(healstation)
+
     room.background = arcade.load_texture("images/background.jpg")
 
     return room
@@ -320,6 +328,7 @@ class MyGame(arcade.Window):
         self.right_pressed = False
         self.up_pressed = False
         self.down_pressed = False
+        self.act_pressed = False
         self.view_bottom = 0
         self.view_left = 0
 
@@ -334,7 +343,6 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 250
         self.player_sprite.center_y = 400
         self.player_list.append(self.player_sprite)
-
 
         # Set the background color
         arcade.set_background_color(arcade.color.AMAZON)
@@ -398,6 +406,8 @@ class MyGame(arcade.Window):
             self.left_pressed = True
         elif key == arcade.key.D:
             self.right_pressed = True
+        if key == arcade.key.L:
+            self.act_pressed = True
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -410,6 +420,8 @@ class MyGame(arcade.Window):
             self.left_pressed = False
         elif key == arcade.key.D:
             self.right_pressed = False
+        if key == arcade.key.L:
+            self.act_pressed = False
 
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -425,6 +437,10 @@ class MyGame(arcade.Window):
             self.player_sprite.change_x = -MOVEMENT_SPEED
         elif self.right_pressed and not self.left_pressed:
             self.player_sprite.change_x = MOVEMENT_SPEED
+
+        if ceil(self.player_sprite.center_x) in range(200, 530) and ceil(self.player_sprite.center_y) in range(300, 310) and self.current_room == 6:
+            if self.act_pressed == True:
+                print('healed')
 
         # Call update on all sprites (The sprites don't do much in this
         # example though.)

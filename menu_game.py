@@ -20,44 +20,43 @@ class MyGame(arcade.Window):
         self.save_color = arcade.color.GRAY
         self.exit_color = arcade.color.GRAY
 
-        """self.dex_sprite = arcade.load_texture("images/pokedex.jpeg")
-        self.bag_sprite = arcade.load_texture("images/bag.jpg")
-        self.save_sprite = arcade.load_texture("images/save.png")
-        self.exit_sprite = arcade.load_texture("images/exit.jpg")"""
+        self.dex_sprite = arcade.load_texture("images/game_menu_images/"
+                                              "pokedex.png")
+        self.bag_sprite = arcade.load_texture("images/game_menu_images/"
+                                              "bag.jpg")
+        self.save_sprite = arcade.load_texture("images/game_menu_images/"
+                                               "save.png")
+        self.exit_sprite = arcade.load_texture("images/game_menu_images/"
+                                               "exit.jpeg")
 
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_text("GAME MENU",
-                         width/2, height * 0.95, arcade.color.BLACK, 50,
+        arcade.draw_text("GAME MENU", 384, 608, arcade.color.BLACK, 50,
                          align="center", anchor_x="center", anchor_y="center")
 
-        arcade.draw_xywh_rectangle_outline(width/4-150,
-                                           height/2-25, 325, 250,
+        arcade.draw_xywh_rectangle_outline(42, 295, 325, 250,
                                            self.dex_color, 5)
-        arcade.draw_text("POKEDEX", width/4 + 12.5,
-                         height * 3/4, self.dex_color, 45,
+        arcade.draw_text("POKEDEX", 204, 480, self.dex_color, 45,
                          align="center", anchor_x="center", anchor_y="center")
+        arcade.draw_texture_rectangle(192, 380, 190, 140, self.dex_sprite)
 
-        arcade.draw_xywh_rectangle_outline(width * 3/4 - 175,
-                                           height/2-25, 325, 250,
+        arcade.draw_xywh_rectangle_outline(401, 295, 325, 250,
                                            self.bag_color, 5)
-        arcade.draw_text("BAG", width * 3/4 - 12.5,
-                         height * 3/4, self.bag_color, 45,
+        arcade.draw_text("BAG", 564, 480, self.bag_color, 45,
                          align="center", anchor_x="center", anchor_y="center")
+        arcade.draw_texture_rectangle(556, 380, 190, 140, self.bag_sprite)
 
-        arcade.draw_xywh_rectangle_outline(width/4 - 150,
-                                           height/2-300, 325,
-                                           250, self.save_color, 5)
-        arcade.draw_text("SAVE", width/4 + 12.5,
-                         height/2-120, self.save_color, 45,
+        arcade.draw_xywh_rectangle_outline(42, 20, 325, 250,
+                                           self.save_color, 5)
+        arcade.draw_text("SAVE", 204, 200, self.save_color, 45,
                          align="center", anchor_x="center", anchor_y="center")
+        arcade.draw_texture_rectangle(192, 91, 190, 140, self.save_sprite)
 
-        arcade.draw_xywh_rectangle_outline(width * 3/4 - 175,
-                                           height/2-300, 325,
-                                           250, self.exit_color, 5)
-        arcade.draw_text("EXIT", width * 3/4 - 12.5,
-                         height/2-120, self.exit_color, 45,
+        arcade.draw_xywh_rectangle_outline(401, 20, 325, 250,
+                                           self.exit_color, 5)
+        arcade.draw_text("EXIT", 564, 200, self.exit_color, 45,
                          align="center", anchor_x="center", anchor_y="center")
+        arcade.draw_texture_rectangle(556, 91, 150, 100, self.exit_sprite)
 
     def update(self, delta_time):
         if self.select_x == 0 and self.select_y == 1:
@@ -102,7 +101,7 @@ class MyGame(arcade.Window):
 
 
 def main():
-    game = MyGame(width, height, "My Game")
+    game = MyGame(width, height, "Game Menu")
     game.setup()
     arcade.run()
 
