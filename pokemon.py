@@ -1,4 +1,3 @@
-import images
 import arcade
 
 types = ["fire", "water", "grass", "normal"]
@@ -176,3 +175,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
