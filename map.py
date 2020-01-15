@@ -192,8 +192,10 @@ def wild_area():
                 wall.bottom = y
                 room.wall_list.append(wall)
 
-    for x in range(sprite_size, (screen_width * 2) - (sprite_size), sprite_size):
-        for y in range(sprite_size, (screen_height * 2) - (sprite_size), sprite_size):
+    for x in range(sprite_size, (screen_width * 2) - (sprite_size),
+                   sprite_size):
+        for y in range(sprite_size, (screen_height * 2) - (sprite_size),
+                       sprite_size):
             grass = arcade.Sprite("images/grass.png", sprite_scale)
             grass.left = x
             grass.bottom = y
@@ -217,9 +219,11 @@ def other_town():
             room.wall_list.append(wall)
 
     for x in (0, (screen_width * 2) - sprite_size):
-        for y in range(sprite_size, (screen_height * 2) - sprite_size, sprite_size):
+        for y in range(sprite_size, (screen_height * 2) - sprite_size,
+                       sprite_size):
             if (y != sprite_size * 4 and y != sprite_size * 5) or x != 0:
-                wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+                wall = arcade.Sprite("images/boxCrate_double.png",
+                                     sprite_scale)
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
@@ -334,7 +338,6 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 250
         self.player_sprite.center_y = 400
         self.player_list.append(self.player_sprite)
-
 
         # Set the background color
         arcade.set_background_color(arcade.color.AMAZON)
