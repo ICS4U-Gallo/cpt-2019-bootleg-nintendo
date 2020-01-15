@@ -112,6 +112,21 @@ class moveButton(TextButton):
             self.pressed = False
 
 
+class switchButton(TextButton):
+    def __init__(self, game, x=0, y=0, width=100, height=40, poke=None, theme=None):
+        super().__init__(x, y, width, height, poke.name, theme=theme)
+        self.poke = poke
+        self.game = game
+
+    def on_press(self):
+        self.pressed = True
+
+    def on_release(self):
+        if self.pressed:
+            self.game.switchto = self.poke
+            self.pressed = False
+
+
 class Battle(arcade.Window):
     def __init__(self, w, h, name, p1, p2):
         super().__init__(w, h, name)
@@ -126,10 +141,9 @@ class Battle(arcade.Window):
         arcade.set_background_color(arcade.color.WHITE)
         self.player = p1
         self.enemy = p2
-        self.i = 0
-        self.j = 0
         self.action = None
         self.move = None
+        self.switchto = None
         self.theme = None
         self.button = None
         self.button_list = None
@@ -148,23 +162,24 @@ class Battle(arcade.Window):
         self.set_button_textures()
 
     def setup_pokemon(self):
-        self.pokemon_list.append(self.player.pokemon[self.i])
-        self.player.pokemon[self.i].center_x = self.player_x
-        self.player.pokemon[self.i].center_y = self.player_y
-        self.pokemon_list.append(self.enemy.pokemon[self.j])
-        self.enemy.pokemon[self.j].center_x = self.enemy_x
-        self.enemy.pokemon[self.j].center_y = self.enemy_y
+        self.pokemon_list.append(self.player.poke)
+        self.player.poke.center_x = self.player_x
+        self.player.poke.center_y = self.player_y
+        self.pokemon_list.append(self.enemy.poke)
+        self.enemy.poke.center_x = self.enemy_x
+        self.enemy.poke.center_y = self.enemy_y
 
     def display_pokemon(self):
-        player = self.player.pokemon[self.i]
-        arcade.draw_xywh_rectangle_filled(125, player.top+30, 150, 8, arcade.color.RED)
-        arcade.draw_xywh_rectangle_filled(125, player.top+30, 150 * (player.cur_stats[0]/player.stats[0]), 8, arcade.color.GREEN)
+        poke = self.player.poke
+        arcade.draw_xywh_rectangle_filled(125, poke.top+30, 150, 8, arcade.color.RED)
+        arcade.draw_xywh_rectangle_filled(125, poke.top+30, 150 * (poke.cur_stats[0]/poke.stats[0]), 8, arcade.color.GREEN)
 
-        enemy = self.enemy.pokemon[self.j]
+        enemy = self.enemy.pokemon[self.enemy.j]
         arcade.draw_xywh_rectangle_filled(525, enemy.bottom-30, 150, 8, arcade.color.RED)
         arcade.draw_xywh_rectangle_filled(525, enemy.bottom-30, 150 * (enemy.cur_stats[0]/enemy.stats[0]), 8, arcade.color.GREEN)
 
     def action_buttons(self):
+        self.action = None
         self.button_list = []
         # (300, 115), (500, 115), (300, 40), (500, 40)
         self.button_list.append(actionButton(self, 300, 115, 200, 70, "Fight", self.theme))
@@ -174,10 +189,16 @@ class Battle(arcade.Window):
 
     def move_buttons(self):
         self.button_list = []
-        poke = self.player.pokemon[self.i]
+        poke = self.player.poke
         for i in range(len(poke.moves)):
             self.button_list.append(moveButton(self, 300+(i%2)*200, 115-(i//2)*75, 200, 70, poke.moves[i], self.theme))
         self.button_set = "move"
+
+    def switch_buttons(self):
+        self.button_list = []
+        for i in range(len(self.player.pokemon)):
+            self.button_list.append(switchButton(self, 300+(i%3)*200, 115-(i//3)*75, 200, 70, self.player.pokemon[i], self.theme))
+        self.button_set = "switch"
 
     def setup(self):
         self.setup_theme()
@@ -188,6 +209,9 @@ class Battle(arcade.Window):
         self.enemy_x = 600
         self.enemy_y = 450
 
+        self.enemy.j = 0
+        self.player.poke = self.player.pokemon[0]
+        self.enemy.poke = self.enemy.pokemon[0]
         self.pokemon_list = arcade.SpriteList()
         self.setup_pokemon()
 
@@ -207,12 +231,23 @@ class Battle(arcade.Window):
             if self.button_set != "move":
                 self.move_buttons()
             if self.move != None:
-                fight(self.player.pokemon[self.i], self.enemy.pokemon[self.j], self.move)
+                fight(self.player.poke, self.enemy.pokemon[self.enemy.j], self.move)
                 self.action_buttons()
-                self.action = None
                 self.move = None
-        elif self.action == "switch":
-            pass
+        elif self.action == "Switch":
+            if self.button_set != "switch":
+                self.switch_buttons()
+            if self.switchto != None and self.switchto != self.player.poke:
+                self.pokemon_list.remove(self.player.poke)
+                self.player.poke = self.switchto
+                self.setup_pokemon()
+                self.action_buttons()
+                self.switchto = None
+                move = self.enemy.poke.moves[random.randrange(len(self.enemy.poke.moves))]
+                self.enemy.poke.attack(self.player.poke, move)
+            
+            
+
 
         if self.player.defeated():
             print("p1 lost")
@@ -220,16 +255,24 @@ class Battle(arcade.Window):
         elif self.enemy.defeated():
             print("p1 won")
             return
-        if self.player.pokemon[self.i].is_dead():
-            self.pokemon_list.remove(self.player.pokemon[self.i])
-            self.i += 1
+        if self.player.poke.is_dead():
+            if self.button_set != "switch":
+                self.switch_buttons()
+            if self.switchto != None and self.switchto != self.player.poke:
+                self.pokemon_list.remove(self.player.poke)
+                self.player.poke = self.switchto
+                self.setup_pokemon()
+                self.action_buttons()
+                self.switchto = None
+                move = self.enemy.poke.moves[random.randrange(len(self.enemy.poke.moves))]
+                self.enemy.poke.attack(self.player.poke, move)
+            print(f"p1 switch to {self.player.poke.name}")
+        elif self.enemy.pokemon[self.enemy.j].is_dead():
+            self.pokemon_list.remove(self.enemy.poke)
+            self.enemy.j += 1
+            self.enemy.poke = self.enemy.pokemon[self.enemy.j]
             self.setup_pokemon()
-            print(f"p1 switch to {self.player.pokemon[self.i].name}")
-        elif self.enemy.pokemon[self.j].is_dead():
-            self.pokemon_list.remove(self.enemy.pokemon[self.j])
-            self.j += 1
-            self.setup_pokemon()
-            print(f"p2 switch to {self.enemy.pokemon[self.j].name}")
+            print(f"p2 switch to {self.enemy.pokemon[self.enemy.j].name}")
 
 if __name__ == "__main__":
     # from utils import FakeDirector
@@ -242,9 +285,11 @@ if __name__ == "__main__":
     poke1 = pokemon.Pokemon.Magikarp()
     poke1.addlevel(4)
     poke2 = pokemon.Pokemon.IceCream()
+    poke2.addlevel(20)
     poke3 = pokemon.Pokemon.Charmander()
     poke4 = pokemon.Pokemon.Bulbasaur()
-    a.pokemon = [poke1, poke3]
+    poke5 = pokemon.Pokemon.Squirtle()
+    a.pokemon = [poke1, poke3, poke5]
     b.pokemon = [poke2, poke4]
 
     game = Battle(settings.WIDTH, settings.HEIGHT, "battle", a, b)

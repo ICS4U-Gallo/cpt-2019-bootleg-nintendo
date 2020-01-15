@@ -2,6 +2,10 @@ import images
 import arcade
 
 types = ["fire", "water", "grass", "normal"]
+poke_list = [pokemon.Pokemon.Charmander(), pokemon.Pokemon.Squirtle(),
+             pokemon.Pokemon.Bulbasaur(), pokemon.Pokemon.IceCream(),
+             pokemon.Pokemon.Garbage(), pokemon.Pokemon.torkoal(),
+             pokemon.Pokemon.Klefki(), pokemon.Pokemon.Magikarp()]
 
 
 class Move:
@@ -89,6 +93,7 @@ class Pokemon(arcade.Sprite):
 
     def is_dead(self):
         if self.cur_stats[0] <= 0:
+            self.cur_stats[0] = 0
             return True
         else:
             return False
