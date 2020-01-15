@@ -200,7 +200,6 @@ def wild_area():
             room.grass_list.append(grass)
 
     room.background = arcade.load_texture("images/floors.jpg")
-    
     return room
 
 
