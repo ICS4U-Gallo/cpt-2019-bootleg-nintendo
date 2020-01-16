@@ -2,8 +2,8 @@ import arcade
 import settings
 import pokemon  # temporary maybe
 
-width = 768
-height = 640
+width = settings.WIDTH
+height = settings.HEIGHT
 
 # poke_list = ["TORKOAL", "GARBAGE", "PIKACHU", "EEVEE", "GARCHOMP", "
 # VESPIQUEN", "COMBEE", "RAYQUAZA"]
@@ -60,7 +60,7 @@ class MyGame(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
 
-        arcade.set_background_color(arcade.color.WHITE)
+        arcade.set_background_color(arcade.color.RED)
 
     def setup(self):
         self._pointer = 0
@@ -73,7 +73,7 @@ class MyGame(arcade.Window):
                           pokemon.Pokemon.Bulbasaur(),
                           pokemon.Pokemon.IceCream(),
                           pokemon.Pokemon.Garbage(),
-                          pokemon.Pokemon.torkoal(),
+                          pokemon.Pokemon.Torkoal(),
                           pokemon.Pokemon.Klefki(),
                           pokemon.Pokemon.Magikarp(),
                           pokemon.Pokemon.Magikarp(),
@@ -83,7 +83,7 @@ class MyGame(arcade.Window):
                           pokemon.Pokemon.Magikarp(),
                           pokemon.Pokemon.Squirtle(),
                           pokemon.Pokemon.IceCream(),
-                          pokemon.Pokemon.torkoal()]
+                          pokemon.Pokemon.Torkoal()]
 
     def get_pointer(self):
         return self._pointer
@@ -100,6 +100,7 @@ class MyGame(arcade.Window):
         arcade.draw_text("Q - Sort", 30, 30, arcade.color.BLACK, 60)
         arcade.draw_text("E - Search", 370, 30, arcade.color.BLACK, 60)
 
+        arcade.draw_xywh_rectangle_filled(0, 173, 768, 320, arcade.color.WHITE)
         arcade.draw_xywh_rectangle_outline(10, 405, 450, 70,
                                            arcade.color.GRAY, 3)
         arcade.draw_xywh_rectangle_outline(5, 290, 460, 90,
@@ -148,9 +149,6 @@ class MyGame(arcade.Window):
             arcade.draw_text("Do you want to sort", 115, 380,
                              arcade.color.BLACK, 50)
             arcade.draw_text("the Pokedex?", 175, 310, arcade.color.BLACK, 50)
-
-    def update(self, delta_time):
-        pass
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:

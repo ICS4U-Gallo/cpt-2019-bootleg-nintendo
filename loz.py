@@ -203,7 +203,7 @@ class MyGame(arcade.Window):
         poke.addlevel(18)
         self.player_sprite.pokemon.append(poke)
         # Set the background color
-        arcade.set_background_color(arcade.color.AMAZON)
+        arcade.set_background_color(arcade.color.BLACK)
 
         # Set the viewport boundaries
         # These numbers set where we have 'scrolled' to.

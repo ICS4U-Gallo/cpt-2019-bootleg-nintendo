@@ -77,14 +77,14 @@ def start_town():
     for y in (0, (screen_height * 2) - sprite_size):
         for x in range(0, (screen_width * 2), sprite_size):
             if (x != sprite_size * 3 and x != sprite_size * 4) or y != (screen_height * 2 - sprite_size):
-                wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+                wall = arcade.Sprite("images/border_tree.jpg", sprite_scale + 1.1)
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
 
     for x in (0, (screen_width * 2) - sprite_size):
         for y in range(sprite_size, (screen_height * 2) - sprite_size, sprite_size):
-            wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+            wall = arcade.Sprite("images/border_tree.jpg", sprite_scale + 0.7)
             wall.left = x
             wall.bottom = y
             room.wall_list.append(wall)
@@ -135,7 +135,7 @@ def start_room():
     bed.bottom = 300
     room.wall_list.append(bed)
 
-    room.background = arcade.load_texture("images/background.jpg")
+    room.background = arcade.load_texture("images/home_floor.jpg")
 
     return room
 
@@ -180,8 +180,8 @@ def wild_area():
     for x in (0, (screen_width * 2) - sprite_size):
         for y in range(0, (screen_height * 2), sprite_size):
             if (y != sprite_size * 4 and y != sprite_size * 5) or x == 0:
-                wall = arcade.Sprite("images/boxCrate_double.png",
-                                     sprite_scale)
+                wall = arcade.Sprite("images/border_tree.jpg",
+                                     sprite_scale + 0.75)
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
@@ -189,8 +189,8 @@ def wild_area():
     for y in (0, (screen_height * 2) - sprite_size):
         for x in range(0, (screen_width * 2), sprite_size):
             if (x != sprite_size * 3 and x != sprite_size * 4) or y != 0:
-                wall = arcade.Sprite("images/boxCrate_double.png",
-                                     sprite_scale)
+                wall = arcade.Sprite("images/border_tree.jpg",
+                                     sprite_scale + 1)
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
@@ -215,7 +215,7 @@ def other_town():
 
     for y in (0, (screen_height * 2) - sprite_size):
         for x in range(0, (screen_width * 2), sprite_size):
-            wall = arcade.Sprite("images/boxCrate_double.png", sprite_scale)
+            wall = arcade.Sprite("images/border_tree.jpg", sprite_scale + 1.1)
             wall.left = x
             wall.bottom = y
             room.wall_list.append(wall)
@@ -224,8 +224,8 @@ def other_town():
         for y in range(sprite_size, (screen_height * 2) - sprite_size,
                        sprite_size):
             if (y != sprite_size * 4 and y != sprite_size * 5) or x != 0:
-                wall = arcade.Sprite("images/boxCrate_double.png",
-                                     sprite_scale)
+                wall = arcade.Sprite("images/border_tree.jpg",
+                                     sprite_scale + 1.0)
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
@@ -508,8 +508,6 @@ class MyGame(arcade.Window):
 
         self.rooms = []
 
-
-
         self.current_room = 1
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
@@ -524,7 +522,8 @@ class MyGame(arcade.Window):
 
         # Draw all the sprites.
         arcade.draw_texture_rectangle(screen_width, screen_height,
-                                      screen_width * 2, screen_height * 2, self.rooms[self.current_room].background)
+                                      screen_width * 2, screen_height * 2,
+                                      self.rooms[self.current_room].background)
         self.rooms[self.current_room].wall_list.draw()
         self.player_list.draw()
         if self.current_room == 3:
