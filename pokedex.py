@@ -2,8 +2,8 @@ import arcade
 import settings
 import pokemon  # temporary maybe
 
-width = 768
-height = 640
+width = settings.WIDTH
+height = settings.HEIGHT
 
 # poke_list = ["TORKOAL", "GARBAGE", "PIKACHU", "EEVEE", "GARCHOMP", "
 # VESPIQUEN", "COMBEE", "RAYQUAZA"]
@@ -149,9 +149,6 @@ class MyGame(arcade.Window):
             arcade.draw_text("Do you want to sort", 115, 380,
                              arcade.color.BLACK, 50)
             arcade.draw_text("the Pokedex?", 175, 310, arcade.color.BLACK, 50)
-
-    def update(self, delta_time):
-        pass
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
