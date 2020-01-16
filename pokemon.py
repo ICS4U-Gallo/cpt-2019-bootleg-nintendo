@@ -50,7 +50,7 @@ class Move:
         return cls("FlameThrower", 80, "fire", 40, 0)
 
     @classmethod
-    def LearBeam(cls):
+    def LeafBeam(cls):
         return cls("LeafBeam", 80, "grass", 40, 0)
 
     @classmethod
@@ -164,113 +164,90 @@ class Pokemon(arcade.Sprite):
         poke = cls(1, "Charmander", "fire", 1, 39, 52, 43, 65)
         poke.texture = arcade.load_texture("images/poke_images/charmander.png")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
-        poke.avaliable_move = {12: Move.FlameThrower()}
-        poke.avaliable_evo = {25: Pokemon.Charm2(), 50: Pokemon.Charm3()}
+        poke.avalible_move = {12: Move.FlameThrower()}
+        poke.avalible_evo = {25: Pokemon.Charm2()}
         return poke
 
     @classmethod
     def Charm2(cls):
         poke = cls(2, "Slightly Better Charmnder", "fire", None, None, None, None, None)
-        poke.texture = arcade.load_texture("Eric import pls")
+        poke.texture = arcade.load_texture("images/poke_images/charizard.jpg")
         return poke
 
-    @classmethod
-    def Charm3(cls):
-        poke = cls(3, "Better Charmander", "fire", None, None, None, None, None)
-        poke.texture = arcade.load_texture("Eric import pls")
-        return poke
 
     @classmethod
     def Squirtle(cls):
-        poke = cls(4, "Squirtle", "water", 1, 44, 48, 65, 43)
+        poke = cls(3, "Squirtle", "water", 1, 44, 48, 65, 43)
         poke.texture = arcade.load_texture("images/poke_images/squirtle.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
-        poke.avaliable_move = {12: Move.WaterGun()}
-        poke.avaliable_evo = {25: Pokemon.Squir2(), 50: Pokemon.Squir3()}
+        poke.avalible_move = {12: Move.WaterGun()}
+        poke.avalible_evo = {25: Pokemon.Squir2()}
         return poke
 
     @classmethod
     def Squir2(cls):
-        poke = cls(5, "Slightly Better Squirtle", "water", None, None, None, None, None)
-        poke.texture = arcade.load_texture("Eric import pls")
-        return poke
-
-    @classmethod
-    def Squir3(cls):
-        poke = cls(6, "Better Squirtle", "water", None, None, None, None, None)
-        poke.texture = arcade.load_texture("Eric import pls")
+        poke = cls(4, "Slightly Better Squirtle", "water", None, None, None, None, None)
+        poke.texture = arcade.load_texture("images/poke_images/squirtle_evo.jpg")
         return poke
 
     @classmethod
     def Bulbasaur(cls):
-        poke = cls(7, "Bulbasaur", "grass", 1, 45, 49, 49, 45)
+        poke = cls(5, "Bulbasaur", "grass", 1, 45, 49, 49, 45)
         poke.texture = arcade.load_texture("images/poke_images/bulbasaur.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
-        poke.avaliable_move = {12: Move.LeafBeam()}
-        poke.avaliable_evo = {25: Pokemon.Bulb2(), 50: Pokemon.Bulb3()}
+        poke.avalible_move = {12: Move.LeafBeam()}
+        poke.avalible_evo = {25: Pokemon.Bulb2()}
         return poke
 
     @classmethod
     def Bulb2(cls):
-        poke = cls(8, "Slightly Better Bulbasaur", "grass", None, None, None, None, None)
-        poke.texture = arcade.load_texture("Eric import pls")
-        return poke
-
-    @classmethod
-    def Bulb3(cls):
-        poke = cls(9, "Better Bulbasaur", "grass", None, None, None, None, None)
-        poke.texture = arcade.load_texture("Eric import pls")
+        poke = cls(6, "Slightly Better Bulbasaur", "grass", None, None, None, None, None)
+        poke.texture = arcade.load_texture("images/poke_images/venesaur.jpg")
         return poke
 
     @classmethod
     def IceCream(cls):
-        poke = cls(10, "Ice cream", "water", 1, 36, 50, 50, 44)
+        poke = cls(7, "Ice cream", "water", 1, 36, 50, 50, 44)
         poke.texture = arcade.load_texture("images/poke_images/"
                                            "literal_ice_cream.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
-        poke.avaliable_move = {12: Move.WaterGun()}
-        poke.avaliable_evo = {25: Pokemon.Ice2(), 50: Pokemon.Ice3()}
+        poke.avalible_move = {12: Move.WaterGun()}
+        poke.avalible_evo = {25: Pokemon.Ice2()}
         return poke
 
     @classmethod
     def Ice2(cls):
-        poke = cls(2, "Literal Ice Cream", "water", None, None, None, None, None)
-        poke.texture = arcade.load_texture("Eric import pls")
-        return poke
-
-    @classmethod
-    def Ice3(cls):
-        poke = cls(3, "Still an Ice Cream", "water", None, None, None, None, None)
-        poke.texture = arcade.load_texture("Eric import pls")
+        poke = cls(8, "Still an Ice Cream", "water", None, None, None, None, None)
+        poke.texture = arcade.load_texture("images/poke_images/fallen_ice_cream.jpg")
         return poke
 
     @classmethod
     def Garbage(cls):
-        poke = cls(13, "Literal Garbage", "grass", 1, 50, 50, 62, 67)
+        poke = cls(9, "Literal Garbage", "grass", 1, 50, 50, 62, 67)
         poke.texture = arcade.load_texture("images/poke_images/garbage.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
-        poke.avaliable_move = {12: Move.LearBeam()}
+        poke.avalible_move = {12: Move.LeafBeam()}
         return poke
 
     @classmethod
     def Torkoal(cls):
-        poke = cls(14, "China's air", "fire", 1, 70, 85, 140, 20)
+        poke = cls(10, "China's air", "fire", 1, 70, 85, 140, 20)
         poke.texture = arcade.load_texture("images/poke_images/torkoal.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
-        poke.avaliable_move = {12: Move.FlameThrower()}
+        poke.avalible_move = {12: Move.FlameThrower()}
         return poke
 
     @classmethod
     def Klefki(cls):
-        poke = cls(15, "Your missing keys", "normal", 1, 57, 80, 91, 75)
+        poke = cls(11, "Your missing keys", "normal", 1, 57, 80, 91, 75)
         poke.texture = arcade.load_texture("images/poke_images/key.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
-        poke.avaliable_move = {12: Move.Bite()}
+        poke.avalible_move = {12: Move.Bite()}
         return poke
 
     @classmethod
     def Magikarp(cls):
-        poke = cls(16, "Dead fish", "water", 1, 100, 100, 100, 100)
+        poke = cls(12, "Dead fish", "water", 1, 100, 100, 100, 100)
         poke.texture = arcade.load_texture("images/poke_images/magikarp.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
         poke.avalible_move = {15: Move.Splash()}
@@ -279,7 +256,7 @@ class Pokemon(arcade.Sprite):
 
     @classmethod
     def PinkMagikarp(cls):
-        poke = cls(17, "Slightly Less Dead fish", "water", None, None, None, None, None)
+        poke = cls(13, "Slightly Less Dead fish", "water", None, None, None, None, None)
         poke.texture = arcade.load_texture("images/poke_images/dead_fish.png", mirrored=True ,scale=0.25)
         return poke
 
