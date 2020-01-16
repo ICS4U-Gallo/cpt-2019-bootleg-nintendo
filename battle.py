@@ -16,6 +16,7 @@ class Player:
         else:
             return True
 
+
 class Enemy:
     def __init__(self, wild, *poke):
         self.wild = wild
@@ -28,9 +29,10 @@ class Enemy:
         else:
             return True
 
+
 def wild_encounter(game):
     enemy_poke = pokemon.Pokemon.random_poke()
-    enemy_poke.addlevel(random.randrange(2,7))
+    enemy_poke.addlevel(random.randrange(2, 50))
     enemy = Enemy(True, enemy_poke)
     setup(game, game.player_sprite, enemy)
 
@@ -195,6 +197,7 @@ def action_buttons(game):
     game.battle_button_list.append(actionButton(game, 300, 115, 200, 70, "Fight", game.battle_theme))
     game.battle_button_list.append(actionButton(game, 500, 115, 200, 70, "Switch", game.battle_theme))
     game.battle_button_list.append(actionButton(game, 300, 40, 200, 70, "Bag", game.battle_theme))
+    game.battle_button_list.append(actionButton(game, 500, 40, 200, 70, "Run", game.battle_theme))
     game.battle_button_set = "action"
 
 
@@ -298,7 +301,22 @@ def update(game):
             game.battle_switchto = None
             move = game.battle_enemy.poke.moves[random.randrange(len(game.battle_enemy.poke.moves))]
             game.battle_enemy.poke.attack(game.battle_player.poke, move)
-            
+    elif game.battle_action == "Run":
+        if game.battle_enemy.wild:
+            if random.randrange(2) == 0:
+                print("you ran")
+                for poke in game.battle_player.pokemon:
+                    poke.cur_stats[1] = poke.stats[1]
+                    poke.cur_stats[2] = poke.stats[2]
+                game.battle_action = None
+                game.cur_screen = "game"
+                return
+            else:
+                print("failed to run away")
+                game.battle_action = None
+                move = game.battle_enemy.poke.moves[random.randrange(len(game.battle_enemy.poke.moves))]
+                game.battle_enemy.poke.attack(game.battle_player.poke, move)
+
 
 if __name__ == "__main__":
     # from utils import FakeDirector
