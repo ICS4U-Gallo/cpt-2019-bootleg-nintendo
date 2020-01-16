@@ -16,6 +16,7 @@ class Player:
         else:
             return True
 
+
 class Enemy:
     def __init__(self, wild, *poke):
         self.wild = wild
@@ -27,6 +28,7 @@ class Enemy:
                 return False
         else:
             return True
+
 
 def wild_encounter(game):
     enemy_poke = pokemon.Pokemon.random_poke()

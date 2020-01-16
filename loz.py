@@ -200,7 +200,7 @@ class MyGame(arcade.Window):
         self.player_list.append(self.player_sprite)
 
         poke = pokemon.Pokemon.Magikarp()
-        poke.addlevel(4)
+        poke.addlevel(18)
         self.player_sprite.pokemon.append(poke)
         # Set the background color
         arcade.set_background_color(arcade.color.AMAZON)
