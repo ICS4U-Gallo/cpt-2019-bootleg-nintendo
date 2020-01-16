@@ -26,6 +26,7 @@ small_room_list = [1, 2, 6]
 tex_right = 1
 tex_left = 0
 
+
 def sort_pokemon(poke):
     # sort pokemon storage by level
     if len(poke) == 1:
@@ -55,6 +56,7 @@ def sort_pokemon(poke):
         left_marker += 1
 
     return sorted_poke
+
 
 def search_pokemon(poke_list, target):
     # search pokemon by name, return list of pokemon

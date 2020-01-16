@@ -189,11 +189,18 @@ class Pokemon(arcade.Sprite):
         poke.avalible_move = {10: Move.Splash()}
         return poke
 
+    @classmethod
+    def PinkMagikarp(cls):
+        poke = cls(17, "Slightly Less Dead fish", "water")
+        poke.texture = arcade.load_texture("images/poke_images/dead_fish.png")
+        
+
 
 poke_list = [Pokemon.Charmander(), Pokemon.Squirtle(),
              Pokemon.Bulbasaur(), Pokemon.IceCream(),
              Pokemon.Garbage(), Pokemon.Torkoal(),
              Pokemon.Klefki(), Pokemon.Magikarp()]
+
 
 def main():
     pass

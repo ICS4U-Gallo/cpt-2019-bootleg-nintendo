@@ -301,6 +301,7 @@ def heal_center():
 
     return room
 
+
 def room_logic(player):
     if ceil(player.player_sprite.center_x) in range(1000, 1080) and ceil(player.player_sprite.center_y) in range(670, 676) and player.current_room == 0:
         player.current_room = 2
@@ -423,6 +424,7 @@ def view_logic(player):
                                 screen_height + player.view_bottom - 1)
     if player.current_room in small_room_list:
         arcade.set_viewport(0, screen_width, 0, screen_height)
+
 
 def create():
     room_list = []
