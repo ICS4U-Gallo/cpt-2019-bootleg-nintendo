@@ -46,6 +46,7 @@ class Item:
         item.texture = arcade.load_texture("images/buff_images/legs.jpg")
         return item
 
+
 class PokeBall(Item):
     def __init__(self, name, effect):
         super().__init__(name, effect)
