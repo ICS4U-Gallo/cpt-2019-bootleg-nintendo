@@ -47,8 +47,9 @@ class Item:
         return item
 
 class PokeBall(Item):
-    def __init__(self, name, effect):
+    def __init__(self, name, effect, amount):
         super().__init__(name, effect)
+        self.amount = amount
 
     def use(self, player, poke):
         if self.name == "pokeball":
@@ -62,19 +63,19 @@ class PokeBall(Item):
 
     @classmethod
     def pokeball(cls):
-        item = cls("pokeball", "25% to catch pokemon")
+        item = cls("pokeball", "25% catch rate", 0)
         item.texture = arcade.load_texture("images/pokeballs/pokeball.png")
         return item
 
     @classmethod
     def greatball(cls):
-        item = cls("great ball", "50% to catch pokemon")
+        item = cls("great ball", "50% catch rate", 0)
         item.texture = arcade.load_texture("images/pokeballs/great_ball.png")
         return item
 
     @classmethod
     def masterball(cls):
-        item = cls("master ball", "100% to catch pokemon")
+        item = cls("master ball", "100% catch rate", 0)
         item.texture = arcade.load_texture("images/pokeballs/master_ball.png")
         return item
 

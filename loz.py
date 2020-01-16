@@ -232,6 +232,8 @@ class MyGame(arcade.Window):
                 self.rooms[self.current_room].grass_list.draw()
         elif self.cur_screen == "battle":
             battle.on_draw(self)
+        elif self.cur_screen == "bag":
+            print("bag")
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """

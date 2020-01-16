@@ -65,7 +65,7 @@ class Pokemon(arcade.Sprite):
     def levelup(self):
         self.lvl += 1
         for i in range(3):
-            self.stats[i] = round(self.stats[i] * 51/50)
+            self.stats[i] = routypend(self.stats[i] * 51/50)
         for i in range(3):
             self.cur_stats[i] += round(self.stats[i]*1.5*0.02)
             if self.cur_stats[i] > self.stats[i]:
