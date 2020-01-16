@@ -26,6 +26,7 @@ small_room_list = [1, 2, 6]
 tex_right = 1
 tex_left = 0
 
+
 def sort_pokemon(poke):
     # sort pokemon storage by level
     if len(poke) == 1:
@@ -55,6 +56,7 @@ def sort_pokemon(poke):
         left_marker += 1
 
     return sorted_poke
+
 
 def search_pokemon(poke_list, target):
     # search pokemon by name, return list of pokemon
@@ -225,7 +227,9 @@ class MyGame(arcade.Window):
         # Draw all the sprites.
         if self.cur_screen == "game":
             arcade.draw_texture_rectangle(screen_width, screen_height,
-                                          screen_width * 2, screen_height * 2, self.rooms[self.current_room].background)
+                                          screen_width * 2, screen_height * 2,
+                                          self.rooms[self.current_room].
+                                          background)
             self.rooms[self.current_room].wall_list.draw()
             self.player_list.draw()
             if self.current_room == 3:
@@ -247,7 +251,7 @@ class MyGame(arcade.Window):
             if key == arcade.key.L:
                 self.act_pressed = True
 
-    def on_key_release(self,key, modifiers):
+    def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
         if key == arcade.key.W:
             self.up_pressed = False
@@ -283,8 +287,7 @@ class MyGame(arcade.Window):
             elif self.right_pressed and not self.left_pressed:
                 self.player_sprite.change_x = MOVEMENT_SPEED
 
-            if math.ceil(self.player_sprite.center_x) in range(200, 530) and math.ceil(self.player_sprite.center_y) in range(300,
-                                                                                                                   310) and self.current_room == 6:
+            if math.ceil(self.player_sprite.center_x) in range(200, 530) and math.ceil(self.player_sprite.center_y) in range(300,310) and self.current_room == 6:
                 if self.act_pressed == True:
                     print('healed')
                     for poke in self.player_sprite.pokemon:
