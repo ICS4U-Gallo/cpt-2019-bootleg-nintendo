@@ -29,7 +29,7 @@ class Enemy:
             return True
 
 def wild_encounter(game):
-    enemy_poke = pokemon.poke_list[random.randrange(len(pokemon.poke_list)-1)]
+    enemy_poke = pokemon.Pokemon.random_poke()
     enemy_poke.addlevel(random.randrange(2,7))
     enemy = Enemy(True, enemy_poke)
     setup(game, game.player_sprite, enemy)

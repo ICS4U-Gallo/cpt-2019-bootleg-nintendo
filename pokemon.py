@@ -1,4 +1,5 @@
 import arcade
+import random
 
 types = ["fire", "water", "grass", "normal"]
 
@@ -22,12 +23,11 @@ class Move:
         if self.status[0] == 0:
             return
         elif self.status[0] == 1:
-            print(self.status[1], self.status[2])
             poke.cur_stats[self.status[1]] += self.status[2]
         elif self.status[0] == 2:
             opp.cur_stats[self.status[1]] += self.status[2]
-        if poke.cur_stats[self.status[1]] <= 0:
-            poke.cur_stats[self.status[1]] = 1
+            if opp.cur_stats[self.status[1]] <= 0:
+                opp.cur_stats[self.status[1]] = 1
 
     @classmethod
     def Tackle(cls):
@@ -41,6 +41,10 @@ class Move:
     def Growl(cls):
         return cls("yap", 0, "normal", 40, 2, 1, -10)
 
+    @classmethod
+    def Splash(cls):
+        return cls("Splash", 70, "water", 40, 0)
+
 
 class Pokemon(arcade.Sprite):
     def __init__(self, num, name, types, lvl, hp, atk, def_, spd):
@@ -51,6 +55,7 @@ class Pokemon(arcade.Sprite):
         self.lvl = lvl
         self.cur_stats = [hp, atk, def_]
         self.stats = [hp, atk, def_, spd]
+        self.avalible_move = {}
         self.killcount = 0
 
     def addlevel(self, lvl):
@@ -62,9 +67,11 @@ class Pokemon(arcade.Sprite):
         for i in range(3):
             self.stats[i] = round(self.stats[i] * 51/50)
         for i in range(3):
-            self.cur_stats[i] += self.stats[i]*1.5
+            self.cur_stats[i] += round(self.stats[i]*1.5*0.02)
             if self.cur_stats[i] > self.stats[i]:
                 self.cur_stats[i] = self.stats[i]
+        if self.lvl in self.avalible_move.keys():
+            self.moves.append(self.avalible_move[self.lvl])
 
     def type_modif(self, opp, move):
         if ((move.type == "fire" and opp.type == "grass") or
@@ -96,15 +103,33 @@ class Pokemon(arcade.Sprite):
 
     def gainkill(self):
         self.killcount += 1
-        if self.killcount == 5:
+        if self.killcount == 1:
             self.killcount = 0
-            self.levelup
+            self.levelup()
 
     def update(self):
         pass
         
     def __str__(self):
         return f"{self.name, self.type, self.lvl, *self.cur_stats}"
+
+    @classmethod
+    def random_poke(cls):
+        rng = random.randrange(7)
+        if rng == 0:
+            return cls.Charmander()
+        elif rng == 1:
+            return cls.Squirtle()
+        elif rng == 2:
+            return cls.Bulbasaur()
+        elif rng == 3:
+            return cls.IceCream()
+        elif rng == 4:
+            return cls.Garbage()
+        elif rng == 5:
+            return cls.Torkoal()
+        elif rng == 6:
+            return cls.Klefki()
 
     @classmethod
     def Charmander(cls):
@@ -143,7 +168,7 @@ class Pokemon(arcade.Sprite):
         return poke
 
     @classmethod
-    def torkoal(cls):
+    def Torkoal(cls):
         poke = cls(14, "China's air", "fire", 1, 70, 85, 140, 20)
         poke.texture = arcade.load_texture("images/poke_images/torkoal.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
@@ -161,12 +186,13 @@ class Pokemon(arcade.Sprite):
         poke = cls(16, "Dead fish", "water", 1, 100, 100, 100, 100)
         poke.texture = arcade.load_texture("images/poke_images/magikarp.jpg")
         poke.moves = [Move.Tackle(), Move.Leer(), Move.Growl()]
+        poke.avalible_move = {10: Move.Splash()}
         return poke
 
 
 poke_list = [Pokemon.Charmander(), Pokemon.Squirtle(),
              Pokemon.Bulbasaur(), Pokemon.IceCream(),
-             Pokemon.Garbage(), Pokemon.torkoal(),
+             Pokemon.Garbage(), Pokemon.Torkoal(),
              Pokemon.Klefki(), Pokemon.Magikarp()]
 
 def main():
