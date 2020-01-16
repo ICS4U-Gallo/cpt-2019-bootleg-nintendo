@@ -1,7 +1,7 @@
 import arcade
 import random
 import os
-import Pokemon
+import pokemon
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600

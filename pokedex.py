@@ -7,14 +7,6 @@ height = 640
 
 # poke_list = ["TORKOAL", "GARBAGE", "PIKACHU", "EEVEE", "GARCHOMP", "
 # VESPIQUEN", "COMBEE", "RAYQUAZA"]
-poke_list = [pokemon.Pokemon.Charmander(), pokemon.Pokemon.Squirtle(),
-             pokemon.Pokemon.Bulbasaur(), pokemon.Pokemon.IceCream(),
-             pokemon.Pokemon.Garbage(), pokemon.Pokemon.torkoal(),
-             pokemon.Pokemon.Klefki(), pokemon.Pokemon.Magikarp(),
-             pokemon.Pokemon.Magikarp(), pokemon.Pokemon.Charmander(),
-             pokemon.Pokemon.Garbage(), pokemon.Pokemon.Magikarp(),
-             pokemon.Pokemon.Magikarp(), pokemon.Pokemon.Squirtle(),
-             pokemon.Pokemon.IceCream(), pokemon.Pokemon.torkoal()]
 
 
 def binary_search(target, numbers):
@@ -71,49 +63,73 @@ class MyGame(arcade.Window):
         arcade.set_background_color(arcade.color.WHITE)
 
     def setup(self):
-        self.pointer = 0
+        self._pointer = 0
         self.sort_menu = False
         self.search_menu = False
         self.search_number = ""
 
+        self.poke_list = [pokemon.Pokemon.Charmander(),
+                          pokemon.Pokemon.Squirtle(),
+                          pokemon.Pokemon.Bulbasaur(),
+                          pokemon.Pokemon.IceCream(),
+                          pokemon.Pokemon.Garbage(),
+                          pokemon.Pokemon.torkoal(),
+                          pokemon.Pokemon.Klefki(),
+                          pokemon.Pokemon.Magikarp(),
+                          pokemon.Pokemon.Magikarp(),
+                          pokemon.Pokemon.Charmander(),
+                          pokemon.Pokemon.Garbage(),
+                          pokemon.Pokemon.Magikarp(),
+                          pokemon.Pokemon.Magikarp(),
+                          pokemon.Pokemon.Squirtle(),
+                          pokemon.Pokemon.IceCream(),
+                          pokemon.Pokemon.torkoal()]
+
+    def get_pointer(self):
+        return self._pointer
+
+    def edit_pointer(self, value):
+        self._pointer = value
+
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_text("Pokedex", 20, height - 70,
-                         arcade.color.BLACK, 50)
-        arcade.draw_text("Total Caught:", 20, height - 120,
-                         arcade.color.BLACK, 30)
-        arcade.draw_text(str(len(poke_list)), 250, height - 120,
+        arcade.draw_text("Pokedex", 20, 570, arcade.color.BLACK, 50)
+        arcade.draw_text("Total Caught:", 20, 520, arcade.color.BLACK, 30)
+        arcade.draw_text(str(len(self.poke_list)), 250, 520,
                          arcade.color.BLACK, 30)
         arcade.draw_text("Q - Sort", 30, 30, arcade.color.BLACK, 60)
         arcade.draw_text("E - Search", 370, 30, arcade.color.BLACK, 60)
 
-        arcade.draw_xywh_rectangle_outline(10, height * 2/3 - 20, 450, 70,
+        arcade.draw_xywh_rectangle_outline(10, 405, 450, 70,
                                            arcade.color.GRAY, 3)
-        arcade.draw_xywh_rectangle_outline(5, height / 2 - 30, 460, 90,
+        arcade.draw_xywh_rectangle_outline(5, 290, 460, 90,
                                            arcade.color.BLACK, 5)
-        arcade.draw_xywh_rectangle_outline(10, height / 3 - 20, 450, 70,
+        arcade.draw_xywh_rectangle_outline(10, 193, 450, 70,
                                            arcade.color.GRAY, 3)
 
-        if self.pointer - 1 != -1:
-            arcade.draw_text("{}: {}".format(poke_list[self.pointer - 1].num,
-                             poke_list[self.pointer - 1].name), 20,
-                             height * 2/3, arcade.color.BLACK, 20)
+        if self.get_pointer() - 1 != -1:
+            arcade.draw_text("{}: {}".format(self.poke_list
+                             [self.get_pointer() - 1].num,
+                             self.poke_list[self.get_pointer() - 1].name), 20,
+                             425, arcade.color.BLACK, 20)
 
-        arcade.draw_text("{}: {}".format(poke_list[self.pointer].num,
-                         poke_list[self.pointer].name), 20,
-                         height/2, arcade.color.BLACK, 30)
+        arcade.draw_text("{}: {}".format(self.poke_list
+                         [self.get_pointer()].num,
+                         self.poke_list[self.get_pointer()].name), 20,
+                         320, arcade.color.BLACK, 30)
 
-        if self.pointer + 1 != len(poke_list):
-            arcade.draw_text("{}: {}".format(poke_list[self.pointer + 1].num,
-                             poke_list[self.pointer + 1].name), 20,
-                             height/3, arcade.color.BLACK, 20)
+        if self.get_pointer() + 1 != len(self.poke_list):
+            arcade.draw_text("{}: {}".format(self.poke_list
+                             [self.get_pointer() + 1].num,
+                             self.poke_list[self.get_pointer() + 1].name), 20,
+                             213, arcade.color.BLACK, 20)
 
-        arcade.draw_triangle_filled(475, height/2+15, 495, height/2-5, 495,
-                                    height/2 + 35, arcade.color.BLACK)
+        arcade.draw_triangle_filled(475, 335, 495, 315, 495,
+                                    355, arcade.color.BLACK)
         arcade.draw_xywh_rectangle_outline(500, 210, 250, 250,
                                            arcade.color.BLACK, 10)
-        arcade.draw_texture_rectangle(625, 335, 240, 240,
-                                      poke_list[self.pointer].texture)
+        arcade.draw_texture_rectangle(625, 335, 240, 240, self.poke_list
+                                      [self.get_pointer()].texture)
 
         if self.search_menu:
             arcade.draw_xywh_rectangle_filled(100, 100, 568, 440,
@@ -137,13 +153,12 @@ class MyGame(arcade.Window):
         pass
 
     def on_key_press(self, key, key_modifiers):
-        global poke_list
         if key == arcade.key.W:
-            if self.pointer != 0:
-                self.pointer -= 1
+            if self.get_pointer() != 0:
+                self.edit_pointer(self.get_pointer() - 1)
         elif key == arcade.key.S:
-            if self.pointer != len(poke_list) - 1:
-                self.pointer += 1
+            if self.get_pointer() != len(self.poke_list) - 1:
+                self.edit_pointer(self.get_pointer() + 1)
         if key == arcade.key.E or self.search_menu:
             self.search_menu = True
             self.sort_menu = False
@@ -182,10 +197,10 @@ class MyGame(arcade.Window):
                 self.search_number = self.search_number[:-1]
 
             if key == arcade.key.L and self.search_number != "":
-                found = binary_search(int(self.search_number), poke_list)
+                found = binary_search(int(self.search_number), self.poke_list)
 
                 if found != -1:
-                    self.pointer = found
+                    self.edit_pointer(found)
                 self.search_menu = False
                 self.search_number = ""
 
@@ -197,14 +212,14 @@ class MyGame(arcade.Window):
             self.sort_menu = True
             self.search_menu = False
             if key == arcade.key.L:
-                poke_list = merge_sort(poke_list)
+                self.poke_list = merge_sort(self.poke_list)
                 self.sort_menu = False
             elif key == arcade.key.K:
                 self.sort_menu = False
 
 
 def main():
-    game = MyGame(width, height, "My Game")
+    game = MyGame(width, height, "Pokedex")
     game.setup()
     arcade.run()
 
