@@ -8,6 +8,7 @@ class Item:
         self.name = name
         self.amount = amount
         self.effect = effect
+        self.amount = amount
 
     def use(self, poke):
         if self.name == "Potion":
