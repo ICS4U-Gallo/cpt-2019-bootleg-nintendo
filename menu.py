@@ -37,7 +37,7 @@ class MyGame(arcade.Window):
 
 
 def main():
-    MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, 'Bootleg Pokemon')
+    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, 'Bootleg Pokemon')
     arcade.run()
 
 

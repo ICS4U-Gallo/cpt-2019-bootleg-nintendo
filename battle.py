@@ -1,9 +1,11 @@
-import settings
 import pokemon
 import random
 from arcade.gui import *
 import os
 import loz
+import time
+import bag
+
 
 class Player:
     def __init__(self):
@@ -44,20 +46,20 @@ def move_first(poke, opp):
         return False
 
 
-def fight(poke, opp, move):
+def fight(poke, opp, move, game):
     if move_first(poke, opp):
-        poke.attack(opp, move)
+        poke.attack(opp, move, game)
         if opp.is_dead():
             print(f"{opp.name} is dead")
             poke.gainkill()
             return
-        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
+        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))], game)
     else:
-        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
+        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))], game)
         if poke.is_dead():
             print(f"{poke.name} is dead")
             return
-        poke.attack(opp, move)
+        poke.attack(opp, move, game)
         if opp.is_dead():
             print(f"{opp.name} is dead")
             poke.gainkill()
@@ -73,8 +75,7 @@ class actionButton(TextButton):
 
     def on_release(self):
         if self.pressed:
-            self.game.battle_player.poke.msg = []
-            self.game.battle_enemy.poke.msg = []
+            self.game.battle_msg = []
             self.game.battle_action = self.text
             self.pressed = False
 
@@ -144,17 +145,11 @@ def display_pokemon(game):
     arcade.draw_text(f"{poke.name} lvl: {poke.lvl}", 125, poke.top+60, arcade.color.BLACK)
     arcade.draw_text(f"hp: {poke.cur_stats[0]}/{poke.stats[0]}", 125, poke.top+45, arcade.color.BLACK)
 
-    for i in range(len(poke.msg)):
-        arcade.draw_text(poke.msg[i], 350, 250-i*20, arcade.color.BLACK)
-
     enemy = game.battle_enemy.pokemon[game.battle_enemy.j]
     arcade.draw_xywh_rectangle_filled(525, enemy.bottom-30, 150, 8, arcade.color.RED)
     arcade.draw_xywh_rectangle_filled(525, enemy.bottom-30, 150 * (enemy.cur_stats[0]/enemy.stats[0]), 8, arcade.color.GREEN)
     arcade.draw_text(f"{enemy.name} lvl: {enemy.lvl}", 525, enemy.bottom-45, arcade.color.BLACK)
     arcade.draw_text(f"hp: {enemy.cur_stats[0]}/{enemy.stats[0]}", 525, enemy.bottom-60, arcade.color.BLACK)
-
-    for i in range(len(enemy.msg)):
-        arcade.draw_text(enemy.msg[i], 350, 250-(len(poke.msg)*20)-i*20, arcade.color.BLACK)
 
 
 def action_buttons(game):
@@ -191,6 +186,7 @@ def setup(game, player, enemy):
     action_buttons(game)
     game.battle_player = player
     game.battle_enemy = enemy
+    game.battle_msg = []
 
     game.battle_player_x = 200
     game.battle_player_y = 300
@@ -220,7 +216,15 @@ def on_draw(game):
 
     game.battle_pokemon_list.draw()
     display_pokemon(game)
+    
+    for i in range(len(game.battle_msg)):
+        arcade.draw_text(game.battle_msg[i], 350, 250-i*20, arcade.color.WHITE_SMOKE)
 
+    if game.battle_enemy.defeated():
+        arcade.draw_text("Enemy is defeated", 350, 240-len(game.battle_msg)*20, arcade.color.WHITE, 20)
+    elif game.battle_player.defeated():
+        arcade.draw_text("You are defeated", 350, 240-len(game.battle_msg)*20, arcade.color.WHITE, 20)
+        
 
 def exit_battle(game):
     for poke in game.battle_player.pokemon:
@@ -232,9 +236,11 @@ def exit_battle(game):
 def update(game):
     if game.battle_player.defeated():
         exit_battle(game)
+        time.sleep(1)
         return
     elif game.battle_enemy.defeated():
         exit_battle(game)
+        time.sleep(1)
         return
     if game.battle_player.poke.is_dead():
         game.battle_action = "Switch"
@@ -245,13 +251,13 @@ def update(game):
         game.battle_pokemon_list.append(game.battle_emeny.poke)
         game.battle_enemy.poke.center_x = game.battle_enemy_x
         game.battle_enemy.poke.center_y = game.battle_enemy_y
-        print(f"p2 switch to {game.battle_enemy.pokemon[game.battle_enemy.j].name}")
+        game.battle_msg.append(f"enemy switch to {game.battle_enemy.pokemon[game.battle_enemy.j].name}")
 
     if game.battle_action == "Fight":
         if game.battle_button_set != "move":
             move_buttons(game)
         if game.battle_move != None:
-            fight(game.battle_player.poke, game.battle_enemy.pokemon[game.battle_enemy.j], game.battle_move)
+            fight(game.battle_player.poke, game.battle_enemy.pokemon[game.battle_enemy.j], game.battle_move, game)
             action_buttons(game)
             game.battle_move = None
     elif game.battle_action == "Switch":
@@ -268,18 +274,20 @@ def update(game):
             action_buttons(game)
             game.battle_switchto = None
             move = game.battle_enemy.poke.moves[random.randrange(len(game.battle_enemy.poke.moves))]
-            game.battle_enemy.poke.attack(game.battle_player.poke, move)
+            game.battle_enemy.poke.attack(game.battle_player.poke, move, game)
+    elif game.battle_action == "Bag":
+        pass
     elif game.battle_action == "Run":
         if game.battle_enemy.wild:
             if random.randrange(2) == 0:
-                print("you ran")
+                game.battle_msg.append("you ran")
                 exit_battle(game)
                 return
             else:
-                print("failed to run away")
+                game.battle_msg.append("you failed to run away")
                 game.battle_action = None
                 move = game.battle_enemy.poke.moves[random.randrange(len(game.battle_enemy.poke.moves))]
-                game.battle_enemy.poke.attack(game.battle_player.poke, move)
+                game.battle_enemy.poke.attack(game.battle_player.poke, move, game)
 
 
 if __name__ == "__main__":

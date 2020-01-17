@@ -27,47 +27,6 @@ tex_right = 1
 tex_left = 0
 
 
-def sort_pokemon(poke):
-    # sort pokemon storage by level
-    if len(poke) == 1:
-        return poke
-
-    midpoint = len(poke) // 2
-    left_side = sort_pokemon(poke[:midpoint])
-    right_side = sort_pokemon(poke[midpoint:])
-    sorted_poke = []
-
-    left_marker = 0
-    right_marker = 0
-    while left_marker < len(left_side) and right_marker < len(right_side):
-        if left_side[left_marker].lvl < right_side[right_marker].lvl:
-            sorted_poke.append(left_side[left_marker])
-            left_marker += 1
-        else:
-            sorted_poke.append(right_side[right_marker])
-            right_marker += 1
-
-    while right_marker < len(right_side):
-        sorted_poke.append(right_side[right_marker])
-        right_marker += 1
-
-    while left_marker < len(left_side):
-        sorted_poke.append(left_side[left_marker])
-        left_marker += 1
-
-    return sorted_poke
-
-
-def search_pokemon(poke_list, target):
-    # search pokemon by name, return list of pokemon
-    result = []
-    for poke in poke_list:
-        if poke.name == target:
-            result.append(poke)
-
-    return result
-
-
 class Player(arcade.Sprite):
     def __init__(self):
         super().__init__()
@@ -148,7 +107,7 @@ class MyGame(arcade.Window):
         """
         Initializer
         """
-        super().__init__(width, height, title)
+        super().__init__(width, height, title, antialiasing=False)
 
         # Set the working directory (where we expect to find files) to the same
         # directory this .py file is in. You can leave this out of your own
@@ -185,6 +144,7 @@ class MyGame(arcade.Window):
         self.battle_button = None
         self.battle_button_list = None
         self.battle_pokemon_list = None
+        self.battle_msg = None
 
     def setup(self):
         """ Set up the game and initialize the variables. """
