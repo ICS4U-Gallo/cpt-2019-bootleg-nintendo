@@ -200,10 +200,10 @@ class MyGame(arcade.Window):
         self.player_list.append(self.player_sprite)
 
         poke = pokemon.Pokemon.Magikarp()
-        poke.addlevel(4)
+        poke.addlevel(18)
         self.player_sprite.pokemon.append(poke)
         # Set the background color
-        arcade.set_background_color(arcade.color.AMAZON)
+        arcade.set_background_color(arcade.color.BLACK)
 
         # Set the viewport boundaries
         # These numbers set where we have 'scrolled' to.
@@ -236,6 +236,8 @@ class MyGame(arcade.Window):
                 self.rooms[self.current_room].grass_list.draw()
         elif self.cur_screen == "battle":
             battle.on_draw(self)
+        elif self.cur_screen == "bag":
+            print("bag")
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """

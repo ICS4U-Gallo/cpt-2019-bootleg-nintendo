@@ -1,8 +1,8 @@
 import arcade
 import settings
 
-width = 768
-height = 640
+width = settings.WIDTH
+height = settings.HEIGHT
 
 
 class MyGame(arcade.Window):
