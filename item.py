@@ -5,17 +5,18 @@ import battle
 
 
 class Item:
-    def __init__(self, name: str, effect: str, amount:int):
+    def __init__(self, name: str, amount: int, effect: str):
         self.name = name
+        self.amount = amount
         self.effect = effect
         self.amount = amount
 
     def use(self, poke):
-        if self.name == "potion":
+        if self.name == "Potion":
             poke.cur_stats[0] += 20
             if poke.cur_stats[0] > poke.stats[0]:
                 poke.cur_stats[0] = poke.stats[0]
-        elif self.name == "super potion":
+        elif self.name == "Super Potion":
             poke.cur_stats[0] += 20
             if poke.cur_stats[0] > poke.stats[0]:
                 poke.cur_stats[0] = poke.stats[0]
@@ -26,25 +27,25 @@ class Item:
 
     @classmethod
     def potion(cls):
-        item = cls("potion", "Heal hp by 20")
+        item = cls("Potion", 5, "Heal hp by 20")
         item.texture = arcade.load_texture("images/heal_images/potion.jpg")
         return item
 
     @classmethod
     def superpotion(cls):
-        item = cls("super potion", "Heal hp by 100")
-        item.texture = arcade.load_texture("images/heal_images/potion.jpg")
+        item = cls("Super Potion", 5, "Heal hp by 100")
+        item.texture = arcade.load_texture("images/heal_images/super_potion.jpg")
         return item
 
     @classmethod
     def steroids(cls):
-        item = cls("Steroids", "Increase attack by 20", 0)
+        item = cls("Steroids", 5, "Increase attack by 20")
         item.texture = arcade.load_texture("images/buff_images/steroid.jpg")
         return item
 
     @classmethod
     def leg_day(cls):
-        item = cls("Leg Day", "Increase speed by 20", 0)
+        item = cls("Leg Day", 5, "Increase speed by 20")
         item.texture = arcade.load_texture("images/buff_images/legs.jpg")
         return item
 
