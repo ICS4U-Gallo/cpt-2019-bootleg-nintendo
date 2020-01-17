@@ -266,7 +266,7 @@ def gym():
                 wall.bottom = y
                 room.wall_list.append(wall)
 
-    room.background = arcade.load_texture("images/background.jpg")
+    room.background = arcade.load_texture("images/home_floor.jpg")
 
     return room
 
@@ -297,7 +297,7 @@ def heal_center():
     healstation.bottom = 330
     room.wall_list.append(healstation)
 
-    room.background = arcade.load_texture("images/background.jpg")
+    room.background = arcade.load_texture("images/home_floor.jpg")
 
     return room
 

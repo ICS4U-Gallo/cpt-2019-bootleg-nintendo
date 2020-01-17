@@ -5,9 +5,10 @@ import battle
 
 
 class Item:
-    def __init__(self, name: str, effect: str):
+    def __init__(self, name: str, effect: str, amount:int):
         self.name = name
         self.effect = effect
+        self.amount = amount
 
     def use(self, poke):
         if self.name == "potion":
@@ -37,13 +38,13 @@ class Item:
 
     @classmethod
     def steroids(cls):
-        item = cls("Steroids", "Increase attack by 20")
+        item = cls("Steroids", "Increase attack by 20", 0)
         item.texture = arcade.load_texture("images/buff_images/steroid.jpg")
         return item
 
     @classmethod
     def leg_day(cls):
-        item = cls("Leg Day", "Increase speed by 20")
+        item = cls("Leg Day", "Increase speed by 20", 0)
         item.texture = arcade.load_texture("images/buff_images/legs.jpg")
         return item
 
