@@ -4,6 +4,7 @@ import math
 import map
 import battle
 import pokemon
+import menu_start
 
 sprite_scale = 0.5
 other_scale = 0.4
@@ -115,11 +116,20 @@ class MyGame(arcade.Window):
         # as mentioned at the top of this program.
         file_path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(file_path)
+        arcade.set_background_color(arcade.color.WHITE)
 
         # Sprite lists
         self.cur_screen = None
         self.current_room = 1
         self.coin_list = None
+
+        # Set up start menu
+        self.start = None
+        self.start_clock = None
+        self.start_y = None
+        self.load = None
+        self.mouse_x = None
+        self.mouse_y = None
 
         # Set up the player
         self.rooms = None
@@ -185,7 +195,9 @@ class MyGame(arcade.Window):
         arcade.start_render()
 
         # Draw all the sprites.
-        if self.cur_screen == "game":
+        if self.cur_screen == "start":
+            menu_start.on_draw(self)
+        elif self.cur_screen == "game":
             arcade.draw_texture_rectangle(screen_width, screen_height,
                                           screen_width * 2, screen_height * 2,
                                           self.rooms[self.current_room].
@@ -229,16 +241,28 @@ class MyGame(arcade.Window):
             self.act_pressed = False
 
     def on_mouse_press(self, x, y, button, key_modifiers):
-        if self.cur_screen == "battle":
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            if self.start is False:
+                self.start = True
+                self.cur_screen = "start"
+        if self.cur_screen == "start":
+            menu_start.on_mouse_press(self, x, y, button)
+        elif self.cur_screen == "battle":
             check_mouse_press_for_buttons(x, y, self.battle_button_list)
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         if self.cur_screen == "battle":
             check_mouse_release_for_buttons(x, y, self.battle_button_list)
 
+    def on_mouse_motion(self, x, y, dx, dy):
+        self.mouse_x = x
+        self.mouse_y = y
+
     def on_update(self, delta_time):
         """ Movement and game logic """
-        if self.cur_screen == "game":
+        if self.cur_screen == "start":
+            menu_start.on_update(self)
+        elif self.cur_screen == "game":
             self.player_sprite.change_x = 0
             self.player_sprite.change_y = 0
 
@@ -279,7 +303,7 @@ class MyGame(arcade.Window):
 def main():
     """ Main method """
     window = MyGame(screen_width, screen_height, screen_title)
-    window.setup()
+    menu_start.setup(window)
     arcade.run()
 
 

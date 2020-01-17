@@ -221,9 +221,9 @@ def on_draw(game):
         arcade.draw_text(game.battle_msg[i], 350, 250-i*20, arcade.color.WHITE_SMOKE)
 
     if game.battle_enemy.defeated():
-        arcade.draw_text("Enemy is defeated", 350, 240-len(game.battle_msg)*20, arcade.color.WHITE, 20)
+        arcade.draw_text("You won!", 350, 240-len(game.battle_msg)*20, arcade.color.WHITE, 20)
     elif game.battle_player.defeated():
-        arcade.draw_text("You are defeated", 350, 240-len(game.battle_msg)*20, arcade.color.WHITE, 20)
+        arcade.draw_text("You lost!", 350, 240-len(game.battle_msg)*20, arcade.color.WHITE, 20)
         
 
 def exit_battle(game):
