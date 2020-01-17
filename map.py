@@ -375,7 +375,7 @@ def room_logic(player):
     if player.current_room == 3:
         grass_hit = arcade.check_for_collision_with_list(player.player_sprite, player.rooms[player.current_room].grass_list)
         if len(grass_hit) > 0:
-            encounter = random.randint(0, 67)
+            encounter = random.randint(0, 69)
             if encounter == 1 and not player.player_sprite.defeated():
                 print("pokemon")
                 battle.wild_encounter(player)
