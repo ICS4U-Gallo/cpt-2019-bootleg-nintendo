@@ -1,6 +1,7 @@
 import arcade
 import loz
 import random
+import battle
 
 
 class Item:
@@ -53,14 +54,24 @@ class PokeBall(Item):
         self.amount = amount
 
     def use(self, player, poke):
-        if self.name == "pokeball":
+        if self.name == "pokeball" and self.amount != 0:
             if random.randrange(4) == 0:
                 player.pokemon.append(poke)
-        elif self.name == "great ball":
+                player.cur_screen = "game"
+            else:
+                player.cur_screen = "battle"
+            self.amount -= 1
+        elif self.name == "great ball" and self.amount != 0:
             if random.randrange(2) == 0:
                 player.pokemon.append(poke)
-        elif self.name == "master ball":
+                player.cur_screen = "game"
+            else:
+                player.cur_screen = "battle"
+            self.amount -= 1
+        elif self.name == "master ball" and self.amount != 0:
             player.pokemon.append(poke)
+            self.amount -= 
+            player.cur_screen = "game"
 
     @classmethod
     def pokeball(cls):

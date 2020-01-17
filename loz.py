@@ -252,6 +252,8 @@ class MyGame(arcade.Window):
                 self.right_pressed = True
             if key == arcade.key.L:
                 self.act_pressed = True
+        elif self.cur_screen == "balls":
+            print("balls")
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
