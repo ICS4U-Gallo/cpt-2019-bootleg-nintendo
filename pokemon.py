@@ -5,32 +5,68 @@ types = ["fire", "water", "grass", "normal"]
 
 class Move:
     def __init__(self, name, pwr, type_, pp, status):
-        self.name = name
-        self.pwr = pwr
-        self.type = type_
-        self.cur_pp = pp
-        self.pp = pp
-        self.status = status
+        self._name = name
+        self._pwr = pwr
+        self._type = type_
+        self._cur_pp = pp
+        self._pp = pp
+        self._status = status
+
+    def set_name(self, name):
+        self._name = name
+
+    def get_name(self):
+        return self._name
+
+    def set_pwr(self, pwr):
+        self._pwr = pwr
+
+    def get_pwr(self):
+        return self._pwr
+
+    def set_type(self, type):
+        self._type = type
+
+    def get_type(self):
+        return self._type
+
+    def set_cur_pp(self, cur_pp):
+        self._cur_pp = cur_pp
+
+    def get_cur_pp(self):
+        return self._cur_pp
+
+    def set_pp(self, pp):
+        self._pp = pp
+
+    def get_pp(self):
+        return self._pp
+
+    def set_status(self, status):
+        self._status = status
+
+    def get_status(self):
+        return self._status
 
     def check_pp(self):
-        if self.cur_pp == 0:
+        if self.get_cur_pp() == 0:
             return False
         else:
-            self.cur_pp -= 1
+            self.set_cur_pp(self.get_cur_pp()-1)
             return True
 
     def apply_effect(self, poke, opp):
-        if self.status == None:
+        if self.get_status() == None:
             return
-        elif self.status == "reduce def":
+        elif self.get_status() == "reduce def":
             opp.cur_stats[2] -= 10
             if opp.cur_stats[2] <= 0:
                 opp.cur_stats[2] = 1
-        elif self.status == "reduce atk":
+        elif self.get_status() == "reduce atk":
             opp.cur_stats[1] -= 10
             if opp.cur_stats[1] <= 0:
                 opp.cur_stats[1] = 1
-        elif self.status == "burn":
+        elif self.get_status() == "burn":
             opp.effect = "burn"
 
     @classmethod
@@ -107,13 +143,13 @@ class Pokemon(arcade.Sprite):
         self.texture = self.avalible_evo[self.lvl].texture
 
     def type_modif(self, opp, move):
-        if ((move.type == "fire" and opp.type == "grass") or
-                (move.type == "grass" and opp.type == "water") or
-                (move.type == "water" and opp.type == "fire")):
+        if ((move.get_type() == "fire" and opp.type == "grass") or
+                (move.get_type() == "grass" and opp.type == "water") or
+                (move.get_type() == "water" and opp.type == "fire")):
             return 1.5
-        elif ((move.type == "fire" and opp.type == "water") or
-                (move.type == "water" and opp.type == "grass") or
-                (move.type == "grass" and opp.type == "fire")):
+        elif ((move.get_type() == "fire" and opp.type == "water") or
+                (move.get_type() == "water" and opp.type == "grass") or
+                (move.get_type() == "grass" and opp.type == "fire")):
             return 0.5
         else:
             return 1
@@ -124,10 +160,10 @@ class Pokemon(arcade.Sprite):
             self.effect = None
 
     def attack(self, opp, move, game):
-        game.battle_msg.append(f"\n{self.name} uses {move.name}")
+        game.battle_msg.append(f"\n{self.name} uses {move.get_name()}")
         modif = self.type_modif(opp, move)
         move.apply_effect(self, opp)
-        dmg = round(((((self.lvl/2+2)*move.pwr*(self.cur_stats[1]
+        dmg = round(((((self.lvl/2+2)*move.get_pwr()*(self.cur_stats[1]
                     / opp.cur_stats[2]))/50)+2)*modif)
         opp.cur_stats[0] -= dmg
         opp.check_effect()

@@ -51,9 +51,8 @@ class Item:
 
 
 class PokeBall(Item):
-    def __init__(self, name, effect, amount):
-        super().__init__(name, effect)
-        self.amount = amount
+    def __init__(self, name, amount, effect):
+        super().__init__(name, amount, effect)
 
     def use(self, player, poke):
         if self.name == "pokeball" and self.amount != 0:
@@ -72,28 +71,28 @@ class PokeBall(Item):
             self.amount -= 1
         elif self.name == "master ball" and self.amount != 0:
             player.pokemon.append(poke)
-            self.amount -= 
+            self.amount -= 1
             player.cur_screen = "game"
 
     @classmethod
     def pokeball(cls):
-        item = cls("pokeball", "25% catch rate", 0)
+        item = cls("pokeball", 0, "25% catch rate")
         item.texture = arcade.load_texture("images/pokeballs/pokeball.png")
         return item
 
     @classmethod
     def greatball(cls):
-        item = cls("great ball", "50% catch rate", 0)
+        item = cls("great ball", 0, "50% catch rate")
         item.texture = arcade.load_texture("images/pokeballs/great_ball.png")
         return item
 
     @classmethod
     def masterball(cls):
-        item = cls("master ball", "100% catch rate", 0)
+        item = cls("master ball", 0, "100% catch rate")
         item.texture = arcade.load_texture("images/pokeballs/master_ball.png")
         return item
 
 
 if __name__ == "__main__":
     p = loz.Player()
-    p.bag.append(item)
+    pass

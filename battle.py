@@ -82,7 +82,7 @@ class actionButton(TextButton):
 
 class moveButton(TextButton):
     def __init__(self, game, x=0, y=0, width=100, height=40, move=None, theme=None):
-        super().__init__(x, y, width, height, move.name, theme=theme)
+        super().__init__(x, y, width, height, move.get_name(), theme=theme)
         self.move = move
         self.game = game
 
