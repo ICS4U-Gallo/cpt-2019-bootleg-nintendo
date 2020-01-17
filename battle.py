@@ -37,30 +37,11 @@ def wild_encounter(game):
     setup(game, game.player_sprite, enemy)
 
 
-def action(p1, p2, i, j):
-    option = "fight"
-    if option == "fight":
-        move = choose_move(p1.pokemon[i])
-        fight(p1.pokemon[i], p2.pokemon[j], move)
-    elif option == "switch":
-        i = 1
-        opp = p2.pokemon[j]
-        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))])
-    elif option == "item":
-        pass
-
-
 def move_first(poke, opp):
     if poke.stats[3] >= opp.stats[3]:
         return True
     else:
         return False
-
-
-def choose_move(poke):
-    move_num = int(input("move# :"))
-    move = poke.moves[move_num]
-    return move
 
 
 def fight(poke, opp, move):
@@ -92,6 +73,8 @@ class actionButton(TextButton):
 
     def on_release(self):
         if self.pressed:
+            self.game.battle_player.poke.msg = []
+            self.game.battle_enemy.poke.msg = []
             self.game.battle_action = self.text
             self.pressed = False
 
@@ -139,28 +122,6 @@ class backButton(TextButton):
             action_buttons(self.game)
             self.pressed = False
 
-# class Battle(arcade.Window):
-#     def __init__(self, w, h, name, p1, p2):
-#         super().__init__(w, h, name)
-#
-#         # Set the working directory (where we expect to find files) to the same
-#         # directory this .py file is in. You can leave this out of your own
-#         # code, but it is needed to easily run the examples using "python -m"
-#         # as mentioned at the top of this program.
-#         file_path = os.path.dirname(os.path.abspath(__file__))
-#         os.chdir(file_path)
-#
-#         arcade.set_background_color(arcade.color.WHITE)
-#         self.player = p1
-#         self.enemy = p2
-#         self.action = None
-#         self.move = None
-#         self.switchto = None
-#         self.theme = None
-#         self.button = None
-#         self.button_list = None
-#         self.pokemon_list = None
-
 
 def set_button_textures(game):
     normal = ":resources:gui_themes/Fantasy/Buttons/Normal.png"
@@ -183,11 +144,17 @@ def display_pokemon(game):
     arcade.draw_text(f"{poke.name} lvl: {poke.lvl}", 125, poke.top+60, arcade.color.BLACK)
     arcade.draw_text(f"hp: {poke.cur_stats[0]}/{poke.stats[0]}", 125, poke.top+45, arcade.color.BLACK)
 
+    for i in range(len(poke.msg)):
+        arcade.draw_text(poke.msg[i], 350, 250-i*20, arcade.color.BLACK)
+
     enemy = game.battle_enemy.pokemon[game.battle_enemy.j]
     arcade.draw_xywh_rectangle_filled(525, enemy.bottom-30, 150, 8, arcade.color.RED)
     arcade.draw_xywh_rectangle_filled(525, enemy.bottom-30, 150 * (enemy.cur_stats[0]/enemy.stats[0]), 8, arcade.color.GREEN)
     arcade.draw_text(f"{enemy.name} lvl: {enemy.lvl}", 525, enemy.bottom-45, arcade.color.BLACK)
     arcade.draw_text(f"hp: {enemy.cur_stats[0]}/{enemy.stats[0]}", 525, enemy.bottom-60, arcade.color.BLACK)
+
+    for i in range(len(enemy.msg)):
+        arcade.draw_text(enemy.msg[i], 350, 250-(len(poke.msg)*20)-i*20, arcade.color.BLACK)
 
 
 def action_buttons(game):
@@ -255,18 +222,19 @@ def on_draw(game):
     display_pokemon(game)
 
 
+def exit_battle(game):
+    for poke in game.battle_player.pokemon:
+        poke.cur_stats[1] = poke.stats[1]
+        poke.cur_stats[2] = poke.stats[2]
+    game.cur_screen = "game"
+
+
 def update(game):
     if game.battle_player.defeated():
-        for poke in game.battle_player.pokemon:
-            poke.cur_stats[1] = poke.stats[1]
-            poke.cur_stats[2] = poke.stats[2]
-        game.cur_screen = "game"
+        exit_battle(game)
         return
     elif game.battle_enemy.defeated():
-        for poke in game.battle_player.pokemon:
-            poke.cur_stats[1] = poke.stats[1]
-            poke.cur_stats[2] = poke.stats[2]
-        game.cur_screen = "game"
+        exit_battle(game)
         return
     if game.battle_player.poke.is_dead():
         game.battle_action = "Switch"
@@ -305,11 +273,7 @@ def update(game):
         if game.battle_enemy.wild:
             if random.randrange(2) == 0:
                 print("you ran")
-                for poke in game.battle_player.pokemon:
-                    poke.cur_stats[1] = poke.stats[1]
-                    poke.cur_stats[2] = poke.stats[2]
-                game.battle_action = None
-                game.cur_screen = "game"
+                exit_battle(game)
                 return
             else:
                 print("failed to run away")

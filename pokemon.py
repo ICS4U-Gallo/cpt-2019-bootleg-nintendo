@@ -4,13 +4,13 @@ import random
 types = ["fire", "water", "grass", "normal"]
 
 class Move:
-    def __init__(self, name, pwr, type_, pp, *status):
+    def __init__(self, name, pwr, type_, pp, status):
         self.name = name
         self.pwr = pwr
         self.type = type_
         self.cur_pp = pp
         self.pp = pp
-        self.status = [*status]
+        self.status = status
 
     def check_pp(self):
         if self.cur_pp == 0:
@@ -20,46 +20,50 @@ class Move:
             return True
 
     def apply_effect(self, poke, opp):
-        if self.status[0] == 0:
+        if self.status == None:
             return
-        elif self.status[0] == 1:
-            poke.cur_stats[self.status[1]] += self.status[2]
-        elif self.status[0] == 2:
-            opp.cur_stats[self.status[1]] += self.status[2]
-            if opp.cur_stats[self.status[1]] <= 0:
-                opp.cur_stats[self.status[1]] = 1
+        elif self.status == "reduce def":
+            opp.cur_stats[2] -= 10
+            if opp.cur_stats[2] <= 0:
+                opp.cur_stats[2] = 1
+        elif self.status == "reduce atk":
+            opp.cur_stats[1] -= 10
+            if opp.cur_stats[1] <= 0:
+                opp.cur_stats[1] = 1
+        elif self.status == "burn":
+            opp.effect = "burn"
 
     @classmethod
     def Tackle(cls):
-        return cls("Bump", 40, "normal", 40, 0)
+        return cls("Bump", 40, "normal", 40, None)
 
     @classmethod
     def Leer(cls):
-        return cls("Leer", 0, "normal", 40, 2, 2, -10)
+        return cls("Leer", 0, "normal", 40, "reduce def")
 
     @classmethod
     def Growl(cls):
-        return cls("yap", 0, "normal", 40, 2, 1, -10)
+        return cls("yap", 0, "normal", 40, "reduce atk")
 
     @classmethod
     def WaterGun(cls):
-        return cls("Not Splash", 80, "water", 40, 0)
+        return cls("Not Splash", 80, "water", 40, None)
 
     @classmethod
     def FlameThrower(cls):
-        return cls("FlameThrower", 80, "fire", 40, 0)
+        return cls("FlameThrower", 60, "fire", 40, "burn")
 
     @classmethod
     def LeafBeam(cls):
-        return cls("LeafBeam", 80, "grass", 40, 0)
+        return cls("LeafBeam", 80, "grass", 40, None)
 
     @classmethod
     def Bite(cls):
-        return cls("Bite", 120, "normal", 40, 0)
+        return cls("Bite", 80, "normal", 40, None)
 
     @classmethod
     def Splash(cls):
-        return cls("Splash", 200, "water", 100, 0)
+        return cls("Splash", 100, "water", 100, None)
 
 
 class Pokemon(arcade.Sprite):
@@ -71,9 +75,11 @@ class Pokemon(arcade.Sprite):
         self.lvl = lvl
         self.cur_stats = [hp, atk, def_]
         self.stats = [hp, atk, def_, spd]
+        self.effect = None
         self.avalible_move = {}
         self.avalible_evo = {}
         self.killcount = 0
+        self.msg = []
 
     def addlevel(self, lvl):
         for i in range(lvl):
@@ -82,7 +88,7 @@ class Pokemon(arcade.Sprite):
     def levelup(self):
         self.lvl += 1
         for i in range(3):
-            self.stats[i] = routypend(self.stats[i] * 51/50)
+            self.stats[i] = round(self.stats[i] * 51/50)
         for i in range(3):
             self.cur_stats[i] += round(self.stats[i]*1.5*0.02)
             if self.cur_stats[i] > self.stats[i]:
@@ -113,14 +119,20 @@ class Pokemon(arcade.Sprite):
         else:
             return 1
 
+    def check_effect(self):
+        if self.effect == "burn":
+            self.cur_stats[0] = round(self.cur_stats[0]*0.95)
+            self.effect = None
+
     def attack(self, opp, move):
-        print(f"\n{self.name} uses {move.name}")
+        self.msg.append(f"\n{self.name} uses {move.name}")
         modif = self.type_modif(opp, move)
         move.apply_effect(self, opp)
         dmg = round(((((self.lvl/2+2)*move.pwr*(self.cur_stats[1]
                     / opp.cur_stats[2]))/50)+2)*modif)
         opp.cur_stats[0] -= dmg
-        print(f"{self.name} does {dmg} damage to {opp.name}.")
+        opp.check_effect()
+        self.msg.append(f"{self.name} does {dmg} damage to {opp.name}.")
 
     def is_dead(self):
         if self.cur_stats[0] <= 0:
@@ -171,7 +183,7 @@ class Pokemon(arcade.Sprite):
     @classmethod
     def Charm2(cls):
         poke = cls(2, "Slightly Better Charmnder", "fire", None, None, None, None, None)
-        poke.texture = arcade.load_texture("images/poke_images/charizard.jpg")
+        poke.texture = arcade.load_texture("images/poke_images/charizard.jpg", scale=0.4)
         return poke
 
 
