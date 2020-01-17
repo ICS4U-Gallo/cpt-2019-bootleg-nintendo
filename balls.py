@@ -56,98 +56,93 @@ def merge_sort(numbers):
     return new_list
 
 
+def setup(player):
+    player.pointer = 0
+    player.sort_menu = False
+    player.search_menu = False
+    player.search_number = ""
+    player.pokeball_amount = 0
+    player.greatball_amount = 0
+    player.masterball_amount = 0
+
+    player.ball_list = [item.PokeBall.pokeball(), item.PokeBall.greatball(), item.PokeBall.masterball()]
+
+def on_draw(player):
+    arcade.start_render()
+    arcade.draw_text("Balls", 20, 570, arcade.color.BLACK, 50)
+    arcade.draw_text("Ball Count:", 20, 520, arcade.color.BLACK, 30)
+    arcade.draw_text(str(len(player.ball_list)), 250, 520,
+                     arcade.color.BLACK, 30)
+    arcade.draw_text("Q - Sort", 30, 30, arcade.color.BLACK, 60)
+    arcade.draw_text("E - Search", 370, 30, arcade.color.BLACK, 60)
+
+    arcade.draw_xywh_rectangle_outline(10, 405, 450, 70,
+                                       arcade.color.GRAY, 3)
+    arcade.draw_xywh_rectangle_outline(5, 290, 460, 90,
+                                       arcade.color.BLACK, 5)
+    arcade.draw_xywh_rectangle_outline(10, 193, 450, 70,
+                                       arcade.color.GRAY, 3)
+
+    if player.pointer - 1 != -1:
+        arcade.draw_text("{}: {}".format(player.ball_list
+                         [player.pointer - 1].name,
+                         player.ball_list[player.pointer - 1].effect), 20,
+                         425, arcade.color.BLACK, 20)
+
+    arcade.draw_text("{}: {}".format(player.ball_list
+                     [player.pointer].name,
+                     player.ball_list[player.pointer].effect), 20,
+                     320, arcade.color.BLACK, 30)
+
+    if player.pointer + 1 != len(player.ball_list):
+        arcade.draw_text("{}: {}".format(player.ball_list
+                         [player.pointer + 1].name,
+                         player.ball_list[player.pointer + 1].effect), 20,
+                         213, arcade.color.BLACK, 20)
+
+    arcade.draw_triangle_filled(475, 335, 495, 315, 495,
+                                355, arcade.color.BLACK)
+    arcade.draw_xywh_rectangle_outline(500, 210, 250, 250,
+                                       arcade.color.BLACK, 10)
+    arcade.draw_texture_rectangle(625, 335, 240, 240, player.ball_list
+                                  [player.pointer].texture)
+    arcade.draw_text("Amount: {}".format(str(player.ball_list[player.pointer].amount)), 465, 150, arcade.color.BLACK, 50)
+
+    if player.search_menu:
+        arcade.draw_xywh_rectangle_filled(100, 100, 568, 440,
+                                          arcade.color.BLACK)
+        arcade.draw_xywh_rectangle_filled(110, 110, 548, 420,
+                                          arcade.color.WHITE)
+        arcade.draw_text("Enter Pokemon Number:", 140, 450,
+                         arcade.color.BLACK, 35)
+        arcade.draw_text(" " + player.search_number, 140, 200,
+                         arcade.color.BLACK, 220)
+    if player.sort_menu:
+        arcade.draw_xywh_rectangle_filled(100, 100, 568, 440,
+                                          arcade.color.BLACK)
+        arcade.draw_xywh_rectangle_filled(110, 110, 548, 420,
+                                          arcade.color.WHITE)
+        arcade.draw_text("Do you want to sort", 115, 380,
+                         arcade.color.BLACK, 50)
+        arcade.draw_text("the Pokedex?", 175, 310, arcade.color.BLACK, 50)
+
+
 class MyGame(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
 
         arcade.set_background_color(arcade.color.WHITE)
 
-    def setup(self):
-        self._pointer = 0
-        self.sort_menu = False
-        self.search_menu = False
-        self.search_number = ""
-        self.pokeball_amount = 0
-        self.greatball_amount = 0
-        self.masterball_amount = 0
-
-        self.ball_list = [item.PokeBall.pokeball(), item.PokeBall.greatball(), item.PokeBall.masterball()]
-
-    def get_pointer(self):
-        return self._pointer
-
-    def edit_pointer(self, value):
-        self._pointer = value
-
-    def on_draw(self):
-        arcade.start_render()
-        arcade.draw_text("Balls", 20, 570, arcade.color.BLACK, 50)
-        arcade.draw_text("Ball Count:", 20, 520, arcade.color.BLACK, 30)
-        arcade.draw_text(str(len(self.ball_list)), 250, 520,
-                         arcade.color.BLACK, 30)
-        arcade.draw_text("Q - Sort", 30, 30, arcade.color.BLACK, 60)
-        arcade.draw_text("E - Search", 370, 30, arcade.color.BLACK, 60)
-
-        arcade.draw_xywh_rectangle_outline(10, 405, 450, 70,
-                                           arcade.color.GRAY, 3)
-        arcade.draw_xywh_rectangle_outline(5, 290, 460, 90,
-                                           arcade.color.BLACK, 5)
-        arcade.draw_xywh_rectangle_outline(10, 193, 450, 70,
-                                           arcade.color.GRAY, 3)
-
-        if self.get_pointer() - 1 != -1:
-            arcade.draw_text("{}: {}".format(self.ball_list
-                             [self.get_pointer() - 1].name,
-                             self.ball_list[self.get_pointer() - 1].effect), 20,
-                             425, arcade.color.BLACK, 20)
-
-        arcade.draw_text("{}: {}".format(self.ball_list
-                         [self.get_pointer()].name,
-                         self.ball_list[self.get_pointer()].effect), 20,
-                         320, arcade.color.BLACK, 30)
-
-        if self.get_pointer() + 1 != len(self.ball_list):
-            arcade.draw_text("{}: {}".format(self.ball_list
-                             [self.get_pointer() + 1].name,
-                             self.ball_list[self.get_pointer() + 1].effect), 20,
-                             213, arcade.color.BLACK, 20)
-
-        arcade.draw_triangle_filled(475, 335, 495, 315, 495,
-                                    355, arcade.color.BLACK)
-        arcade.draw_xywh_rectangle_outline(500, 210, 250, 250,
-                                           arcade.color.BLACK, 10)
-        arcade.draw_texture_rectangle(625, 335, 240, 240, self.ball_list
-                                      [self.get_pointer()].texture)
-        arcade.draw_text("Amount: {}".format(str(self.ball_list[self.get_pointer()].amount)), 465, 150, arcade.color.BLACK, 50)
-
-        if self.search_menu:
-            arcade.draw_xywh_rectangle_filled(100, 100, 568, 440,
-                                              arcade.color.BLACK)
-            arcade.draw_xywh_rectangle_filled(110, 110, 548, 420,
-                                              arcade.color.WHITE)
-            arcade.draw_text("Enter Pokemon Number:", 140, 450,
-                             arcade.color.BLACK, 35)
-            arcade.draw_text(" " + self.search_number, 140, 200,
-                             arcade.color.BLACK, 220)
-        if self.sort_menu:
-            arcade.draw_xywh_rectangle_filled(100, 100, 568, 440,
-                                              arcade.color.BLACK)
-            arcade.draw_xywh_rectangle_filled(110, 110, 548, 420,
-                                              arcade.color.WHITE)
-            arcade.draw_text("Do you want to sort", 115, 380,
-                             arcade.color.BLACK, 50)
-            arcade.draw_text("the Pokedex?", 175, 310, arcade.color.BLACK, 50)
-
     def update(self, delta_time):
         pass
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
-            if self.get_pointer() != 0:
-                self.edit_pointer(self.get_pointer() - 1)
+            if self.pointer != 0:
+                self.edit_pointer(self.pointer - 1)
         elif key == arcade.key.S:
-            if self.get_pointer() != len(self.ball_list) - 1:
-                self.edit_pointer(self.get_pointer() + 1)
+            if self.pointer != len(self.ball_list) - 1:
+                self.edit_pointer(self.pointer + 1)
         if key == arcade.key.E or self.search_menu:
             self.search_menu = True
             self.sort_menu = False

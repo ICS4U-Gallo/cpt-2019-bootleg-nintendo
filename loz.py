@@ -5,6 +5,7 @@ import map
 import battle
 import pokemon
 import menu_start
+import balls
 
 sprite_scale = 0.5
 other_scale = 0.4
@@ -210,6 +211,8 @@ class MyGame(arcade.Window):
             battle.on_draw(self)
         elif self.cur_screen == "bag":
             print("bag")
+        elif self.cur_screen == "balls":
+            balls.on_draw(self)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
