@@ -34,41 +34,6 @@ class Room:
         self.grass_list = None
 
 
-class Player(arcade.Sprite):
-    def __init__(self):
-        super().__init__()
-
-        # Load a left facing texture and a right facing texture.
-        # mirrored=True will mirror the image we load.
-        texture = arcade.load_texture("images/character.png",
-                                      mirrored=True, scale=other_scale)
-        self.textures.append(texture)
-        texture = arcade.load_texture("images/character.png",
-                                      scale=other_scale)
-        self.textures.append(texture)
-
-        # By default, face right.
-        self.face_dir = 1
-        # 0 = up, 1 = right, 2 = down, 3 = left
-        self.set_texture(tex_right)
-
-        self.pokemon = []
-
-    def update(self):
-
-        # Figure out player facing direction
-        if self.change_y < 0:
-            self.face_dir = 2
-        if self.change_y > 0:
-            self.face_dir = 0
-        if self.change_x < 0:
-            self.face_dir = 3
-            self.set_texture(tex_left)
-        if self.change_x > 0:
-            self.face_dir = 1
-            self.set_texture(tex_right)
-
-
 def start_town():
     room = Room()
 
@@ -204,7 +169,7 @@ def wild_area():
             grass.bottom = y
             room.grass_list.append(grass)
 
-    room.background = arcade.load_texture("images/floors.jpg")
+    room.background = arcade.load_texture("images/background.jpg")
     return room
 
 
@@ -453,150 +418,9 @@ def create():
     return room_list
 
 
-class MyGame(arcade.Window):
-    """ Main application class. """
-
-    def __init__(self, width, height, title):
-        """
-        Initializer
-        """
-        super().__init__(width, height, title)
-
-        # Set the working directory (where we expect to find files) to the same
-        # directory this .py file is in. You can leave this out of your own
-        # code, but it is needed to easily run the examples using "python -m"
-        # as mentioned at the top of this program.
-        file_path = os.path.dirname(os.path.abspath(__file__))
-        os.chdir(file_path)
-
-        # Sprite lists
-        self.current_room = 1
-        self.coin_list = None
-
-        # Set up the player
-        self.rooms = None
-        self.player_sprite = None
-        self.player_list = None
-        self.physics_engine = None
-        self.left_pressed = False
-        self.right_pressed = False
-        self.up_pressed = False
-        self.down_pressed = False
-        self.act_pressed = False
-        self.view_bottom = 0
-        self.view_left = 0
-
-    def setup(self):
-        """ Set up the game and initialize the variables. """
-
-        # Sprite lists
-        self.player_list = arcade.SpriteList()
-
-        # Set up the player
-        self.player_sprite = Player()
-        self.player_sprite.center_x = 250
-        self.player_sprite.center_y = 400
-        self.player_list.append(self.player_sprite)
-
-        # Set the background color
-        arcade.set_background_color(arcade.color.AMAZON)
-
-        # Set the viewport boundaries
-        # These numbers set where we have 'scrolled' to.
-        self.view_left = 0
-        self.view_bottom = 0
-
-        self.rooms = []
-
-        self.current_room = 1
-
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
-
-    def on_draw(self):
-        """
-        Render the screen.
-        """
-
-        # This command has to happen before we start drawing
-        arcade.start_render()
-
-        # Draw all the sprites.
-        arcade.draw_texture_rectangle(screen_width, screen_height,
-                                      screen_width * 2, screen_height * 2,
-                                      self.rooms[self.current_room].background)
-        self.rooms[self.current_room].wall_list.draw()
-        self.player_list.draw()
-        if self.current_room == 3:
-            self.rooms[self.current_room].grass_list.draw()
-
-    def on_key_press(self, key, modifiers):
-        """Called whenever a key is pressed. """
-
-        if key == arcade.key.W:
-            self.up_pressed = True
-        elif key == arcade.key.S:
-            self.down_pressed = True
-        elif key == arcade.key.A:
-            self.left_pressed = True
-        elif key == arcade.key.D:
-            self.right_pressed = True
-        if key == arcade.key.L:
-            self.act_pressed = True
-
-    def on_key_release(self, key, modifiers):
-        """Called when the user releases a key. """
-
-        if key == arcade.key.W:
-            self.up_pressed = False
-        elif key == arcade.key.S:
-            self.down_pressed = False
-        elif key == arcade.key.A:
-            self.left_pressed = False
-        elif key == arcade.key.D:
-            self.right_pressed = False
-        if key == arcade.key.L:
-            self.act_pressed = False
-
-    def on_update(self, delta_time):
-        """ Movement and game logic """
-
-        self.player_sprite.change_x = 0
-        self.player_sprite.change_y = 0
-
-        if self.up_pressed and not self.down_pressed:
-            self.player_sprite.change_y = MOVEMENT_SPEED
-        elif self.down_pressed and not self.up_pressed:
-            self.player_sprite.change_y = -MOVEMENT_SPEED
-        if self.left_pressed and not self.right_pressed:
-            self.player_sprite.change_x = -MOVEMENT_SPEED
-        elif self.right_pressed and not self.left_pressed:
-            self.player_sprite.change_x = MOVEMENT_SPEED
-
-        if ceil(self.player_sprite.center_x) in range(200, 530) and ceil(self.player_sprite.center_y) in range(300, 310) and self.current_room == 6:
-            if self.act_pressed == True:
-                print('healed')
-
-        # Call update on all sprites (The sprites don't do much in this
-        # example though.)
-        self.physics_engine.update()
-        self.player_list.update()
-        # --- Manage Scrolling ---
-        # Keep track of if we changed the boundary. We don't want to call the
-        # set_viewport command if we didn't change the view port.
-
-        view_logic(self)
-        room_logic(self)
-
-        # 1000-1080, 674.4
-        # 383.6, 40
-        # if player in room then make the viewport 0 and set the screen
-
-
 def main():
     """ Main method """
-    window = MyGame(screen_width, screen_height, screen_title)
-    window.setup()
-    arcade.run()
+    pass
 
 
 if __name__ == "__main__":

@@ -15,9 +15,9 @@ class MyGame(arcade.Window):
         self.select_y = 1
 
         self.dex_color = arcade.color.BLACK
-        self.bag_color = arcade.color.GRAY
-        self.save_color = arcade.color.GRAY
-        self.exit_color = arcade.color.GRAY
+        self.bag_color = arcade.color.BLACK
+        self.save_color = arcade.color.BLACK
+        self.exit_color = arcade.color.BLACK
 
         self.dex_sprite = arcade.load_texture("images/game_menu_images/"
                                               "pokedex.png")

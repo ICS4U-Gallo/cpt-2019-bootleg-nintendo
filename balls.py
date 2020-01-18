@@ -1,5 +1,4 @@
 import arcade
-import settings
 import item  # temporary maybe
 
 width = 768

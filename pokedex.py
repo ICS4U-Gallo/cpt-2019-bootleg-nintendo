@@ -1,9 +1,8 @@
 import arcade
-import settings
 import pokemon  # temporary maybe
 
-width = settings.WIDTH
-height = settings.HEIGHT
+width = 768
+height = 600
 
 # poke_list = ["TORKOAL", "GARBAGE", "PIKACHU", "EEVEE", "GARCHOMP", "
 # VESPIQUEN", "COMBEE", "RAYQUAZA"]
