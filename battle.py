@@ -1,10 +1,9 @@
 import pokemon
 import random
 from arcade.gui import *
-import os
 import loz
 import time
-import bag
+import item
 
 
 class Enemy:
@@ -18,39 +17,6 @@ class Enemy:
                 return False
         else:
             return True
-
-
-def wild_encounter(game):
-    enemy_poke = pokemon.Pokemon.random_poke()
-    enemy_poke.addlevel(random.randrange(2, 50))
-    enemy = Enemy(True, enemy_poke)
-    setup(game, game.player_sprite, enemy)
-
-
-def move_first(poke, opp):
-    if poke.stats[3] >= opp.stats[3]:
-        return True
-    else:
-        return False
-
-
-def fight(poke, opp, move, game):
-    if move_first(poke, opp):
-        poke.attack(opp, move, game)
-        if opp.is_dead():
-            print(f"{opp.name} is dead")
-            poke.gainkill()
-            return
-        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))], game)
-    else:
-        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))], game)
-        if poke.is_dead():
-            print(f"{poke.name} is dead")
-            return
-        poke.attack(opp, move, game)
-        if opp.is_dead():
-            print(f"{opp.name} is dead")
-            poke.gainkill()
 
 
 class actionButton(TextButton):
@@ -70,12 +36,13 @@ class actionButton(TextButton):
 
 class moveButton(TextButton):
     def __init__(self, game, x=0, y=0, width=100, height=40, move=None, theme=None):
-        super().__init__(x, y, width, height, move.get_name(), theme=theme)
+        super().__init__(x, y, width, height, f"{move.get_name()}({move.get_cur_pp()})", theme=theme)
         self.move = move
         self.game = game
 
     def on_press(self):
-        self.pressed = True
+        if self.move.check_pp():
+            self.pressed = True
 
     def on_release(self):
         if self.pressed:
@@ -85,12 +52,13 @@ class moveButton(TextButton):
 
 class switchButton(TextButton):
     def __init__(self, game, x=0, y=0, width=100, height=40, poke=None, theme=None):
-        super().__init__(x, y, width, height, poke.name, theme=theme)
+        super().__init__(x, y, width, height, f"{poke.name}({poke.cur_stats[0]}/{poke.stats[0]})", theme=theme)
         self.poke = poke
         self.game = game
 
     def on_press(self):
-        self.pressed = True
+        if not self.poke.is_dead():
+            self.pressed = True
 
     def on_release(self):
         if self.pressed:
@@ -98,17 +66,52 @@ class switchButton(TextButton):
             self.pressed = False
 
 
-class backButton(TextButton):
-    def __init__(self, game, x=0, y=0, width=100, height=40, text="Back", theme=None):
+class bagButton(TextButton):
+    def __init__(self, game, x=0, y=0, width=100, height=40, text=None, theme=None, bag=None):
         super().__init__(x, y, width, height, text, theme=theme)
         self.game = game
+        self.bag = bag
 
     def on_press(self):
         self.pressed = True
 
     def on_release(self):
         if self.pressed:
-            action_buttons(self.game)
+            self.game.battle_bag = self.bag
+            self.pressed = False
+
+
+class itemButton(TextButton):
+    def __init__(self, game, x=0, y=0, width=100, height=40, item=None, theme=None):
+        super().__init__(x, y, width, height, f"{item.name}({item.amount})", theme=theme)
+        self.game = game
+        self.item = item
+
+    def on_press(self):
+        if self.item.amount >= 1:
+            self.pressed = True
+
+    def on_release(self):
+        if self.pressed:
+            self.game.battle_item = self.item
+            self.pressed = False
+
+
+class backButton(TextButton):
+    def __init__(self, game, x=0, y=0, width=100, height=40, text="Back", theme=None, backto="action"):
+        super().__init__(x, y, width, height, text, theme=theme)
+        self.game = game
+        self.backto = backto
+
+    def on_press(self):
+        self.pressed = True
+
+    def on_release(self):
+        if self.pressed:
+            if self.backto == "action":
+                action_buttons(self.game)
+            elif self.backto == "bag":
+                bag_buttons(self.game)
             self.pressed = False
 
 
@@ -143,33 +146,63 @@ def display_pokemon(game):
 def action_buttons(game):
     game.battle_action = None
     game.battle_button_list = []
-    # (300, 115), (500, 115), (300, 40), (500, 40)
-    game.battle_button_list.append(actionButton(game, 300, 115, 200, 70, "Fight", game.battle_theme))
-    game.battle_button_list.append(actionButton(game, 500, 115, 200, 70, "Switch", game.battle_theme))
-    game.battle_button_list.append(actionButton(game, 300, 40, 200, 70, "Bag", game.battle_theme))
-    game.battle_button_list.append(actionButton(game, 500, 40, 200, 70, "Run", game.battle_theme))
+    game.battle_button_list.append(actionButton(game, game.width/2-96, 115, 192, 70, "Fight", game.battle_theme))
+    game.battle_button_list.append(actionButton(game, game.width/2+96, 115, 192, 70, "Switch", game.battle_theme))
+    game.battle_button_list.append(actionButton(game, game.width/2-96, 40, 192, 70, "Bag", game.battle_theme))
+    game.battle_button_list.append(actionButton(game, game.width/2+96, 40, 192, 70, "Run", game.battle_theme))
     game.battle_button_set = "action"
 
 
 def move_buttons(game):
+    game.battle_move = None
     game.battle_button_list = []
     poke = game.battle_player.poke
     for i in range(len(poke.moves)):
-        game.battle_button_list.append(moveButton(game, 300+(i%2)*200, 115-(i//2)*75, 200, 70, poke.moves[i], game.battle_theme))
-    game.battle_button_list.append(backButton(game, 700, 40, 200, 70, theme=game.battle_theme))
+        game.battle_button_list.append(moveButton(game, game.width/2-96+(i%2)*192, 115-(i//2)*75, 192, 70, poke.moves[i], game.battle_theme))
+    game.battle_button_list.append(backButton(game, game.width/2+288, 40, 192, 70, theme=game.battle_theme))
     game.battle_button_set = "move"
 
 
 def switch_buttons(game):
+    theme = Theme()
+    theme.set_font(15, arcade.color.WHITE)
+    set_button_textures(game)
+    normal = ":resources:gui_themes/Fantasy/Buttons/Normal.png"
+    hover = ":resources:gui_themes/Fantasy/Buttons/Hover.png"
+    clicked = ":resources:gui_themes/Fantasy/Buttons/Clicked.png"
+    locked = ":resources:gui_themes/Fantasy/Buttons/Locked.png"
+    theme.add_button_textures(normal, hover, clicked, locked)
+
+    game.battle_switchto = None
     game.battle_button_list = []
     for i in range(len(game.battle_player.pokemon)):
-        game.battle_button_list.append(switchButton(game, 100+(i%3)*200, 115-(i//3)*75, 200, 70, game.battle_player.pokemon[i], game.battle_theme))
-    game.battle_button_list.append(backButton(game, 700, 40, 200, 70, theme=game.battle_theme))
+        game.battle_button_list.append(switchButton(game, game.width/2-288+(i%3)*192, 115-(i//3)*75, 192, 70, game.battle_player.pokemon[i], theme))
+    game.battle_button_list.append(backButton(game, game.width/2+288, 40, 192, 70, theme=game.battle_theme))
     game.battle_button_set = "switch"
+
+
+def bag_buttons(game):
+    game.battle_bag = None
+    game.battle_button_list = []
+    game.battle_button_list.append(bagButton(game, game.width/2-96, 115, 192, 70, "ball", game.battle_theme, game.battle_player.item_bag[0]))
+    game.battle_button_list.append(bagButton(game, game.width/2+96, 115, 192, 70, "buff", game.battle_theme, game.battle_player.item_bag[1]))
+    game.battle_button_list.append(bagButton(game, game.width/2-96, 40, 192, 70, "heal", game.battle_theme, game.battle_player.item_bag[2]))
+    game.battle_button_list.append(backButton(game, game.width/2+288, 40, 192, 70, theme=game.battle_theme))
+    game.battle_button_set = "bag"
+
+
+def item_buttons(game):
+    game.battle_item = None
+    game.battle_button_list = []
+    for i in range(len(game.battle_bag)):
+        game.battle_button_list.append(itemButton(game, game.width/2-96+(i%2)*192, 115-(i//2)*75, 192, 70, game.battle_bag[i], game.battle_theme))
+    game.battle_button_list.append(backButton(game, game.width / 2 + 288, 40, 192, 70, theme=game.battle_theme, backto="bag"))
+    game.battle_button_set = "item"
 
 
 def setup(game, player, enemy):
     game.cur_screen = "battle"
+    game.battle_caught = False
     setup_theme(game)
     action_buttons(game)
     game.battle_player = player
@@ -182,7 +215,10 @@ def setup(game, player, enemy):
     game.battle_enemy_y = 450
 
     game.battle_enemy.j = 0
-    game.battle_player.poke = game.battle_player.pokemon[0]
+    for poke in game.battle_player.pokemon:
+        if not poke.is_dead():
+            game.battle_player.poke = poke
+            break
     game.battle_enemy.poke = game.battle_enemy.pokemon[0]
     game.battle_pokemon_list = arcade.SpriteList()
 
@@ -209,15 +245,16 @@ def on_draw(game):
         arcade.draw_text(game.battle_msg[i], 350, 250-i*20, arcade.color.WHITE_SMOKE)
 
     if game.battle_enemy.defeated():
-        arcade.draw_text("You won!", 350, 240-len(game.battle_msg)*20, arcade.color.WHITE, 20)
+        arcade.draw_text("You won!", 350, 240-len(game.battle_msg)*20-10, arcade.color.WHITE, 30)
     elif game.battle_player.defeated():
-        arcade.draw_text("You lost!", 350, 240-len(game.battle_msg)*20, arcade.color.WHITE, 20)
+        arcade.draw_text("You lost!", 350, 240-len(game.battle_msg)*20-10, arcade.color.WHITE, 30)
         
 
 def exit_battle(game):
     for poke in game.battle_player.pokemon:
         poke.cur_stats[1] = poke.stats[1]
         poke.cur_stats[2] = poke.stats[2]
+        poke.cur_stats[3] = poke.stats[3]
     game.cur_screen = "game"
 
 
@@ -230,8 +267,14 @@ def update(game):
         exit_battle(game)
         time.sleep(1)
         return
+    elif game.battle_caught:
+        exit_battle(game)
+        time.sleep(1)
+        return
+
     if game.battle_player.poke.is_dead():
         game.battle_action = "Switch"
+        game.battle_msg = [f"{game.battle_player.poke.name} is dead"]
     elif game.battle_enemy.pokemon[game.battle_enemy.j].is_dead():
         game.battle_pokemon_list.remove(game.battle_enemy.poke)
         game.battle_enemy.j += 1
@@ -264,7 +307,25 @@ def update(game):
             move = game.battle_enemy.poke.moves[random.randrange(len(game.battle_enemy.poke.moves))]
             game.battle_enemy.poke.attack(game.battle_player.poke, move, game)
     elif game.battle_action == "Bag":
-        pass
+        if game.battle_button_set != "bag" and game.battle_button_set != "item":
+            bag_buttons(game)
+        if game.battle_bag != None and game.battle_button_set != "item":
+            item_buttons(game)
+        if game.battle_item != None:
+            game.battle_msg.append(f"You used {game.battle_item.name}")
+            if type(game.battle_item) == item.PokeBall:
+                if game.battle_enemy.wild:
+                    game.battle_item.ball_use(game, game.battle_enemy.poke)
+                else:
+                    game.battle_msg.append("not wild pokemon")
+            else:
+                game.battle_item.use(game, game.battle_player.poke)
+            game.battle_bag = None
+            game.battle_item = None
+            action_buttons(game)
+            if not game.battle_caught:
+                move = game.battle_enemy.poke.moves[random.randrange(len(game.battle_enemy.poke.moves))]
+                game.battle_enemy.poke.attack(game.battle_player.poke, move, game)
     elif game.battle_action == "Run":
         if game.battle_enemy.wild:
             if random.randrange(2) == 0:
@@ -276,6 +337,39 @@ def update(game):
                 game.battle_action = None
                 move = game.battle_enemy.poke.moves[random.randrange(len(game.battle_enemy.poke.moves))]
                 game.battle_enemy.poke.attack(game.battle_player.poke, move, game)
+
+
+def wild_encounter(game):
+    enemy_poke = pokemon.Pokemon.random_poke()
+    enemy_poke.addlevel(random.randrange(2, 50))
+    enemy = Enemy(True, enemy_poke)
+    setup(game, game.player_sprite, enemy)
+
+
+def move_first(poke, opp):
+    if poke.cur_stats[3] >= opp.cur_stats[3]:
+        return True
+    else:
+        return False
+
+
+def fight(poke, opp, move, game):
+    if move_first(poke, opp):
+        poke.attack(opp, move, game)
+        if opp.is_dead():
+            print(f"{opp.name} is dead")
+            poke.gainkill()
+            return
+        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))], game)
+    else:
+        opp.attack(poke, opp.moves[random.randrange(len(opp.moves))], game)
+        if poke.is_dead():
+            print(f"{poke.name} is dead")
+            return
+        poke.attack(opp, move, game)
+        if opp.is_dead():
+            print(f"{opp.name} is dead")
+            poke.gainkill()
 
 
 if __name__ == "__main__":

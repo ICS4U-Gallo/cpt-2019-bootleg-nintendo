@@ -11,19 +11,29 @@ class Item:
         self.effect = effect
         self.amount = amount
 
-    def use(self, poke):
-        if self.name == "Potion":
-            poke.cur_stats[0] += 20
-            if poke.cur_stats[0] > poke.stats[0]:
-                poke.cur_stats[0] = poke.stats[0]
-        elif self.name == "Super Potion":
-            poke.cur_stats[0] += 20
-            if poke.cur_stats[0] > poke.stats[0]:
-                poke.cur_stats[0] = poke.stats[0]
-        elif self.name == "Steroids":
-            poke.atk += 20
-        elif self.name == "Leg Day":
-            poke.spd += 20
+    def use(self, game, poke):
+        if self.amount >= 1:
+            if self.name == "Potion":
+                poke.cur_stats[0] += 20
+                if poke.cur_stats[0] > poke.stats[0]:
+                    poke.cur_stats[0] = poke.stats[0]
+                if game.cur_screen == "battle":
+                    game.battle_msg.append(f"{poke.name} is now at {poke.cur_stats[0]} hp")
+            elif self.name == "Super Potion":
+                poke.cur_stats[0] += 50
+                if poke.cur_stats[0] > poke.stats[0]:
+                    poke.cur_stats[0] = poke.stats[0]
+                if game.cur_screen == "battle":
+                    game.battle_msg.append(f"{poke.name} is now at {poke.cur_stats[0]} hp")
+            elif self.name == "Steroids":
+                poke.cur_stats[1] += 20
+                if game.cur_screen == "battle":
+                    game.battle_msg.append(f"{poke.name}'s' attack is now at {poke.cur_stats[1]}")
+            elif self.name == "Leg Day":
+                if game.cur_screen == "battle":
+                    game.battle_msg.append(f"{poke.name}'s' speed is now at {poke.cur_stats[3]}")
+                poke.cur_stats[3] += 20
+            self.amount -= 1
 
     @classmethod
     def potion(cls):
@@ -54,25 +64,25 @@ class PokeBall(Item):
     def __init__(self, name, amount, effect):
         super().__init__(name, amount, effect)
 
-    def ball_use(self, player, poke, enemy):
+    def ball_use(self, player, poke):
         if self.name == "poke ball" and self.amount != 0:
             if random.randrange(4) == 0:
-                player.catch(poke, enemy)
-                player.cur_screen = "game"
+                player.player_sprite.catch(player, poke)
+                player.battle_caught = True
             else:
-                player.cur_screen = "battle"
+                player.battle_msg.append(f"failed to catch {poke.name}")
             self.amount -= 1
         elif self.name == "great ball" and self.amount != 0:
             if random.randrange(2) == 0:
-                player.catch(poke, enemy)
-                player.cur_screen = "game"
+                player.player_sprite.catch(player, poke)
+                player.battle_caught = True
             else:
-                player.cur_screen = "battle"
+                player.battle_msg.append(f"failed to catch {poke.name}")
             self.amount -= 1
         elif self.name == "master ball" and self.amount != 0:
-            player.catch(poke, enemy)
+            player.player_sprite.catch(player, poke)
             self.amount -= 1
-            player.cur_screen = "game"
+            player.battle_caught = True
 
     @classmethod
     def pokeball(cls):

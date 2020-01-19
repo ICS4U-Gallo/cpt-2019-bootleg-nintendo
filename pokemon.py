@@ -52,7 +52,6 @@ class Move:
         if self.get_cur_pp() == 0:
             return False
         else:
-            self.set_cur_pp(self.get_cur_pp()-1)
             return True
 
     def apply_effect(self, poke, opp):
@@ -109,9 +108,10 @@ class Pokemon(arcade.Sprite):
         self.name = name
         self.type = types
         self.lvl = lvl
-        self.cur_stats = [hp, atk, def_]
+        self.cur_stats = [hp, atk, def_, spd]
         self.stats = [hp, atk, def_, spd]
         self.effect = None
+        self.moves = []
         self.avalible_move = {}
         self.avalible_evo = {}
         self.killcount = 0
@@ -138,6 +138,7 @@ class Pokemon(arcade.Sprite):
             self.stats[i] = round(self.stats[i]*1.25)
             self.cur_stats[i] = self.stats[i]
         self.stats[3] = round(self.stats[3]*1.25)
+        self.cur_stats[3] = self.stats[3]
         self.num = self.avalible_evo[self.lvl].num
         self.name = self.avalible_evo[self.lvl].name
         self.texture = self.avalible_evo[self.lvl].texture
@@ -157,7 +158,6 @@ class Pokemon(arcade.Sprite):
     def check_effect(self):
         if self.effect == "burn":
             self.cur_stats[0] = round(self.cur_stats[0]*0.95)
-            self.effect = None
 
     def attack(self, opp, move, game):
         game.battle_msg.append(f"\n{self.name} uses {move.get_name()}")
@@ -166,6 +166,7 @@ class Pokemon(arcade.Sprite):
         dmg = round(((((self.lvl/2+2)*move.get_pwr()*(self.cur_stats[1]
                     / opp.cur_stats[2]))/50)+2)*modif)
         opp.cur_stats[0] -= dmg
+        move.set_cur_pp(move.get_cur_pp()-1)
         opp.check_effect()
         game.battle_msg.append(f"{self.name} does {dmg} damage to {opp.name}.")
 

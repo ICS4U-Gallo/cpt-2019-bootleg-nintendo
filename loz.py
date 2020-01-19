@@ -56,7 +56,6 @@ class Player(arcade.Sprite):
         self.set_texture(tex_right)
 
         self.pokemon = []
-        self.pokeball_bag = []
         self.item_bag = []
         self.pokemon_storage = []
 
@@ -81,14 +80,15 @@ class Player(arcade.Sprite):
         else:
             return True
 
-    def catch(self, poke, enemy):
-        if enemy.wild:
-            if len(self.pokemon) < 6:
-                self.pokemon.append(poke)
-            else:
-                self.pokemon_storage.append(poke)
+    def catch(self, game, poke):
+        if len(self.pokemon) < 6:
+            self.pokemon.append(poke)
+            game.battle_msg.append(f"You caught {poke.name}")
+            game.battle_msg.append(f"added {poke.name} to bag")
         else:
-            print("cannot catch")
+            self.pokemon_storage.append(poke)
+            game.battle_msg.append(f"You caught {poke.name}")
+            game.battle_msg.append(f"added {poke.name} to storage")
 
 
 def check_mouse_press_for_buttons(x, y, button_list):
@@ -159,11 +159,14 @@ class MyGame(arcade.Window):
         self.battle_action = None
         self.battle_move = None
         self.battle_switchto = None
+        self.battle_bag = None
+        self.battle_item = None
         self.battle_theme = None
         self.battle_button = None
         self.battle_button_list = None
         self.battle_pokemon_list = None
         self.battle_msg = None
+        self.battle_caught = False
 
         # Set up bag
         self.bag_button_list = None
@@ -205,7 +208,7 @@ class MyGame(arcade.Window):
         self.sto_page = None
         self.sto_poke_list = None
         self.sto_selected = None
-        self.sto_searching = None
+        self.sto_searching = False
         self.sto_search_number = None
 
     def setup(self):
@@ -220,6 +223,7 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 250
         self.player_sprite.center_y = 400
         self.player_list.append(self.player_sprite)
+        self.player_sprite.item_bag = [self.ball_list, self.buff_list, self.heal_list]
 
         # Add pokemon for testing
         for i in range(6):
@@ -267,6 +271,7 @@ class MyGame(arcade.Window):
         if self.cur_screen == "start":
             menu_start.on_draw(self)
         elif self.cur_screen == "game":
+            arcade.set_background_color(arcade.color.BLACK)
             arcade.draw_texture_rectangle(screen_width, screen_height,
                                           screen_width * 2, screen_height * 2,
                                           self.rooms[self.current_room].
@@ -339,19 +344,19 @@ class MyGame(arcade.Window):
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
+            if self.cur_screen == "start":
+                menu_start.on_mouse_press(self, x, y, button)
+            elif self.cur_screen == "battle":
+                check_mouse_press_for_buttons(x, y, self.battle_button_list)
+            elif self.cur_screen == "bag":
+                check_mouse_press_for_buttons(x, y, self.bag_button_list)
+            elif self.cur_screen == "pokemon":
+                pokeBag.mouse_logic(self, x, y, button)
+            elif self.cur_screen == "pokebag":
+                pokeStorage.mouse_logic(self, x, y, button)
             if self.start is False:
                 self.start = True
                 self.cur_screen = "start"
-        if self.cur_screen == "start":
-            menu_start.on_mouse_press(self, x, y, button)
-        elif self.cur_screen == "battle":
-            check_mouse_press_for_buttons(x, y, self.battle_button_list)
-        elif self.cur_screen == "bag":
-            check_mouse_press_for_buttons(x, y, self.bag_button_list)
-        elif self.cur_screen == "pokemon":
-            pokeBag.mouse_logic(self, x, y, button)
-        elif self.cur_screen == "pokebag":
-            pokeStorage.mouse_logic(self, x, y, button)
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         if self.cur_screen == "battle":
