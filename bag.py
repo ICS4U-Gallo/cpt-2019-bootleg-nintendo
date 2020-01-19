@@ -153,6 +153,16 @@ class Pokemon(TextButton):
         self.action_function()
 
 
+class PokeBag(TextButton):
+    def __init__(self, center_x, center_y, action_function):
+        super().__init__(center_x, center_y, 160, 40, "Poke Bag", 30, "Arial")
+        self.action_function = action_function
+
+    def on_release(self):
+        super().on_release()
+        self.action_function()
+
+
 def setup(player):
     player.bag_button_list = []
     play_button = Resume(200, 450, player.resume_program)
@@ -163,7 +173,9 @@ def setup(player):
     player.bag_button_list.append(balls_button)
     buff_button = Buff_items(600, 450, player.buff_part)
     player.bag_button_list.append(buff_button)
-    pokemon_button = Pokemon(400, 300, player.poke_part)
+    pokemon_button = Pokemon(200, 300, player.poke_part)
+    player.bag_button_list.append(pokemon_button)
+    pokemon_button = PokeBag(600, 300, player.pokebag_part)
     player.bag_button_list.append(pokemon_button)
 
 

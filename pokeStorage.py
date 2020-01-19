@@ -56,134 +56,142 @@ def search_pokemon(poke_list, target):
 
     return result
 
+#
+# class MyGame(arcade.Window):
+#
+#     def __init__(self, width, height, title):
+#         super().__init__(width, height, title)
+#         arcade.set_background_color(arcade.color.WHITE)
 
-class MyGame(arcade.Window):
+def setup(game):
+    game.sto_page = 1
+    game.sto_poke_list = game.player_sprite.pokemon_storage
+    game.sto_selected = None
+    game.sto_searching = False
+    game.sto_search_number = 0
 
-    def __init__(self, width, height, title):
-        super().__init__(width, height, title)
-        arcade.set_background_color(arcade.color.WHITE)
+def draw_button():
+    arcade.draw_xywh_rectangle_outline(20, 530, 140, 50, arcade.color.BLACK, 3)
+    arcade.draw_text("Prev Page", 90, 555, arcade.color.BLACK, 25, align="center", anchor_x="center",
+                     anchor_y="center")
 
-    def setup(self):
-        self.p = loz.Player()
-        self.page = 1
-        self.poke_list = self.p.pokemon_storage
-        self.selected = None
-        self.searching = False
-        self.search_number = 0
+    arcade.draw_xywh_rectangle_outline(380, 530, 140, 50, arcade.color.BLACK, 3)
+    arcade.draw_text("Next Page", 450, 555, arcade.color.BLACK, 25, align="center", anchor_x="center",
+                     anchor_y="center")
 
-        for i in range(20):
-            poke = pokemon.Pokemon.random_poke()
-            poke.addlevel(random.randrange(1,50))
-            self.p.pokemon_storage.append(poke)
-        for i in self.p.pokemon_storage:
-            print(i)
+    for i in range(9):
+        arcade.draw_xywh_rectangle_outline(20+i%3*175, 370-i//3*175, 150, 150, arcade.color.BLACK, 2)
 
-    def draw_button(self):
-        arcade.draw_xywh_rectangle_outline(20, 530, 140, 50, arcade.color.BLACK, 3)
-        arcade.draw_text("Prev Page", 90, 555, arcade.color.BLACK, 25, align="center", anchor_x="center",
-                         anchor_y="center")
+def draw_pokemon(game):
+    if len(game.sto_poke_list)//9 >= game.sto_page:
+        end = game.sto_page*9
+    else:
+        end = len(game.sto_poke_list)
+    for i in range((game.sto_page-1)*9, end):
+        game.sto_poke_list[i].center_x = 95 + (i%9)%3*175
+        game.sto_poke_list[i].center_y = 445 - (i%9)//3*175
+        game.sto_poke_list[i].draw()
 
-        arcade.draw_xywh_rectangle_outline(380, 530, 140, 50, arcade.color.BLACK, 3)
-        arcade.draw_text("Next Page", 450, 555, arcade.color.BLACK, 25, align="center", anchor_x="center",
-                         anchor_y="center")
+def on_draw(game):
+    arcade.start_render()
+    arcade.draw_text("Pokemon Storage", width/2, height-20, arcade.color.BLACK, 40, align="center",
+                     anchor_x="center", anchor_y="center")
+    arcade.draw_text(f"Page: {game.sto_page}", 270, 555, arcade.color.BLACK, 30, align="center",
+                     anchor_x="center", anchor_y="center")
+    arcade.draw_text("Q to sort by #", 540, 60, arcade.color.BLACK, 20)
+    arcade.draw_text("E to search by #", 540, 40, arcade.color.BLACK, 20)
 
-        for i in range(9):
-            arcade.draw_xywh_rectangle_outline(20+i%3*175, 370-i//3*175, 150, 150, arcade.color.BLACK, 2)
+    draw_pokemon(game)
+    draw_button()
 
-    def draw_pokemon(self):
-        if len(self.poke_list)//9 >= self.page:
-            end = self.page*9
-        else:
-            end = len(self.poke_list)
-        for i in range((self.page-1)*9, end):
-            self.poke_list[i].center_x = 95 + (i%9)%3*175
-            self.poke_list[i].center_y = 445 - (i%9)//3*175
-            self.poke_list[i].draw()
+    if game.sto_selected != None:
+        arcade.draw_text(game.sto_selected.name, 540, 480, arcade.color.BLACK, 20)
+        arcade.draw_text(f"# {game.sto_selected.num}", 540, 460, arcade.color.BLACK, 20)
+        arcade.draw_text(f"lvl: {game.sto_selected.lvl}", 540, 440, arcade.color.BLACK, 20)
+        arcade.draw_text(f"hp: {game.sto_selected.cur_stats[0]} / {game.sto_selected.stats[0]}", 540, 420, arcade.color.BLACK, 20)
+        arcade.draw_text(f"atk: {game.sto_selected.stats[1]}", 540, 400, arcade.color.BLACK, 20)
+        arcade.draw_text(f"def: {game.sto_selected.stats[2]}", 540, 380, arcade.color.BLACK, 20)
+        arcade.draw_text(f"spd: {game.sto_selected.stats[3]}", 540, 360, arcade.color.BLACK, 20)
+        arcade.draw_xywh_rectangle_outline(540, 300, 200, 50, arcade.color.BLACK, 3)
+        arcade.draw_text("Send to bag", 640, 325, arcade.color.BLACK, 24, align="center",
+                     anchor_x="center", anchor_y="center")
+        if len(game.player_sprite.pokemon) >= 6:
+            arcade.draw_text("bag is full", 540, 270, arcade.color.BLACK, 20)
+    else:
+        arcade.draw_text("No Pokemon Selected", 540, 480, arcade.color.BLACK, 20)
 
-    def on_draw(self):
-        arcade.start_render()
-        arcade.draw_text("Pokemon Storage", width/2, height-20, arcade.color.BLACK, 40, align="center",
-                         anchor_x="center", anchor_y="center")
-        arcade.draw_text("Q to sort by #", 270, 567, arcade.color.BLACK, 20, align="center",
-                         anchor_x="center", anchor_y="center")
-        arcade.draw_text("E to search by #", 270, 543, arcade.color.BLACK, 20, align="center",
-                         anchor_x="center", anchor_y="center")
+    if game.sto_searching:
+        arcade.draw_text("K to stop searching", 540, 560, arcade.color.BLACK, 20)
+        arcade.draw_text(f"Searching for", 540, 530, arcade.color.BLACK, 20)
+        arcade.draw_text(f"pokemon #{game.sto_search_number}", 540, 510, arcade.color.BLACK, 20)
 
-        self.draw_pokemon()
-        self.draw_button()
+def key_logic(game, key):
+    if key == arcade.key.Q:
+        game.player_sprite.pokemon_storage = sort_pokemon(game.player_sprite.pokemon_storage)
+    elif key == arcade.key.E:
+        game.sto_page = 1
+        game.sto_searching = True
+    elif key == arcade.key.K and not game.sto_searching:
+        game.cur_screen = "bag"
+        print(game.cur_screen)
 
-        if self.selected != None:
-            arcade.draw_text(self.selected.name, 540, 480, arcade.color.BLACK, 20)
-            arcade.draw_text(f"# {self.selected.num}", 540, 460, arcade.color.BLACK, 20)
-            arcade.draw_text(f"lvl: {self.selected.lvl}", 540, 440, arcade.color.BLACK, 20)
-            arcade.draw_text(f"hp: {self.selected.cur_stats[0]} / {self.selected.stats[0]}", 540, 420, arcade.color.BLACK, 20)
-            arcade.draw_text(f"atk: {self.selected.stats[1]}", 540, 400, arcade.color.BLACK, 20)
-            arcade.draw_text(f"def: {self.selected.stats[2]}", 540, 380, arcade.color.BLACK, 20)
-            arcade.draw_text(f"spd: {self.selected.stats[3]}", 540, 360, arcade.color.BLACK, 20)
-        else:
-            arcade.draw_text("No Pokemon Selected", 540, 480, arcade.color.BLACK, 20)
-
-        if self.searching:
-            arcade.draw_text("Escape to back", 540, 560, arcade.color.BLACK, 20)
-            arcade.draw_text(f"Searching for", 540, 530, arcade.color.BLACK, 20)
-            arcade.draw_text(f"pokemon #{self.search_number}", 540, 510, arcade.color.BLACK, 20)
-
-    def on_key_press(self, key, modifiers):
-        if key == arcade.key.Q:
-            self.p.pokemon_storage = sort_pokemon(self.p.pokemon_storage)
-        elif key == arcade.key.E:
-            self.searching = True
-
-        if self.searching:
-            if arcade.key.KEY_0 <= key <= arcade.key.KEY_9:
-                self.search_number = self.search_number*10 + (key-arcade.key.KEY_0)
-            elif key == arcade.key.BACKSPACE:
-                self.search_number = self.search_number//10
-            elif key == arcade.key.ESCAPE:
-                self.searching = False
-                self.poke_list = self.p.pokemon_storage
-
-    def on_key_release(self, key, modifiers):
-        pass
-
-    def update(self, delta_time):
-        if self.searching:
-            self.poke_list = search_pokemon(self.p.pokemon_storage, self.search_number)
-        else:
-            self.poke_list = self.p.pokemon_storage
-
-    def set_selected(self, num):
-        try:
-            self.selected = self.poke_list[num]
-        except IndexError:
-            self.selected = None
-
-    def on_mouse_press(self, x, y, button, key_modifiers):
-        if button == arcade.MOUSE_BUTTON_LEFT:
-            if 20 < x < 160 and 530 < y < 580 and self.page > 1:
-                self.page -= 1
-            elif 380 < x < 520 and 530 < y < 580 and self.page < math.ceil(len(self.poke_list)/9):
-                self.page += 1
-            elif 20 < x < 170 and 370 < y < 520:
-                self.set_selected(0+(self.page-1)*9)
-            elif 195 < x < 345 and 370 < y < 520:
-                self.set_selected(1+(self.page-1)*9)
-            elif 370 < x < 520 and 370 < y < 520:
-                self.set_selected(2+(self.page-1)*9)
-            elif 20 < x < 170 and 195 < y < 345:
-                self.set_selected(3+(self.page-1)*9)
-            elif 195 < x < 345 and 195 < y < 345:
-                self.set_selected(4+(self.page-1)*9)
-            elif 370 < x < 520 and 195 < y < 345:
-                self.set_selected(5+(self.page-1)*9)
-            elif 20 < x < 170 and 20 < y < 170:
-                self.set_selected(6+(self.page-1)*9)
-            elif 195 < x < 345 and 20 < y < 170:
-                self.set_selected(7+(self.page-1)*9)
-            elif 370 < x < 520 and 20 < y < 170:
-                self.set_selected(8+(self.page-1)*9)
+    if game.sto_searching:
+        if arcade.key.KEY_0 <= key <= arcade.key.KEY_9:
+            game.sto_search_number = game.sto_search_number*10 + (key-arcade.key.KEY_0)
+        elif key == arcade.key.BACKSPACE:
+            game.sto_search_number = game.sto_search_number//10
+        elif key == arcade.key.K:
+            game.sto_searching = False
+            game.sto_poke_list = game.player_sprite.pokemon_storage
 
 
+def on_key_release(self, key, modifiers):
+    pass
+
+def update(game):
+    if game.sto_searching:
+        game.sto_poke_list = search_pokemon(game.player_sprite.pokemon_storage, game.sto_search_number)
+    else:
+        game.sto_poke_list = game.player_sprite.pokemon_storage
+
+def set_selected(game, num):
+    try:
+        game.sto_selected = game.sto_poke_list[num]
+    except IndexError:
+        game.sto_selected = None
+
+def mouse_logic(game, x, y, button):
+    if button == arcade.MOUSE_BUTTON_LEFT:
+        game.sto_sent = None
+        if 20 < x < 160 and 530 < y < 580 and game.sto_page > 1:
+            game.sto_page -= 1
+        elif 380 < x < 520 and 530 < y < 580 and game.sto_page < math.ceil(len(game.sto_poke_list)/9):
+            game.sto_page += 1
+        elif 20 < x < 170 and 370 < y < 520:
+            set_selected(game, 0+(game.sto_page-1)*9)
+        elif 195 < x < 345 and 370 < y < 520:
+            set_selected(game, 1+(game.sto_page-1)*9)
+        elif 370 < x < 520 and 370 < y < 520:
+            set_selected(game, 2+(game.sto_page-1)*9)
+        elif 20 < x < 170 and 195 < y < 345:
+            set_selected(game, 3+(game.sto_page-1)*9)
+        elif 195 < x < 345 and 195 < y < 345:
+            set_selected(game, 4+(game.sto_page-1)*9)
+        elif 370 < x < 520 and 195 < y < 345:
+            set_selected(game, 5+(game.sto_page-1)*9)
+        elif 20 < x < 170 and 20 < y < 170:
+            set_selected(game, 6+(game.sto_page-1)*9)
+        elif 195 < x < 345 and 20 < y < 170:
+            set_selected(game, 7+(game.sto_page-1)*9)
+        elif 370 < x < 520 and 20 < y < 170:
+            set_selected(game, 8+(game.sto_page-1)*9)
+
+        if game.sto_selected != None:
+            if 540 < x < 740 and 300 < y < 350:
+                if len(game.player_sprite.pokemon) < 6:
+                    game.player_sprite.pokemon_storage.remove(game.sto_selected)
+                    game.player_sprite.pokemon.append(game.sto_selected)
+                    game.sto_selected = None
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         pass

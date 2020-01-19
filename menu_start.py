@@ -32,7 +32,6 @@ def on_mouse_press(game, x, y, button):
         if (game.width / 2 + 150 > game.mouse_x > game.width / 2 - 150 and
                 game.height / 2 + 100 > game.mouse_y >  game.height / 2 + 25 and
                 game.cur_screen == "start"):
-            print("lol")
             game.setup()
         if (game.width / 2 + 75 / 2 > x > game.width / 2 - 75 / 2 and
                 game.height / 2 - 150 > y > game.height / 2 - 225

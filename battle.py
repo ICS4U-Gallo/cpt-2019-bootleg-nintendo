@@ -7,18 +7,6 @@ import time
 import bag
 
 
-class Player:
-    def __init__(self):
-        self.pokemon = []
-
-    def defeated(self):
-        for poke in self.pokemon:
-            if not poke.is_dead():
-                return False
-        else:
-            return True
-
-
 class Enemy:
     def __init__(self, wild, *poke):
         self.wild = wild

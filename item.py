@@ -54,23 +54,23 @@ class PokeBall(Item):
     def __init__(self, name, amount, effect):
         super().__init__(name, amount, effect)
 
-    def ball_use(self, player, poke):
+    def ball_use(self, player, poke, enemy):
         if self.name == "poke ball" and self.amount != 0:
             if random.randrange(4) == 0:
-                player.pokemon.append(poke)
+                player.catch(poke, enemy)
                 player.cur_screen = "game"
             else:
                 player.cur_screen = "battle"
             self.amount -= 1
         elif self.name == "great ball" and self.amount != 0:
             if random.randrange(2) == 0:
-                player.pokemon.append(poke)
+                player.catch(poke, enemy)
                 player.cur_screen = "game"
             else:
                 player.cur_screen = "battle"
             self.amount -= 1
         elif self.name == "master ball" and self.amount != 0:
-            player.pokemon.append(poke)
+            player.catch(poke, enemy)
             self.amount -= 1
             player.cur_screen = "game"
 

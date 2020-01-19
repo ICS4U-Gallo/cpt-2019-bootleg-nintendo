@@ -12,6 +12,8 @@ import pokedex
 import menu_start
 import menu_game
 import balls
+import pokeBag
+import pokeStorage
 
 sprite_scale = 0.5
 other_scale = 0.4
@@ -79,8 +81,8 @@ class Player(arcade.Sprite):
         else:
             return True
 
-    def catch(self, poke):
-        if poke.wild:
+    def catch(self, poke, enemy):
+        if enemy.wild:
             if len(self.pokemon) < 6:
                 self.pokemon.append(poke)
             else:
@@ -173,10 +175,10 @@ class MyGame(arcade.Window):
         self.ball_list = [item.PokeBall.pokeball(), item.PokeBall.greatball(), item.PokeBall.masterball()]
         self.buff_list = [item.Item.steroids(), item.Item.leg_day()]
         self.heal_list = [item.Item.potion(), item.Item.superpotion()]
-        self.poke_list = [pokemon.Pokemon.Charmander(),
-                          pokemon.Pokemon.Squirtle(),
-                          pokemon.Pokemon.Bulbasaur(),
-                          pokemon.Pokemon.IceCream(),
+        self.poke_list = [pokemon.Pokemon.Charmander(), pokemon.Pokemon.Charm2(),
+                          pokemon.Pokemon.Squirtle(), pokemon.Pokemon.Squir2(),
+                          pokemon.Pokemon.Bulbasaur(), pokemon.Pokemon.Bulb2(),
+                          pokemon.Pokemon.IceCream(), pokemon.Pokemon.Ice2(),
                           pokemon.Pokemon.Garbage(),
                           pokemon.Pokemon.Torkoal(),
                           pokemon.Pokemon.Klefki(),
@@ -194,6 +196,18 @@ class MyGame(arcade.Window):
         self.save_sprite = None
         self.exit_sprite = None
 
+        # Set up Pokemon Bag
+        self.selected = None
+        self.switch_pos = None
+        self.switched = None
+
+        # Set up Pokemon Storage
+        self.sto_page = None
+        self.sto_poke_list = None
+        self.sto_selected = None
+        self.sto_searching = None
+        self.sto_search_number = None
+
     def setup(self):
         """ Set up the game and initialize the variables. """
         self.cur_screen = "game"
@@ -207,9 +221,15 @@ class MyGame(arcade.Window):
         self.player_sprite.center_y = 400
         self.player_list.append(self.player_sprite)
 
-        poke = pokemon.Pokemon.Magikarp()
-        poke.addlevel(18)
-        self.player_sprite.pokemon.append(poke)
+        # Add pokemon for testing
+        for i in range(6):
+            poke = pokemon.Pokemon.Magikarp()
+            poke.addlevel(i+10)
+            self.player_sprite.pokemon.append(poke)
+
+        for poke in pokemon.poke_list:
+            poke.addlevel(9)
+            self.player_sprite.pokemon_storage.append(poke)
         # Set the background color
         arcade.set_background_color(arcade.color.BLACK)
 
@@ -220,6 +240,8 @@ class MyGame(arcade.Window):
 
         bag.setup(self)
         menu_game.setup(self)
+        pokeBag.setup(self)
+        pokeStorage.setup(self)
 
         self.rooms = map.create()
 
@@ -267,6 +289,10 @@ class MyGame(arcade.Window):
             menu_game.on_draw(self)
         elif self.cur_screen == "pokedex":
             pokedex.on_draw(self)
+        elif self.cur_screen == "pokemon":
+            pokeBag.on_draw(self)
+        elif self.cur_screen == "pokebag":
+            pokeStorage.on_draw(self)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -293,6 +319,10 @@ class MyGame(arcade.Window):
             menu_game.key_logic(self, key)
         elif self.cur_screen == "pokedex":
             pokedex.key_logic(self, key)
+        elif self.cur_screen == "pokemon":
+            pokeBag.key_logic(self, key)
+        elif self.cur_screen == "pokebag":
+            pokeStorage.key_logic(self, key)
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -318,6 +348,10 @@ class MyGame(arcade.Window):
             check_mouse_press_for_buttons(x, y, self.battle_button_list)
         elif self.cur_screen == "bag":
             check_mouse_press_for_buttons(x, y, self.bag_button_list)
+        elif self.cur_screen == "pokemon":
+            pokeBag.mouse_logic(self, x, y, button)
+        elif self.cur_screen == "pokebag":
+            pokeStorage.mouse_logic(self, x, y, button)
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         if self.cur_screen == "battle":
@@ -370,6 +404,10 @@ class MyGame(arcade.Window):
         elif self.cur_screen == "game menu":
 
             menu_game.update(self)
+            arcade.set_viewport(0, screen_width, 0, screen_height)
+
+        elif self.cur_screen == "pokebag":
+            pokeStorage.update(self)
 
     def resume_program(self):
         self.cur_screen = "game"
@@ -384,6 +422,9 @@ class MyGame(arcade.Window):
         self.cur_screen = "buff"
 
     def poke_part(self):
+        self.cur_screen = "pokemon"
+
+    def pokebag_part(self):
         self.cur_screen = "pokebag"
 
 

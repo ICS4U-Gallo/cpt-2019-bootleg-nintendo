@@ -9,9 +9,9 @@ def setup(player):
     player.select_y = 1
 
     player.dex_color = arcade.color.BLACK
-    player.bag_color = arcade.color.BLACK
-    player.save_color = arcade.color.BLACK
-    player.exit_color = arcade.color.BLACK
+    player.bag_color = arcade.color.GRAY
+    player.save_color = arcade.color.GRAY
+    player.exit_color = arcade.color.GRAY
 
     player.dex_sprite = arcade.load_texture("images/game_menu_images/"
                                             "pokedex.png")

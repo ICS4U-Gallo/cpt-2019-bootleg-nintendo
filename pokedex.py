@@ -121,6 +121,8 @@ def key_logic(player, key):
     elif key == arcade.key.S:
         if player.get_pointer() != len(player.poke_list) - 1:
             player.edit_pointer(player.get_pointer() + 1)
+    elif key == arcade.key.K and not player.sort_menu and not player.search_menu:
+        player.cur_screen = "game menu"
     if key == arcade.key.E or player.search_menu:
         player.search_menu = True
         player.sort_menu = False
