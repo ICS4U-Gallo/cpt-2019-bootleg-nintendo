@@ -3,8 +3,14 @@ import os
 import math
 import map
 import battle
+import bag
+import item
+import buffs
+import heals
 import pokemon
+import pokedex
 import menu_start
+import menu_game
 import balls
 
 sprite_scale = 0.5
@@ -36,10 +42,10 @@ class Player(arcade.Sprite):
         # Load a left facing texture and a right facing texture.
         # mirrored=True will mirror the image we load.
         texture = arcade.load_texture("images/character.png",
-                                      mirrored=True, scale=other_scale)
+                                      mirrored=True, scale=sprite_scale)
         self.textures.append(texture)
         texture = arcade.load_texture("images/character.png",
-                                      scale=other_scale)
+                                      scale=sprite_scale)
         self.textures.append(texture)
 
         # By default, face right.
@@ -157,6 +163,37 @@ class MyGame(arcade.Window):
         self.battle_pokemon_list = None
         self.battle_msg = None
 
+        # Set up bag
+        self.bag_button_list = None
+        self._pointer = 0
+        self.search_menu = False
+        self.sort_menu = False
+        self.search_number = ""
+        self.search_letter = ""
+        self.ball_list = [item.PokeBall.pokeball(), item.PokeBall.greatball(), item.PokeBall.masterball()]
+        self.buff_list = [item.Item.steroids(), item.Item.leg_day()]
+        self.heal_list = [item.Item.potion(), item.Item.superpotion()]
+        self.poke_list = [pokemon.Pokemon.Charmander(),
+                          pokemon.Pokemon.Squirtle(),
+                          pokemon.Pokemon.Bulbasaur(),
+                          pokemon.Pokemon.IceCream(),
+                          pokemon.Pokemon.Garbage(),
+                          pokemon.Pokemon.Torkoal(),
+                          pokemon.Pokemon.Klefki(),
+                          pokemon.Pokemon.Magikarp()]
+
+        # Set up Game menu
+        self.select_x = 0
+        self.select_y = 0
+        self.dex_color = None
+        self.bag_color = None
+        self.save_color = None
+        self.exit_color = None
+        self.dex_sprite = None
+        self.bag_sprite = None
+        self.save_sprite = None
+        self.exit_sprite = None
+
     def setup(self):
         """ Set up the game and initialize the variables. """
         self.cur_screen = "game"
@@ -181,11 +218,20 @@ class MyGame(arcade.Window):
         self.view_left = 0
         self.view_bottom = 0
 
+        bag.setup(self)
+        menu_game.setup(self)
+
         self.rooms = map.create()
 
         self.current_room = 1
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
+
+    def get_pointer(self):
+        return self._pointer
+
+    def edit_pointer(self, value):
+        self._pointer = value
 
     def on_draw(self):
         """
@@ -210,9 +256,17 @@ class MyGame(arcade.Window):
         elif self.cur_screen == "battle":
             battle.on_draw(self)
         elif self.cur_screen == "bag":
-            print("bag")
+            bag.on_draw(self)
+        elif self.cur_screen == "buff":
+            buffs.on_draw(self)
         elif self.cur_screen == "balls":
             balls.on_draw(self)
+        elif self.cur_screen == "heal":
+            heals.on_draw(self)
+        elif self.cur_screen == "game menu":
+            menu_game.on_draw(self)
+        elif self.cur_screen == "pokedex":
+            pokedex.on_draw(self)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -227,8 +281,18 @@ class MyGame(arcade.Window):
                 self.right_pressed = True
             if key == arcade.key.L:
                 self.act_pressed = True
+            elif key == arcade.key.K:
+                self.cur_screen = "game menu"
         elif self.cur_screen == "balls":
-            print("balls")
+            balls.search_logic(self, key)
+        elif self.cur_screen == "buff":
+            buffs.search_logic(self, key)
+        elif self.cur_screen == "heal":
+            heals.search_logic(self, key)
+        elif self.cur_screen == "game menu":
+            menu_game.key_logic(self, key)
+        elif self.cur_screen == "pokedex":
+            pokedex.key_logic(self, key)
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -252,10 +316,14 @@ class MyGame(arcade.Window):
             menu_start.on_mouse_press(self, x, y, button)
         elif self.cur_screen == "battle":
             check_mouse_press_for_buttons(x, y, self.battle_button_list)
+        elif self.cur_screen == "bag":
+            check_mouse_press_for_buttons(x, y, self.bag_button_list)
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         if self.cur_screen == "battle":
             check_mouse_release_for_buttons(x, y, self.battle_button_list)
+        elif self.cur_screen == "bag":
+            check_mouse_release_for_buttons(x, y, self.bag_button_list)
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.mouse_x = x
@@ -298,9 +366,25 @@ class MyGame(arcade.Window):
 
             battle.update(self)
             arcade.set_viewport(0, screen_width, 0, screen_height)
-        # 1000-1080, 674.4
-        # 383.6, 40
-        # if player in room then make the viewport 0 and set the screen
+
+        elif self.cur_screen == "game menu":
+
+            menu_game.update(self)
+
+    def resume_program(self):
+        self.cur_screen = "game"
+
+    def heal_part(self):
+        self.cur_screen = "heal"
+
+    def ball_part(self):
+        self.cur_screen = "balls"
+
+    def buff_part(self):
+        self.cur_screen = "buff"
+
+    def poke_part(self):
+        self.cur_screen = "pokebag"
 
 
 def main():

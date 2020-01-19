@@ -268,7 +268,7 @@ def heal_center():
 
 
 def room_logic(player):
-    if ceil(player.player_sprite.center_x) in range(1000, 1080) and ceil(player.player_sprite.center_y) in range(670, 676) and player.current_room == 0:
+    if ceil(player.player_sprite.center_x) in range(1000, 1080) and ceil(player.player_sprite.center_y) in range(660, 676) and player.current_room == 0:
         player.current_room = 2
         player.physics_engine = arcade.PhysicsEngineSimple(player.player_sprite,
                                                          player.rooms[player.current_room].wall_list)
@@ -290,7 +290,7 @@ def room_logic(player):
         player.physics_engine = arcade.PhysicsEngineSimple(player.player_sprite,
                                                          player.rooms[player.current_room].wall_list)
         player.player_sprite.center_x = 30
-    elif ceil(player.player_sprite.center_x) in range(200, 285) and ceil(player.player_sprite.center_y) in range(670, 676) and player.current_room == 0:
+    elif ceil(player.player_sprite.center_x) in range(200, 285) and ceil(player.player_sprite.center_y) in range(660, 676) and player.current_room == 0:
         player.current_room = 1
         player.physics_engine = arcade.PhysicsEngineSimple(player.player_sprite,
                                                          player.rooms[player.current_room].wall_list)
@@ -302,13 +302,13 @@ def room_logic(player):
                                                          player.rooms[player.current_room].wall_list)
         player.player_sprite.center_x = 1040
         player.player_sprite.center_y = 656
-    elif ceil(player.player_sprite.center_x) in range(1100, 1180) and ceil(player.player_sprite.center_y) in range(670, 676) and player.current_room == 4:
+    elif ceil(player.player_sprite.center_x) in range(1100, 1180) and ceil(player.player_sprite.center_y) in range(660, 676) and player.current_room == 4:
         player.current_room = 5
         player.physics_engine = arcade.PhysicsEngineSimple(player.player_sprite,
                                                          player.rooms[player.current_room].wall_list)
         player.player_sprite.center_x = 383.6
         player.player_sprite.center_y = 40
-    elif ceil(player.player_sprite.center_x) in range(180, 270) and ceil(player.player_sprite.center_y) in range(670, 676) and player.current_room == 4:
+    elif ceil(player.player_sprite.center_x) in range(180, 270) and ceil(player.player_sprite.center_y) in range(660, 676) and player.current_room == 4:
         player.current_room = 6
         player.physics_engine = arcade.PhysicsEngineSimple(player.player_sprite,
                                                          player.rooms[player.current_room].wall_list)

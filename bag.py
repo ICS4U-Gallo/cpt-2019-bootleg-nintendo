@@ -112,7 +112,6 @@ class Resume(TextButton):
         super().on_release()
         self.action_function()
 
-
 class Heals(TextButton):
     def __init__(self, center_x, center_y, action_function):
         super().__init__(center_x, center_y, 160, 40, "Heals", 30, "Arial")
@@ -120,7 +119,8 @@ class Heals(TextButton):
 
     def on_release(self):
         super().on_release()
-        self.action_function
+        self.action_function()
+
 
 
 class Buff_items(TextButton):
@@ -130,7 +130,7 @@ class Buff_items(TextButton):
 
     def on_release(self):
         super().on_release()
-        self.action_function
+        self.action_function()
 
 
 class Balls(TextButton):
@@ -140,7 +140,7 @@ class Balls(TextButton):
 
     def on_release(self):
         super().on_release()
-        self.action_function
+        self.action_function()
 
 
 class Pokemon(TextButton):
@@ -150,7 +150,32 @@ class Pokemon(TextButton):
     
     def on_release(self):
         super().on_release()
-        self.action_function
+        self.action_function()
+
+
+def setup(player):
+    player.bag_button_list = []
+    play_button = Resume(200, 450, player.resume_program)
+    player.bag_button_list.append(play_button)
+    heals_button = Heals(600, 150, player.heal_part)
+    player.bag_button_list.append(heals_button)
+    balls_button = Balls(200, 150, player.ball_part)
+    player.bag_button_list.append(balls_button)
+    buff_button = Buff_items(600, 450, player.buff_part)
+    player.bag_button_list.append(buff_button)
+    pokemon_button = Pokemon(400, 300, player.poke_part)
+    player.bag_button_list.append(pokemon_button)
+
+
+def on_draw(player):
+    arcade.start_render()
+    arcade.set_background_color(arcade.color.WHITE)
+    for button in player.bag_button_list:
+        button.draw()
+
+def update(player):
+    pass
+
 
 
 class MyGame(arcade.Window):
@@ -166,52 +191,11 @@ class MyGame(arcade.Window):
         self.pause = False
         self.button_list = None
 
-    def setup(self):
-
-        self.button_list = []
-
-        play_button = Resume(200, 450, self.resume_program)
-        self.button_list.append(play_button)
-
-        heals_button = Heals(600, 150, self.heals_button)
-        self.button_list.append(heals_button)
-
-        balls_button = Balls(200, 150, self.balls_button)
-        self.button_list.append(balls_button)
-
-        buff_button = Buff_items(600, 450, self.buff_button)
-        self.button_list.append(buff_button)
-
-        pokemon_button = Pokemon(400, 300, self.pokemon_button)
-        self.button_list.append(pokemon_button)
-
-    def on_draw(self):
-
-        arcade.start_render()
-
-        for button in self.button_list:
-            button.draw()
-
     def on_mouse_press(self, x, y, button, key_modifiers):
         check_mouse_press_for_buttons(x, y, self.button_list)
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         check_mouse_release_for_buttons(x, y, self.button_list)
-
-    def resume_program(self):
-        self.pause = False
-
-    def heals_button(self):
-        pass
-
-    def balls_button(self):
-        pass
-
-    def buff_button(self):
-        pass
-
-    def pokemon_button(self):
-        pass
 
 
 def main():

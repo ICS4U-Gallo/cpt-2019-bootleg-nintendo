@@ -54,8 +54,8 @@ class PokeBall(Item):
     def __init__(self, name, amount, effect):
         super().__init__(name, amount, effect)
 
-    def use(self, player, poke):
-        if self.name == "pokeball" and self.amount != 0:
+    def ball_use(self, player, poke):
+        if self.name == "poke ball" and self.amount != 0:
             if random.randrange(4) == 0:
                 player.pokemon.append(poke)
                 player.cur_screen = "game"
@@ -76,19 +76,19 @@ class PokeBall(Item):
 
     @classmethod
     def pokeball(cls):
-        item = cls("pokeball", 0, "25% catch rate")
+        item = cls("poke ball", 10, "25% catch rate")
         item.texture = arcade.load_texture("images/pokeballs/pokeball.png")
         return item
 
     @classmethod
     def greatball(cls):
-        item = cls("great ball", 0, "50% catch rate")
+        item = cls("great ball", 5, "50% catch rate")
         item.texture = arcade.load_texture("images/pokeballs/great_ball.png")
         return item
 
     @classmethod
     def masterball(cls):
-        item = cls("master ball", 0, "100% catch rate")
+        item = cls("master ball", 1, "100% catch rate")
         item.texture = arcade.load_texture("images/pokeballs/master_ball.png")
         return item
 
