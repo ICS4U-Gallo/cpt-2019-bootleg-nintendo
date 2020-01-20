@@ -207,6 +207,8 @@ class MyGame(arcade.Window):
         self.save_sprite = None
         self.exit_sprite = None
 
+        # Pokemon Bag is the 6 pokemon being used
+        # Pokemon Storage is the rest of the pokemon
         # Set up Pokemon Bag
         self.selected = None
         self.switch_pos = None
