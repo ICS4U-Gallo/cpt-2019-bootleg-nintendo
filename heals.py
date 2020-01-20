@@ -153,8 +153,8 @@ def on_draw(player: arcade.Window):
                                        arcade.color.BLACK, 10)
     arcade.draw_texture_rectangle(625, 335, 240, 240, player.heal_list
     [player.get_pointer()].texture)
-    arcade.draw_text("Amount: {}".format(str(player.heal_list[player.get_pointer()].amount)), 465, 150,
-                     arcade.color.BLACK, 50)
+    arcade.draw_text("Amount: {}".format(str(player.heal_list[player.get_pointer()].amount)),
+                     465, 150, arcade.color.BLACK, 50)
 
     if player.sort_menu:
         arcade.draw_xywh_rectangle_filled(100, 100, 568, 440,

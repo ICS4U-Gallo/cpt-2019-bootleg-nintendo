@@ -10,10 +10,10 @@ SCREEN_TITLE = "Poke Me"
 
 class TextButton:
 
-    def __init__(self, center_x, center_y, width, height, text, font_size=18,
-                 font_face="Arial", face_color=arcade.color.GREEN_YELLOW,
-                 highlight_color=arcade.color.GREEN,
-                 shadow_color=arcade.color.GREEN, button_height=2):
+    def __init__(self, center_x, center_y, width, height, text, font_size = 18,
+                 font_face = "Arial", face_color = arcade.color.GREEN_YELLOW,
+                 highlight_color = arcade.color.GREEN,
+                 shadow_color = arcade.color.GREEN, button_height = 2):
         self.center_x = center_x
         self.center_y = center_y
         self.width = width
