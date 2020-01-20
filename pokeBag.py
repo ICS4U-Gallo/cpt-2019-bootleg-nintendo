@@ -27,8 +27,8 @@ def on_draw(game: "arcade.Window") -> None:
                      align="center", anchor_x="center", anchor_y="center")
 
     for i in range(len(game.player_sprite.pokemon)):
-        game.player_sprite.pokemon[i].center_x = 125 + i % 2 * 175
-        game.player_sprite.pokemon[i].center_y = 445 - i // 2 * 175
+        game.player_sprite.pokemon[i].center_x = (125 + i % 2 * 175)
+        game.player_sprite.pokemon[i].center_y = (445 - i // 2 * 175)
         game.player_sprite.pokemon[i].draw()
 
     for i in range(6):

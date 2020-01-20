@@ -160,6 +160,9 @@ class Pokemon(arcade.Sprite):
             if self.cur_stats[i] > self.stats[i]:
                 self.cur_stats[i] = self.stats[i]
         if self.lvl in self.available_move.keys():
+            if game is not None:
+                game.battle_msg.append(f"{self.name} learn \
+{self.available_move[self.lvl].name}")
             self.moves.append(self.available_move[self.lvl])
         if self.lvl in self.available_evo.keys():
             if game is not None:

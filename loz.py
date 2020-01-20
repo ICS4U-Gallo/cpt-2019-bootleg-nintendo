@@ -401,7 +401,7 @@ class MyGame(arcade.Window):
 
             if (math.ceil(self.player_sprite.center_x) in range(200, 530) and
                     math.ceil(self.player_sprite.center_y) in
-                    range(300, 310) and
+                    range(290, 300) and
                     self.current_room == 6):
                 if self.act_pressed is True:
                     print('healed')
@@ -437,12 +437,15 @@ class MyGame(arcade.Window):
 
     def heal_part(self):
         self.cur_screen = "heal"
+        self.edit_pointer(0)
 
     def ball_part(self):
         self.cur_screen = "balls"
+        self.edit_pointer(0)
 
     def buff_part(self):
         self.cur_screen = "buff"
+        self.edit_pointer(0)
 
     def poke_part(self):
         self.cur_screen = "pokemon"
