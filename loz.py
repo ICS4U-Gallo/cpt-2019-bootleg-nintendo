@@ -175,13 +175,21 @@ class MyGame(arcade.Window):
         self.sort_menu = False
         self.search_number = ""
         self.search_letter = ""
-        self.ball_list = [item.PokeBall.pokeball(), item.PokeBall.greatball(), item.PokeBall.masterball()]
-        self.buff_list = [item.Item.steroids(), item.Item.leg_day()]
-        self.heal_list = [item.Item.potion(), item.Item.superpotion()]
-        self.poke_list = [pokemon.Pokemon.Charmander(), pokemon.Pokemon.Charm2(),
-                          pokemon.Pokemon.Squirtle(), pokemon.Pokemon.Squir2(),
-                          pokemon.Pokemon.Bulbasaur(), pokemon.Pokemon.Bulb2(),
-                          pokemon.Pokemon.IceCream(), pokemon.Pokemon.Ice2(),
+        self.ball_list = [item.PokeBall.pokeball(),
+                          item.PokeBall.greatball(),
+                          item.PokeBall.masterball()]
+        self.buff_list = [item.Item.steroids(),
+                          item.Item.leg_day()]
+        self.heal_list = [item.Item.potion(),
+                          item.Item.superpotion()]
+        self.poke_list = [pokemon.Pokemon.Charmander(),
+                          pokemon.Pokemon.Charm2(),
+                          pokemon.Pokemon.Squirtle(),
+                          pokemon.Pokemon.Squir2(),
+                          pokemon.Pokemon.Bulbasaur(),
+                          pokemon.Pokemon.Bulb2(),
+                          pokemon.Pokemon.IceCream(),
+                          pokemon.Pokemon.Ice2(),
                           pokemon.Pokemon.Garbage(),
                           pokemon.Pokemon.Torkoal(),
                           pokemon.Pokemon.Klefki(),
@@ -223,7 +231,9 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 250
         self.player_sprite.center_y = 400
         self.player_list.append(self.player_sprite)
-        self.player_sprite.item_bag = [self.ball_list, self.buff_list, self.heal_list]
+        self.player_sprite.item_bag = [self.ball_list,
+                                       self.buff_list,
+                                       self.heal_list]
 
         # Add pokemon for testing
         for i in range(6):
@@ -251,7 +261,11 @@ class MyGame(arcade.Window):
 
         self.current_room = 1
 
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
+        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                         (self.rooms
+                                                          [self.
+                                                           current_room].
+                                                          wall_list))
 
     def get_pointer(self):
         return self._pointer
@@ -272,8 +286,10 @@ class MyGame(arcade.Window):
             menu_start.on_draw(self)
         elif self.cur_screen == "game":
             arcade.set_background_color(arcade.color.BLACK)
-            arcade.draw_texture_rectangle(screen_width, screen_height,
-                                          screen_width * 2, screen_height * 2,
+            arcade.draw_texture_rectangle(screen_width,
+                                          screen_height,
+                                          screen_width * 2,
+                                          screen_height * 2,
                                           self.rooms[self.current_room].
                                           background)
             self.rooms[self.current_room].wall_list.draw()
@@ -385,8 +401,11 @@ class MyGame(arcade.Window):
             elif self.right_pressed and not self.left_pressed:
                 self.player_sprite.change_x = MOVEMENT_SPEED
 
-            if math.ceil(self.player_sprite.center_x) in range(200, 530) and math.ceil(self.player_sprite.center_y) in range(300,310) and self.current_room == 6:
-                if self.act_pressed == True:
+            if (math.ceil(self.player_sprite.center_x) in range(200, 530) and
+                    math.ceil(self.player_sprite.center_y) in
+                    range(300, 310) and
+                    self.current_room == 6):
+                if self.act_pressed is True:
                     print('healed')
                     for poke in self.player_sprite.pokemon:
                         poke.cur_stats[0] = poke.stats[0]
@@ -396,8 +415,7 @@ class MyGame(arcade.Window):
             self.physics_engine.update()
             self.player_list.update()
             # --- Manage Scrolling ---
-            # Keep track of if we changed the boundary. We don't want to call the
-            # set_viewport command if we didn't change the view port.
+            # Keep track of if we changed the boundary.
 
             map.view_logic(self)
             map.room_logic(self)
