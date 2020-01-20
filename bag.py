@@ -10,10 +10,10 @@ SCREEN_TITLE = "Poke Me"
 
 class TextButton:
 
-    def __init__(self, center_x, center_y, width, height, text, font_size=18,
-                 font_face="Arial", face_color=arcade.color.GREEN_YELLOW,
-                 highlight_color=arcade.color.GREEN,
-                 shadow_color=arcade.color.GREEN, button_height=2):
+    def __init__(self, center_x, center_y, width, height, text, font_size = 18,
+                 font_face = "Arial", face_color = arcade.color.GREEN_YELLOW,
+                 highlight_color = arcade.color.GREEN,
+                 shadow_color = arcade.color.GREEN, button_height = 2):
         self.center_x = center_x
         self.center_y = center_y
         self.width = width
@@ -28,7 +28,7 @@ class TextButton:
         self.button_height = button_height
 
     def draw(self):
-        arcade.draw_rectangle_filled(self.center_x, self.center_y, 
+        arcade.draw_rectangle_filled(self.center_x, self.center_y,
                                      self.width + 160, self.height + 40,
                                      self.face_color)
 
@@ -112,6 +112,7 @@ class Resume(TextButton):
         super().on_release()
         self.action_function()
 
+
 class Heals(TextButton):
     def __init__(self, center_x, center_y, action_function):
         super().__init__(center_x, center_y, 160, 40, "Heals", 30, "Arial")
@@ -120,7 +121,6 @@ class Heals(TextButton):
     def on_release(self):
         super().on_release()
         self.action_function()
-
 
 
 class Buff_items(TextButton):
@@ -147,7 +147,7 @@ class Pokemon(TextButton):
     def __init__(self, center_x, center_y, action_function):
         super().__init__(center_x, center_y, 160, 40, "Pokemon", 30, "Arial")
         self.action_function = action_function
-    
+
     def on_release(self):
         super().on_release()
         self.action_function()
@@ -185,9 +185,9 @@ def on_draw(player):
     for button in player.bag_button_list:
         button.draw()
 
+
 def update(player):
     pass
-
 
 
 class MyGame(arcade.Window):

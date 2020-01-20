@@ -11,7 +11,7 @@ class Item:
         self.effect = effect
         self.amount = amount
 
-    def use(self, game, poke):
+    def use(self, game: arcade.Window, poke):
         if self.amount >= 1:
             if self.name == "Potion":
                 poke.cur_stats[0] += 20

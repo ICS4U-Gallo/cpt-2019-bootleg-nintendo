@@ -54,7 +54,7 @@ def merge_sort(numbers):
     return new_list
 
 
-def on_draw(player):
+def on_draw(player: arcade.Window):
     arcade.start_render()
     arcade.draw_text("Buffs", 20, 570, arcade.color.BLACK, 50)
     arcade.draw_text("Item Count:", 20, 520, arcade.color.BLACK, 30)
@@ -73,7 +73,8 @@ def on_draw(player):
     if player.get_pointer() - 1 != -1:
         arcade.draw_text("{}: {}".format(player.buff_list
                          [player.get_pointer() - 1].name,
-                         player.buff_list[player.get_pointer() - 1].effect), 20,
+                         player.buff_list[player.get_pointer() -
+                                          1].effect), 20,
                          425, arcade.color.BLACK, 20)
 
     arcade.draw_text("{}: {}".format(player.buff_list
@@ -84,7 +85,8 @@ def on_draw(player):
     if player.get_pointer() + 1 != len(player.buff_list):
         arcade.draw_text("{}: {}".format(player.buff_list
                          [player.get_pointer() + 1].name,
-                         player.buff_list[player.get_pointer() + 1].effect), 20,
+                         player.buff_list[player.get_pointer() +
+                                          1].effect), 20,
                          213, arcade.color.BLACK, 20)
 
     arcade.draw_triangle_filled(475, 335, 495, 315, 495,
@@ -93,7 +95,8 @@ def on_draw(player):
                                        arcade.color.BLACK, 10)
     arcade.draw_texture_rectangle(625, 335, 240, 240, player.buff_list
                                   [player.get_pointer()].texture)
-    arcade.draw_text("Amount: {}".format(str(player.buff_list[player.get_pointer()].amount)), 465, 150, arcade.color.BLACK, 50)
+    arcade.draw_text("Amount: {}".format(str(player.buff_list[player.get_pointer()].amount)),
+                     465, 150, arcade.color.BLACK, 50)
 
     if player.search_menu:
         arcade.draw_xywh_rectangle_filled(100, 100, 568, 440,
@@ -113,7 +116,8 @@ def on_draw(player):
                          arcade.color.BLACK, 50)
         arcade.draw_text("the bag?", 175, 310, arcade.color.BLACK, 50)
 
-def search_logic(player, key):
+
+def search_logic(player: arcade.Window, key):
     if key == arcade.key.W:
         if player.get_pointer() != 0:
             player.edit_pointer(player.get_pointer() - 1)

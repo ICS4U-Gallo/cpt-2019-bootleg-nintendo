@@ -252,7 +252,7 @@ class Pokemon(arcade.Sprite):
 
     @classmethod
     def Charm2(cls) -> "Pokemon":
-        poke = cls(2, "Slightly Better Charmnder", "fire", None, None, None,
+        poke = cls(2, "Slightly Better Charmander", "fire", None, None, None,
                    None, None)
         poke.texture = arcade.load_texture("images/poke_images/charizard.jpg",
                                            scale=75/221)

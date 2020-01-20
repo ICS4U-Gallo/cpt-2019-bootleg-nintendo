@@ -71,21 +71,18 @@ def on_draw(player):
     if player.get_pointer() - 1 != -1:
         arcade.draw_text("{}: {}".format(player.ball_list
                          [player.get_pointer() - 1].name,
-                         player.ball_list
-                         [player.get_pointer() - 1].effect), 20,
+                         player.ball_list[player.get_pointer() - 1].effect), 20,
                          425, arcade.color.BLACK, 20)
 
     arcade.draw_text("{}: {}".format(player.ball_list
                      [player.get_pointer()].name,
-                     player.ball_list
-                     [player.get_pointer()].effect), 20,
+                     player.ball_list[player.get_pointer()].effect), 20,
                      320, arcade.color.BLACK, 30)
 
     if player.get_pointer() + 1 != len(player.ball_list):
         arcade.draw_text("{}: {}".format(player.ball_list
                          [player.get_pointer() + 1].name,
-                         player.ball_list
-                         [player.get_pointer() + 1].effect), 20,
+                         player.ball_list[player.get_pointer() + 1].effect), 20,
                          213, arcade.color.BLACK, 20)
 
     arcade.draw_triangle_filled(475, 335, 495, 315, 495,
@@ -94,9 +91,7 @@ def on_draw(player):
                                        arcade.color.BLACK, 10)
     arcade.draw_texture_rectangle(625, 335, 240, 240, player.ball_list
                                   [player.get_pointer()].texture)
-    arcade.draw_text("Amount: {}".format(str(player.ball_list
-                                             [player.get_pointer()].amount)),
-                     465, 150, arcade.color.BLACK, 50)
+    arcade.draw_text("Amount: {}".format(str(player.ball_list[player.get_pointer()].amount)), 465, 150, arcade.color.BLACK, 50)
 
     if player.search_menu:
         arcade.draw_xywh_rectangle_filled(100, 100, 568, 440,
@@ -114,8 +109,7 @@ def on_draw(player):
                                           arcade.color.WHITE)
         arcade.draw_text("Do you want to sort", 175, 380,
                          arcade.color.BLACK, 40)
-        arcade.draw_text("the balls by least amount?", 130,
-                         310, arcade.color.BLACK, 40)
+        arcade.draw_text("the balls by least amount?", 130, 310, arcade.color.BLACK, 40)
 
 
 def search_logic(player, key):
