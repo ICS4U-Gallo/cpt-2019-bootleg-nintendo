@@ -23,7 +23,7 @@ class MyGame(arcade.Window):
         self.mouse_click = False
 
     def on_mouse_press(self, x, y, button, modifiers):
-        
+
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.mouse_click = True
 

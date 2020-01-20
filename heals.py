@@ -52,7 +52,7 @@ def merge_sort(numbers):
     return new_list
 
 
-def search_logic(player, key):
+def search_logic(player: arcade.Window, key):
     if key == arcade.key.W:
         if player.get_pointer() != 0:
             player.edit_pointer(player.get_pointer() - 1)
@@ -118,7 +118,7 @@ def search_logic(player, key):
         player.cur_screen = "bag"
 
 
-def on_draw(player):
+def on_draw(player: arcade.Window):
     arcade.start_render()
     arcade.draw_text("Potion", 20, 570, arcade.color.BLACK, 50)
     arcade.draw_text("Q - Sort", 30, 30, arcade.color.BLACK, 60)
@@ -153,8 +153,8 @@ def on_draw(player):
                                        arcade.color.BLACK, 10)
     arcade.draw_texture_rectangle(625, 335, 240, 240, player.heal_list
     [player.get_pointer()].texture)
-    arcade.draw_text("Amount: {}".format(str(player.heal_list[player.get_pointer()].amount)), 465, 150, arcade.color.BLACK,
-                     50)
+    arcade.draw_text("Amount: {}".format(str(player.heal_list[player.get_pointer()].amount)), 465, 150,
+                     arcade.color.BLACK, 50)
 
     if player.sort_menu:
         arcade.draw_xywh_rectangle_filled(100, 100, 568, 440,
@@ -163,7 +163,7 @@ def on_draw(player):
                                           arcade.color.WHITE)
         arcade.draw_text("Do you want to sort", 115, 380,
                          arcade.color.BLACK, 50)
-        arcade.draw_text("the items?", 175, 310, arcade.color.BLACK, 50)
+        arcade.draw_text("by hp healed?", 175, 310, arcade.color.BLACK, 50)
 
 
 def main():

@@ -385,7 +385,8 @@ class MyGame(arcade.Window):
             elif self.right_pressed and not self.left_pressed:
                 self.player_sprite.change_x = MOVEMENT_SPEED
 
-            if math.ceil(self.player_sprite.center_x) in range(200, 530) and math.ceil(self.player_sprite.center_y) in range(300,310) and self.current_room == 6:
+            if math.ceil(self.player_sprite.center_x) in range(200, 530) and math.ceil(self.player_sprite.center_y)\
+                    in range(300,310) and self.current_room == 6:
                 if self.act_pressed == True:
                     print('healed')
                     for poke in self.player_sprite.pokemon:
