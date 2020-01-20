@@ -255,6 +255,7 @@ def exit_battle(game):
         poke.cur_stats[1] = poke.stats[1]
         poke.cur_stats[2] = poke.stats[2]
         poke.cur_stats[3] = poke.stats[3]
+        poke.effect = None
     game.cur_screen = "game"
 
 
