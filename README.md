@@ -1,5 +1,5 @@
 # Bootleg Pokemon
-Program description. Replace with description of your program. Give a description of each scene.
+Trying to remake pokemon with python and arcade
 
 ### Group Members:
 - Eric J
