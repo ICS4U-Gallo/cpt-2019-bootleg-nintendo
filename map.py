@@ -1,8 +1,8 @@
 import random
 import arcade
-import os
 from math import ceil
 import battle
+from pokemon import Pokemon
 
 sprite_scale = 0.5
 other_scale = 0.4
@@ -32,6 +32,8 @@ class Room:
         self.wall_list = None
         self.background_list = None
         self.grass_list = None
+        self.enemy_list = None
+        self.pokeball = None
 
 
 def start_town():
@@ -113,6 +115,7 @@ def poke_lab():
     room = Room()
 
     room.wall_list = arcade.SpriteList()
+    room.pokeball = arcade.SpriteList()
 
     for x in (0, screen_width - sprite_size):
         for y in range(0, screen_height, sprite_size):
@@ -131,9 +134,14 @@ def poke_lab():
                 room.wall_list.append(wall)
 
     table = arcade.Sprite("images/table.png", 2)
-    table.left = 300
+    table.center_x = screen_width/2
     table.bottom = 350
     room.wall_list.append(table)
+
+    ball = arcade.Sprite("images/pokeballs/pokeball.png", 0.3)
+    ball.center_x = screen_width/2
+    ball.center_y = 425
+    room.pokeball.append(ball)
 
     room.background = arcade.load_texture("images/background.jpg")
 
@@ -219,6 +227,7 @@ def gym():
     room = Room()
 
     room.wall_list = arcade.SpriteList()
+    room.enemy_list = arcade.SpriteList()
 
     for x in (0, (screen_width * 2) - sprite_size):
         for y in range(0, (screen_height * 2), sprite_size):
@@ -235,6 +244,51 @@ def gym():
                 wall.left = x
                 wall.bottom = y
                 room.wall_list.append(wall)
+
+    for x in range(sprite_size, (screen_width*2)-(sprite_size*6), sprite_size):
+        wall = arcade.Sprite("images/boxCrate_double.png",
+                             sprite_scale)
+        wall.left = x
+        wall.bottom = sprite_size*6
+        room.wall_list.append(wall)
+
+    for y in range(sprite_size*7, (screen_height*2)-(sprite_size*5),
+                   sprite_size):
+        wall = arcade.Sprite("images/boxCrate_double.png",
+                             sprite_scale)
+        wall.left = sprite_size*17
+        wall.bottom = y
+        room.wall_list.append(wall)
+
+    for y in range(sprite_size*7, (screen_height*2)-sprite_size, sprite_size):
+        wall = arcade.Sprite("images/boxCrate_double.png",
+                             sprite_scale)
+        wall.left = sprite_size*7
+        wall.bottom = y
+        room.wall_list.append(wall)
+
+    loc = [[3, 3, 1], [8, 1, 0], [13, 5, 2], [18, 1, 0], [18, 6, 1],
+           [22, 10, 3], [18, 14, 1], [17, 18, 2], [16, 14, 3]]
+    for i in range(len(loc)):
+        poke_list = []
+        for j in range(2):
+            poke = Pokemon.Magikarp()
+            poke.addlevel(5*(i+1)+j)
+            poke_list.append(poke)
+        enemy = battle.Enemy(False, poke_list, loc[i][2], False)
+        enemy.left = loc[i][0]*64
+        enemy.bottom = loc[i][1]*64
+        room.enemy_list.append(enemy)
+
+    poke_list = []
+    for i in range(6):
+        poke = Pokemon.Magikarp()
+        poke.addlevel(50+i)
+        poke_list.append(poke)
+    boss = battle.Enemy(False, poke_list, 0, True)
+    boss.center_x = screen_width
+    boss.center_y = screen_height
+    room.enemy_list.append(boss)
 
     room.background = arcade.load_texture("images/home_floor.jpg")
 
@@ -408,6 +462,19 @@ def room_logic(player):
             if encounter == 1 and not player.player_sprite.defeated():
                 print("pokemon")
                 battle.wild_encounter(player)
+    elif player.current_room == 5:
+        for enemy in player.rooms[player.current_room].enemy_list:
+            if not player.player_sprite.defeated():
+                enemy.see_player(player, player.player_sprite)
+    elif player.current_room == 2:
+        if (len(player.rooms[player.current_room].pokeball) == 1 and
+            player.act_pressed):
+            poke_list = [Pokemon.Charmander(), Pokemon.Squirtle(),
+                         Pokemon.Bulbasaur(), Pokemon.Magikarp()]
+            for poke in poke_list:
+                poke.addlevel(4)
+                player.player_sprite.pokemon.append(poke)
+            player.rooms[player.current_room].pokeball = arcade.SpriteList()
 
 
 def view_logic(player):

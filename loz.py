@@ -193,7 +193,8 @@ class MyGame(arcade.Window):
                           pokemon.Pokemon.Garbage(),
                           pokemon.Pokemon.Torkoal(),
                           pokemon.Pokemon.Klefki(),
-                          pokemon.Pokemon.Magikarp()]
+                          pokemon.Pokemon.Magikarp(),
+                          pokemon.Pokemon.PinkMagikarp()]
 
         # Set up Game menu
         self.select_x = 0
@@ -237,15 +238,6 @@ class MyGame(arcade.Window):
                                        self.buff_list,
                                        self.heal_list]
 
-        # Add pokemon for testing
-        for i in range(6):
-            poke = pokemon.Pokemon.Magikarp()
-            poke.addlevel(i+10)
-            self.player_sprite.pokemon.append(poke)
-
-        for poke in pokemon.poke_list:
-            poke.addlevel(9)
-            self.player_sprite.pokemon_storage.append(poke)
         # Set the background color
         arcade.set_background_color(arcade.color.BLACK)
 
@@ -298,6 +290,10 @@ class MyGame(arcade.Window):
             self.player_list.draw()
             if self.current_room == 3:
                 self.rooms[self.current_room].grass_list.draw()
+            elif self.current_room == 5:
+                self.rooms[self.current_room].enemy_list.draw()
+            elif self.current_room == 2:
+                self.rooms[self.current_room].pokeball.draw()
         elif self.cur_screen == "battle":
             battle.on_draw(self)
         elif self.cur_screen == "bag":
@@ -411,6 +407,8 @@ class MyGame(arcade.Window):
                     print('healed')
                     for poke in self.player_sprite.pokemon:
                         poke.cur_stats[0] = poke.stats[0]
+                        for move in poke.moves:
+                            move.set_cur_pp(move.get_pp())
 
             # Call update on all sprites (The sprites don't do much in this
             # example though.)

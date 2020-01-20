@@ -148,9 +148,11 @@ class Pokemon(arcade.Sprite):
         for i in range(lvl):
             self.levelup()
 
-    def levelup(self) -> None:
+    def levelup(self, game: "arcade.Window"=None) -> None:
         """Level up pokemon and check for available moves/evolves"""
         self.lvl += 1
+        if game is not None:
+            game.battle_msg.append(f"{self.name} level up to lvl {self.lvl}")
         for i in range(3):
             self.stats[i] = round(self.stats[i] * 51/50)
         for i in range(3):
@@ -160,6 +162,8 @@ class Pokemon(arcade.Sprite):
         if self.lvl in self.available_move.keys():
             self.moves.append(self.available_move[self.lvl])
         if self.lvl in self.available_evo.keys():
+            if game is not None:
+                game.battle_msg.append(f"{self.name} evolved")
             self.evo()
 
     def evo(self) -> None:
@@ -212,12 +216,12 @@ class Pokemon(arcade.Sprite):
         else:
             return False
 
-    def gainkill(self) -> None:
+    def gainkill(self, game: "arcade.Window") -> None:
         """Add kill to killcount and check for level up"""
         self.killcount += 1
-        if self.killcount == 5:
+        if self.killcount == 1:
             self.killcount = 0
-            self.levelup()
+            self.levelup(game)
 
     def __str__(self) -> str:
         return f"{self.name, self.type, self.lvl, *self.cur_stats}"

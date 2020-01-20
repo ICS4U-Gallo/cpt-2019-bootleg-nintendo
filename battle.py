@@ -7,15 +7,67 @@ from typing import *
 from loz import Player
 
 
-class Enemy:
+class Enemy(arcade.Sprite):
     """Enemy class
         Attributes:
             wild(bool) = Whether enemy is wild pokemon or not
+            left(int) = x coordinate for enemy left
+            bottom(int) = y coordinate for enemy bottom
+            dir(int) = direction of enemy(0=up, 1=right, 2=down, 3=left)
             pokemon(List["Pokemon"]) = Pokemon the enemy has (only 1 for wild)
         """
-    def __init__(self, wild: bool, *poke: "pokemon.Pokemon"):
+    def __init__(self, wild: bool, poke: List["pokemon.Pokemon"],
+                 dir: int=0, boss: bool=False):
+        super().__init__()
         self.wild = wild
-        self.pokemon = [*poke]
+        self.dir = dir
+        self.pokemon = poke
+        self.boss = boss
+        self.check_dir()
+
+    def check_dir(self) -> None:
+        """Check enemy director and change image"""
+        if self.boss:
+            self.texture = arcade.load_texture(
+                ":resources:images/alien/alienBlue_front.png")
+        if not self.wild and not self.boss:
+            if self.dir == 0:
+                self.texture = arcade.load_texture(
+                    ":resources:images/alien/alienBlue_climb1.png", scale=0.4)
+            elif self.dir == 1:
+                self.texture = arcade.load_texture(
+                    ":resources:images/alien/alienBlue_walk2.png", scale=0.4)
+            elif self.dir == 2:
+                self.texture = arcade.load_texture(
+                    ":resources:images/alien/alienBlue_front.png", scale=0.4)
+            elif self.dir == 3:
+                self.texture = arcade.load_texture(
+                    ":resources:images/alien/alienBlue_walk2.png",
+                    mirrored=True, scale=0.4)
+
+    def see_player(self, game: "arcade.Window", player: "Player") -> None:
+        """Check encounter between player and enemy"""
+        if not self.defeated():
+            if self.boss:
+                if (abs(self.center_y - player.center_y) < 196 and
+                        abs(self.center_x - player.center_x) < 196):
+                    setup(game, player, self)
+            if self.dir == 2:
+                if (-32 < self.center_y - player.center_y < 256 and
+                        abs(self.center_x-player.center_x) < 64):
+                    setup(game, player, self)
+            elif self.dir == 0:
+                if (-256 < self.center_y - player.center_y < 32 and
+                        abs(self.center_x-player.center_x) < 64):
+                    setup(game, player, self)
+            elif self.dir == 3:
+                if (-32 < self.center_x - player.center_x < 256 and
+                        abs(self.center_y-player.center_y) < 64):
+                    setup(game, player, self)
+            elif self.dir == 1:
+                if (-256 < self.center_x - player.center_x < 32 and
+                        abs(self.center_y-player.center_y) < 64):
+                    setup(game, player, self)
 
     def defeated(self) -> bool:
         """Check whether enemy is defeated or not"""
@@ -363,11 +415,11 @@ def update(game: "arcade.Window") -> None:
         game.battle_pokemon_list.remove(game.battle_enemy.poke)
         game.battle_enemy.j += 1
         game.battle_enemy.poke = game.battle_enemy.pokemon[game.battle_enemy.j]
-        game.battle_pokemon_list.append(game.battle_emeny.poke)
+        game.battle_pokemon_list.append(game.battle_enemy.poke)
         game.battle_enemy.poke.center_x = game.battle_enemy_x
         game.battle_enemy.poke.center_y = game.battle_enemy_y
-        game.battle_msg.append(f"enemy switch to\
-        {game.battle_enemy.pokemon[game.battle_enemy.j].name}")
+        game.battle_msg.append(f"enemy switch to \
+{game.battle_enemy.pokemon[game.battle_enemy.j].name}")
 
     if game.battle_action == "Fight":
 
@@ -389,8 +441,6 @@ def update(game: "arcade.Window") -> None:
         if (game.battle_switchto is not None and
                 game.battle_switchto != game.battle_player.poke):
             game.battle_pokemon_list.remove(game.battle_player.poke)
-            for poke in game.battle_pokemon_list:
-                print(poke)
             game.battle_player.poke = game.battle_switchto
             game.battle_pokemon_list.append(game.battle_player.poke)
             game.battle_player.poke.center_x = game.battle_player_x
@@ -445,11 +495,25 @@ def update(game: "arcade.Window") -> None:
                                               game)
 
 
+def avg_lvl(poke_list: List["pokemon.Pokemon"]) -> int:
+    """Calculate the average level in a list of pokemon"""
+    total = 0
+    for poke in poke_list:
+        total += poke.lvl
+    avg = round(total/len(poke_list))
+
+    return avg
+
+
 def wild_encounter(game: "arcade.Window") -> None:
     """Randomize pokemon when encounter a wild pokemon"""
     enemy_poke = pokemon.Pokemon.random_poke()
-    enemy_poke.addlevel(random.randrange(2, 50))
-    enemy = Enemy(True, enemy_poke)
+    avg = avg_lvl(game.player_sprite.pokemon)
+    if avg < 5:
+        enemy_poke.addlevel(random.randrange(0, avg+5))
+    else:
+        enemy_poke.addlevel(random.randrange(avg-5, avg+5))
+    enemy = Enemy(True, [enemy_poke])
     setup(game, game.player_sprite, enemy)
 
 
@@ -467,16 +531,18 @@ def fight(poke: "pokemon.Pokemon", opp: "pokemon.Pokemon",
     if move_first(poke, opp):
         poke.attack(opp, move, game)
         if opp.is_dead():
-            poke.gainkill()
+            poke.gainkill(game)
             return
         opp.attack(poke, opp.moves[random.randrange(len(opp.moves))], game)
+        if poke.is_dead():
+            return
     else:
         opp.attack(poke, opp.moves[random.randrange(len(opp.moves))], game)
         if poke.is_dead():
             return
         poke.attack(opp, move, game)
         if opp.is_dead():
-            poke.gainkill()
+            poke.gainkill(game)
 
 
 if __name__ == "__main__":

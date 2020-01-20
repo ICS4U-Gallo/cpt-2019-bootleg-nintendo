@@ -71,14 +71,14 @@ def on_draw(player: arcade.Window):
                                        arcade.color.GRAY, 3)
 
     if player.get_pointer() - 1 != -1:
-        arcade.draw_text("{}: {}".format(player.buff_list
-                         [player.get_pointer() - 1].name,
+        arcade.draw_text("{}: {}".format(player.buff_list[
+                         player.get_pointer() - 1].name,
                          player.buff_list[player.get_pointer() -
                                           1].effect), 20,
                          425, arcade.color.BLACK, 20)
 
-    arcade.draw_text("{}: {}".format(player.buff_list
-                     [player.get_pointer()].name,
+    arcade.draw_text("{}: {}".format(player.buff_list[
+                     player.get_pointer()].name,
                      player.buff_list[player.get_pointer()].effect), 20,
                      320, arcade.color.BLACK, 20)
 
