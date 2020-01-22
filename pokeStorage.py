@@ -138,6 +138,8 @@ def on_draw(game: "arcade.Window") -> None:
         arcade.draw_text(f"Searching for", 540, 530, arcade.color.BLACK, 20)
         arcade.draw_text(f"pokemon #{game.sto_search_number}", 540, 510,
                          arcade.color.BLACK, 20)
+    else:
+        arcade.draw_text("K to leave", 540, 20, arcade.color.BLACK, 20)
 
 
 def key_logic(game: "arcade.Window", key: int) -> None:

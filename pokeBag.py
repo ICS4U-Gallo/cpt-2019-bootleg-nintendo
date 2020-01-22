@@ -25,6 +25,7 @@ def on_draw(game: "arcade.Window") -> None:
     arcade.start_render()
     arcade.draw_text("Pokemon", width/2, height-20, arcade.color.BLACK, 40,
                      align="center", anchor_x="center", anchor_y="center")
+    arcade.draw_text("K to leave", 440, 60, arcade.color.BLACK, 20)
 
     for i in range(len(game.player_sprite.pokemon)):
         game.player_sprite.pokemon[i].center_x = (125 + i % 2 * 175)

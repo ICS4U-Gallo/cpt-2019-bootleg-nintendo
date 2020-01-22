@@ -245,7 +245,7 @@ def gym():
                 wall.bottom = y
                 room.wall_list.append(wall)
 
-    for x in range(sprite_size, (screen_width*2)-(sprite_size*6), sprite_size):
+    for x in range(sprite_size*2, (screen_width*2)-(sprite_size*6), sprite_size):
         wall = arcade.Sprite("images/boxCrate_double.png",
                              sprite_scale)
         wall.left = x
@@ -266,6 +266,12 @@ def gym():
         wall.left = sprite_size*7
         wall.bottom = y
         room.wall_list.append(wall)
+
+    wall = battle.Enemy(False, [])
+    wall.texture = arcade.load_texture("images/boxCrate_double.png", scale=sprite_scale)
+    wall.left = sprite_size
+    wall.bottom = sprite_size*6
+    room.enemy_list.append(wall)
 
     loc = [[3, 3, 1], [8, 1, 0], [13, 5, 2], [18, 1, 0], [18, 6, 1],
            [22, 10, 3], [18, 14, 1], [17, 18, 2], [16, 14, 3]]
@@ -466,9 +472,18 @@ def room_logic(player):
         for enemy in player.rooms[player.current_room].enemy_list:
             if not player.player_sprite.defeated():
                 enemy.see_player(player, player.player_sprite)
+        if (player.act_pressed and
+            64 < player.player_sprite.center_x < 128
+            and 1152 < player.player_sprite.center_y < 1216):
+            print("gained item")
+            for bag in player.player_sprite.item_bag:
+                for item in bag:
+                    item.amount += 1
     elif player.current_room == 2:
         if (len(player.rooms[player.current_room].pokeball) == 1
-                and player.act_pressed):
+                and player.act_pressed and
+                280 < player.player_sprite.center_x < 490
+                and 286 < player.player_sprite.center_y < 350):
             poke_list = [Pokemon.Charmander(), Pokemon.Squirtle(),
                          Pokemon.Bulbasaur(), Pokemon.Magikarp()]
             for poke in poke_list:

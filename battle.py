@@ -346,7 +346,7 @@ def setup(game: "arcade.Window", player: "Player", enemy: "Enemy") -> None:
             game.battle_player.poke = poke
             break
     game.battle_enemy.poke = game.battle_enemy.pokemon[0]
-    game.battle_pokemon_list = arcade.SpriteList()
+    game.battle_pokemon_list = []
 
     game.battle_pokemon_list.append(game.battle_player.poke)
     game.battle_player.poke.center_x = game.battle_player_x
@@ -365,7 +365,8 @@ def on_draw(game: "arcade.Window") -> None:
     for button in game.battle_button_list:
         button.draw()
 
-    game.battle_pokemon_list.draw()
+    for poke in game.battle_pokemon_list:
+        poke.draw()
     display_pokemon(game)
 
     for i in range(len(game.battle_msg)):

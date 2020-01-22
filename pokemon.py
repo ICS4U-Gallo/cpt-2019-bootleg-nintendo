@@ -23,20 +23,11 @@ class Move:
         self._pp = pp
         self._status = status
 
-    def set_name(self, name: str) -> None:
-        self._name = name
-
     def get_name(self) -> str:
         return self._name
 
-    def set_pwr(self, pwr: int) -> None:
-        self._pwr = pwr
-
     def get_pwr(self) -> int:
         return self._pwr
-
-    def set_type(self, type: str) -> None:
-        self._type = type
 
     def get_type(self) -> str:
         return self._type
@@ -47,14 +38,8 @@ class Move:
     def get_cur_pp(self) -> int:
         return self._cur_pp
 
-    def set_pp(self, pp: int) -> None:
-        self._pp = pp
-
     def get_pp(self) -> int:
         return self._pp
-
-    def set_status(self, status: str) -> None:
-        self._status = status
 
     def get_status(self) -> str:
         return self._status
