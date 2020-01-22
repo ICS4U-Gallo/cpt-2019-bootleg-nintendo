@@ -1,6 +1,41 @@
 # Bootleg Pokemon
 Trying to remake pokemon with python and arcade
 
+###Control:
+Run loz.py to start the game, grab pokemon in the pokelab (the house next the starting house) by pressing `L` under the table.
+
+#### In start menu:
+- click once to activate
+- select buttons with mouse click
+
+#### In game:
+- `W` - move upward
+- `A` - move left
+- `S` - move downward
+- `D` - move right
+- `K` - open menu
+- `L` - interact (with healing station in pokemon center)
+
+#### In battle:
+- `mouse` - click buttons
+
+#### In game menu:
+- `W, A, S, D` - change selection
+- `L` - confirm selection
+
+#### In bag menu:
+- `mouse` click buttons
+
+#### In pokedex / item menu:
+- `W` - previous pokemon / item
+- `S` - next pokemon / item
+- `K` - go back
+
+#### In pokemon / poke bag:
+- `mouse` - click pokemon to show stats
+- `mouse` - click buttons
+- `K` - go back
+
 ### Group Members:
 - Eric J
 - Ryan C

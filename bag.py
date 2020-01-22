@@ -182,6 +182,8 @@ def setup(player):
 def on_draw(player):
     arcade.start_render()
     arcade.set_background_color(arcade.color.WHITE)
+    arcade.draw_text("Bag", player.width / 2, player.height - 60, arcade.color.BLACK,
+                     50, align="center", anchor_x="center", anchor_y="center")
     for button in player.bag_button_list:
         button.draw()
 
