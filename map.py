@@ -467,8 +467,8 @@ def room_logic(player):
             if not player.player_sprite.defeated():
                 enemy.see_player(player, player.player_sprite)
     elif player.current_room == 2:
-        if (len(player.rooms[player.current_room].pokeball) == 1 and
-            player.act_pressed):
+        if (len(player.rooms[player.current_room].pokeball) == 1
+                and player.act_pressed):
             poke_list = [Pokemon.Charmander(), Pokemon.Squirtle(),
                          Pokemon.Bulbasaur(), Pokemon.Magikarp()]
             for poke in poke_list:

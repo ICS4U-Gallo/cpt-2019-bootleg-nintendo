@@ -5,11 +5,16 @@ import battle
 
 
 class Item:
+    """ Class for items
+    Attributes:
+            name(str) = Name of item
+            amount(int): Number of item held
+            effect(str): Effect of item
+    """
     def __init__(self, name: str, amount: int, effect: str):
         self.name = name
         self.amount = amount
         self.effect = effect
-        self.amount = amount
 
     def use(self, game: arcade.Window, poke):
         if self.amount >= 1:
@@ -61,6 +66,7 @@ class Item:
 
 
 class PokeBall(Item):
+    """Class for pokeballs; inherits from Item class"""
     def __init__(self, name, amount, effect):
         super().__init__(name, amount, effect)
 
