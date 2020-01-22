@@ -1,7 +1,7 @@
 # Bootleg Pokemon
 Trying to remake pokemon with python and arcade
 
-###Control:
+### Control:
 Run loz.py to start the game, grab pokemon in the pokelab (the house next the starting house) by pressing `L` under the table.
 
 #### In start menu:
